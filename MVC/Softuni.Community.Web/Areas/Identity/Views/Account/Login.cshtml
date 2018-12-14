@@ -1,0 +1,46 @@
+﻿@model Softuni.Community.Web.Areas.Identity.Models.LoginBindingModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div >
+    <div class="text-center">
+        <section class="w-25 mx-auto">
+            <form method="post" >
+                <h4>Use your email and password to log in.</h4>
+                <hr />
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label asp-for="RememberMe">
+                            <input asp-for="RememberMe" />
+                            @Html.DisplayNameFor(m => m.RememberMe)
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default">Log in</button>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <a area="Identity" asp-controller="Account" asp-action="ForgotPassword">Forgot your password?</a>
+                    </p>
+                    <p>
+                        <a area="Identity" asp-controller="Account" asp-action="Register">Register as a new user</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>

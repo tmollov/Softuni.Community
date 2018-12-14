@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Softuni.Community.Data\Softuni.Community.Data.csproj" />
+    <ProjectReference Include="..\Softuni.Community.Services.Interfaces\Softuni.Community.Services.Interfaces.csproj" />
+  </ItemGroup>
+
+</Project>

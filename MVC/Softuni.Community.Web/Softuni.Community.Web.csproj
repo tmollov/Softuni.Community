@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Softuni.Community.Data\Softuni.Community.Data.csproj" />
+    <ProjectReference Include="..\Softuni.Community.Services.Interfaces\Softuni.Community.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\Softuni.Community.Services\Softuni.Community.Services.csproj" />
+    <ProjectReference Include="..\Softuni.Community.Web.Common\Softuni.Community.Web.Common.csproj" />
+  </ItemGroup>
+
+</Project>
