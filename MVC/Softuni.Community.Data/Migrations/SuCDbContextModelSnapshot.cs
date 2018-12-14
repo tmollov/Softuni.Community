@@ -190,6 +190,9 @@ namespace Softuni.Community.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AboutMe")
+                        .HasMaxLength(300);
+
                     b.Property<DateTime>("BirthDate");
 
                     b.Property<string>("FirstName")

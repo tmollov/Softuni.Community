@@ -7,13 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softuni.Community.Data.Mode
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softuni.Community.Data", "Softuni.Community.Data\Softuni.Community.Data.csproj", "{54E54A7D-A09A-4F72-9522-8B4C40DAA5FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softuni.Community.Web", "Softuni.Community.Web\Softuni.Community.Web.csproj", "{AB953269-107B-409F-9739-872FB0880B88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softuni.Community.Web", "Softuni.Community.Web\Softuni.Community.Web.csproj", "{AB953269-107B-409F-9739-872FB0880B88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softuni.Community.Services", "Softuni.Community.Services\Softuni.Community.Services.csproj", "{EEBDE4BE-DABF-4105-844D-66E172278A9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softuni.Community.Services", "Softuni.Community.Services\Softuni.Community.Services.csproj", "{EEBDE4BE-DABF-4105-844D-66E172278A9B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softuni.Community.Services.Interfaces", "Softuni.Community.Services.Interfaces\Softuni.Community.Services.Interfaces.csproj", "{BC0902FB-F5F7-467A-9886-850518C7F524}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softuni.Community.Web.Common", "Softuni.Community.Web.Common\Softuni.Community.Web.Common.csproj", "{006CC667-83DA-40EF-A115-C621871AF39F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softuni.Community.Web.Common", "Softuni.Community.Web.Common\Softuni.Community.Web.Common.csproj", "{006CC667-83DA-40EF-A115-C621871AF39F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softuni.Community.Web.Models", "Softuni.Community.Web.Models\Softuni.Community.Web.Models.csproj", "{0B75B467-81E8-4ECA-8B7B-6096D17C37F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{006CC667-83DA-40EF-A115-C621871AF39F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{006CC667-83DA-40EF-A115-C621871AF39F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{006CC667-83DA-40EF-A115-C621871AF39F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B75B467-81E8-4ECA-8B7B-6096D17C37F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B75B467-81E8-4ECA-8B7B-6096D17C37F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B75B467-81E8-4ECA-8B7B-6096D17C37F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B75B467-81E8-4ECA-8B7B-6096D17C37F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

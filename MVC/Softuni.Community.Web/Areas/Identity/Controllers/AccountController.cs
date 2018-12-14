@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Softuni.Community.Data.Models;
 using Softuni.Community.Services.Interfaces;
-using Softuni.Community.Web.Areas.Identity.Models;
 using Softuni.Community.Web.Common;
 using Softuni.Community.Web.Controllers;
+using Softuni.Community.Web.Models.BindingModels;
 
 namespace Softuni.Community.Web.Areas.Identity.Controllers
 {
@@ -15,13 +16,15 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         private readonly UserManager<CustomUser> userManager;
         private readonly SignInManager<CustomUser> signInManager;
         private readonly IDataService dataService;
+        private readonly IMapper mapper;
 
         public AccountController(UserManager<CustomUser> userMgr,
-            SignInManager<CustomUser> signinMgr, IDataService dataService)
+            SignInManager<CustomUser> signinMgr, IDataService dataService, IMapper mapper)
         {
             this.userManager = userMgr;
             this.signInManager = signinMgr;
             this.dataService = dataService;
+            this.mapper = mapper;
         }
 
         [AllowAnonymous]
@@ -40,21 +43,32 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
                 CustomUser user = userManager.FindByEmailAsync(bindingModel.Email).Result;
                 if (user != null)
                 {
-                    signInManager.SignOutAsync().GetAwaiter().GetResult();
-                    Microsoft.AspNetCore.Identity.SignInResult result =
-                        signInManager.PasswordSignInAsync(
-                            user, bindingModel.Password, false, false).Result;
-                    if (result.Succeeded)
+                    var isPasswordRight = userManager.CheckPasswordAsync(user, bindingModel.Password).Result;
+
+                    if (isPasswordRight)
                     {
-                        return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
+                        signInManager.SignOutAsync().GetAwaiter().GetResult();
+                        Microsoft.AspNetCore.Identity.SignInResult result =
+                            signInManager.PasswordSignInAsync(
+                                user, bindingModel.Password, false, false).Result;
+
+                        if (result.Succeeded)
+                            return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(nameof(LoginBindingModel.Password),
+                            ErrorMessages.UserWithGivenPasswordNotFound);
+                        // Will returning empty password field
+                        //bindingModel.Password = string.Empty;
                     }
                 }
-                ModelState.AddModelError(nameof(LoginBindingModel.Email),
-                    ErrorMessages.UserWithGivenEmailNotFound);
+                else
+                {
+                    ModelState.AddModelError(nameof(LoginBindingModel.Email),
+                        ErrorMessages.UserWithGivenEmailNotFound);
+                }
             }
-
-            // Returning empty password field
-            bindingModel.Password = string.Empty;
             return View(bindingModel);
         }
 
@@ -72,16 +86,11 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             if (ModelState.IsValid && (bindingModel.Password == bindingModel.ConfirmPassword))
             {
                 var userInfo = new UserInfo();
-
-                CustomUser user = new CustomUser
-                {
-                    Email = bindingModel.Email,
-                    MyInfo = dataService.AddUserInfo(userInfo)
-                };
+                CustomUser user = mapper.Map<CustomUser>(bindingModel);
+                user.MyInfo = dataService.AddUserInfo(userInfo);
 
                 IdentityResult result
                     = userManager.CreateAsync(user, bindingModel.Password).Result;
-
 
                 if (dataService.IsFirstUser())
                     userManager.AddToRoleAsync(user, Role.Admin).Wait();
@@ -90,7 +99,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction(ActionsConts.FillYourProfile, ControllersConts.Account);
+                    return RedirectToAction(ActionsConts.ProfileSetUp, ControllersConts.Account);
                 }
                 else
                 {
@@ -99,7 +108,6 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
                         ModelState.AddModelError(error.Code, error.Description);
                     }
                 }
-
             }
             return View(bindingModel);
         }
@@ -111,9 +119,25 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         }
 
         [Authorize]
-        public IActionResult FillYourProfile()
+        public IActionResult ProfileSetUp()
         {
             return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult ProfileSetUp(UserInfoBindingModel bindingModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var userInfo = mapper.Map<UserInfo>(bindingModel);
+                var result = dataService.UpdateUserInfo(User.Identity.Name, userInfo);
+                if (result != null)
+                {
+                    return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
+                }
+            }
+            return View(bindingModel);
         }
 
         [Authorize]
@@ -123,5 +147,22 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
             return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
         }
+
+
+        [Authorize]
+        public IActionResult Profile()
+        {
+            
+
+            return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
+        }
+
+        [Authorize]
+        public IActionResult ProfileSettings()
+        {
+
+            return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
+        }
+
     }
 }

@@ -5,7 +5,6 @@ namespace Softuni.Community.Data.Models
 {
     public class UserInfo
     {
-
         public int Id { get; set; }
 
         [DataType(DataType.DateTime)]
@@ -22,5 +21,9 @@ namespace Softuni.Community.Data.Models
         [StringLength(50)]
         [RegularExpression("^[A-Za-z]+$")]
         public string LastName { get; set; }
+
+        [DataType(DataType.Text)]
+        [StringLength(300)]
+        public string AboutMe { get; set; }
     }
 }

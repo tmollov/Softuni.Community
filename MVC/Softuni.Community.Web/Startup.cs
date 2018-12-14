@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +14,7 @@ using Softuni.Community.Data.Models;
 using Softuni.Community.Services;
 using Softuni.Community.Services.Interfaces;
 using Softuni.Community.Web.Common;
+
 namespace Softuni.Community.Web
 {
     public class Startup
@@ -57,9 +59,19 @@ namespace Softuni.Community.Web
                 .AddEntityFrameworkStores<SuCDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAuthentication();
+
+
+            // Adding AutoMapper
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            IMapper mapper = mappingConfig.CreateMapper();
+
             // Adding Services
             services.AddScoped<IDataService, DataService>();
-
+            services.AddSingleton(mapper);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -87,6 +99,8 @@ namespace Softuni.Community.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

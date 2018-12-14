@@ -1,8 +1,8 @@
 ﻿namespace Softuni.Community.Web.Common
 {
-    public class Actions
+    public class ActionsConts
     {
         public const string Index = "Index";
-        public const string FillYourProfile = "FillYourProfile";
+        public const string ProfileSetUp = "ProfileSetUp";
     }
 }
