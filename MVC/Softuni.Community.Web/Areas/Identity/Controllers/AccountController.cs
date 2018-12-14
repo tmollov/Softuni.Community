@@ -1,9 +1,7 @@
-﻿using System;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Softuni.Community.Data.Models;
-using Softuni.Community.Services;
 using Softuni.Community.Services.Interfaces;
 using Softuni.Community.Web.Areas.Identity.Models;
 using Softuni.Community.Web.Common;
@@ -48,7 +46,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
                             user, bindingModel.Password, false, false).Result;
                     if (result.Succeeded)
                     {
-                        return RedirectToAction(Actions.Index, Controllers.Home);
+                        return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
                     }
                 }
                 ModelState.AddModelError(nameof(LoginBindingModel.Email),
@@ -56,7 +54,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             }
 
             // Returning empty password field
-            bindingModel.Password = String.Empty;
+            bindingModel.Password = string.Empty;
             return View(bindingModel);
         }
 
@@ -83,7 +81,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
                 IdentityResult result
                     = userManager.CreateAsync(user, bindingModel.Password).Result;
-                
+
 
                 if (dataService.IsFirstUser())
                     userManager.AddToRoleAsync(user, Role.Admin).Wait();
@@ -92,7 +90,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction(Actions.FillYourProfile, Controllers.Account);
+                    return RedirectToAction(ActionsConts.FillYourProfile, ControllersConts.Account);
                 }
                 else
                 {
@@ -123,7 +121,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         {
             signInManager.SignOutAsync().GetAwaiter().GetResult();
 
-            return RedirectToAction(Actions.Index, Controllers.Home);
+            return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
         }
     }
 }

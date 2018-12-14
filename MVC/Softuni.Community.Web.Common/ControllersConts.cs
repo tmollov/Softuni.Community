@@ -1,4 +1,4 @@
-﻿namespace Softuni.Community.Web.Areas.Identity.Controllers
+﻿namespace Softuni.Community.Web.Common
 {
     public class Controllers
     {
