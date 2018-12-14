@@ -121,6 +121,12 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         [Authorize]
         public IActionResult ProfileSetUp()
         {
+            // Logic to add somewhere later
+            //var user = userManager.FindByNameAsync(User.Identity.Name).Result;
+            //if (!user.IsProfileSettedUp)
+            //{
+            //
+            //}
             return View();
         }
 
@@ -152,7 +158,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         [Authorize]
         public IActionResult Profile()
         {
-            
+
 
             return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
         }

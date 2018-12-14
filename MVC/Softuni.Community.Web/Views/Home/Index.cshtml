@@ -2,12 +2,8 @@
     ViewData["Title"] = "Home Page";
 }
 
-@if (User.Identity.IsAuthenticated)
-{
-<h1> HELLO THERE</h1>
-}
-
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to</h1>
+    <h1 class="display-4">Softuni C<img src="~/images/earthIcon.png" width="30px" height="30px">mmunity</h1>
+    <p><a asp-area="Identity" asp-controller="Account" , asp-action="Register">Join</a> our developer community today!</p>
 </div>

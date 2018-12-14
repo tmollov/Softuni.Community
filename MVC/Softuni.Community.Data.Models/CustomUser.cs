@@ -8,5 +8,7 @@ namespace Softuni.Community.Data.Models
         public int UserInfoId { get; set; }
 
         public virtual UserInfo MyInfo { get; set; }
+
+        public bool IsProfileSettedUp { get; set; }
     }
 }
