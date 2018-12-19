@@ -87,7 +87,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             {
                 var userInfo = new UserInfo();
                 CustomUser user = mapper.Map<CustomUser>(bindingModel);
-                user.MyInfo = dataService.AddUserInfo(userInfo);
+                user.UserInfo = dataService.AddUserInfo(userInfo);
 
                 IdentityResult result
                     = userManager.CreateAsync(user, bindingModel.Password).Result;

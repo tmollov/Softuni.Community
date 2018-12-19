@@ -1,3 +1,8 @@
 ﻿body {
     font-family: "Exo 2",sans-serif;
 }
+
+.borderDiscussion {
+    border: 2px;
+    border-radius: 5px;
+}

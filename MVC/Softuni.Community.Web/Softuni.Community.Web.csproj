@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Models\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

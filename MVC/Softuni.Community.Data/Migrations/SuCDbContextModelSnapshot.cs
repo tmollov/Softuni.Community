@@ -144,6 +144,8 @@ namespace Softuni.Community.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<bool>("IsProfileSettedUp");
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -253,7 +255,7 @@ namespace Softuni.Community.Data.Migrations
 
             modelBuilder.Entity("Softuni.Community.Data.Models.CustomUser", b =>
                 {
-                    b.HasOne("Softuni.Community.Data.Models.UserInfo", "MyInfo")
+                    b.HasOne("Softuni.Community.Data.Models.UserInfo", "UserInfo")
                         .WithMany()
                         .HasForeignKey("UserInfoId")
                         .OnDelete(DeleteBehavior.Cascade);
