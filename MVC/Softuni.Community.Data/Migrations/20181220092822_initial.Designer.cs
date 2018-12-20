@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Softuni.Community.Data;
 
 namespace Softuni.Community.Data.Migrations
 {
     [DbContext(typeof(SuCDbContext))]
-    partial class SuCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181220092822_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,19 +169,6 @@ namespace Softuni.Community.Data.Migrations
                     b.ToTable("Answers");
                 });
 
-            modelBuilder.Entity("Softuni.Community.Data.Models.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-                });
-
             modelBuilder.Entity("Softuni.Community.Data.Models.CustomUser", b =>
                 {
                     b.Property<string>("Id")
@@ -243,14 +232,14 @@ namespace Softuni.Community.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Category");
+
                     b.Property<string>("Content")
                         .IsRequired();
 
                     b.Property<DateTime>("PublishTime");
 
                     b.Property<string>("PublisherId");
-
-                    b.Property<int>("QuestionsCategoriesId");
 
                     b.Property<int>("Rating");
 
@@ -262,22 +251,6 @@ namespace Softuni.Community.Data.Migrations
                     b.HasIndex("PublisherId");
 
                     b.ToTable("Questions");
-                });
-
-            modelBuilder.Entity("Softuni.Community.Data.Models.QuestionsCategories", b =>
-                {
-                    b.Property<int>("QuestionId");
-
-                    b.Property<int>("CategoryId");
-
-                    b.HasKey("QuestionId", "CategoryId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("QuestionId")
-                        .IsUnique();
-
-                    b.ToTable("QuestionsCategories");
                 });
 
             modelBuilder.Entity("Softuni.Community.Data.Models.QuestionsTags", b =>
@@ -405,19 +378,6 @@ namespace Softuni.Community.Data.Migrations
                     b.HasOne("Softuni.Community.Data.Models.CustomUser", "Publisher")
                         .WithMany()
                         .HasForeignKey("PublisherId");
-                });
-
-            modelBuilder.Entity("Softuni.Community.Data.Models.QuestionsCategories", b =>
-                {
-                    b.HasOne("Softuni.Community.Data.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Softuni.Community.Data.Models.Question", "Question")
-                        .WithOne("QuestionsCategories")
-                        .HasForeignKey("Softuni.Community.Data.Models.QuestionsCategories", "QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Softuni.Community.Data.Models.QuestionsTags", b =>

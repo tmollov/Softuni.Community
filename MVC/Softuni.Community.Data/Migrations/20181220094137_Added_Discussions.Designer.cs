@@ -10,8 +10,8 @@ using Softuni.Community.Data;
 namespace Softuni.Community.Data.Migrations
 {
     [DbContext(typeof(SuCDbContext))]
-    [Migration("20181214192212_New_prop_AboutMe_to_UserInfo")]
-    partial class New_prop_AboutMe_to_UserInfo
+    [Migration("20181220094137_Added_Discussions")]
+    partial class Added_Discussions
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,13 +21,16 @@ namespace Softuni.Community.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<string>", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
 
                     b.Property<string>("Name")
                         .HasMaxLength(256);
@@ -43,6 +46,8 @@ namespace Softuni.Community.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole<string>");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -87,9 +92,11 @@ namespace Softuni.Community.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128);
 
-                    b.Property<string>("ProviderKey");
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderDisplayName");
 
@@ -120,15 +127,59 @@ namespace Softuni.Community.Data.Migrations
                 {
                     b.Property<string>("UserId");
 
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(450);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasMaxLength(450);
 
                     b.Property<string>("Value");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Softuni.Community.Data.Models.Answer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<DateTime>("PublishTime");
+
+                    b.Property<string>("PublisherId");
+
+                    b.Property<int>("QuestionId");
+
+                    b.Property<int>("Rating");
+
+                    b.Property<string>("Title")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PublisherId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("Answers");
+                });
+
+            modelBuilder.Entity("Softuni.Community.Data.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Softuni.Community.Data.Models.CustomUser", b =>
@@ -145,6 +196,8 @@ namespace Softuni.Community.Data.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<bool>("IsProfileSettedUp");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -186,6 +239,74 @@ namespace Softuni.Community.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Softuni.Community.Data.Models.Question", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CategoryId");
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<DateTime>("PublishTime");
+
+                    b.Property<string>("PublisherId");
+
+                    b.Property<int>("Rating");
+
+                    b.Property<string>("Title")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("PublisherId");
+
+                    b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("Softuni.Community.Data.Models.QuestionsCategories", b =>
+                {
+                    b.Property<int>("QuestionId");
+
+                    b.Property<int>("CategoryId");
+
+                    b.HasKey("QuestionId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("QuestionsCategories");
+                });
+
+            modelBuilder.Entity("Softuni.Community.Data.Models.QuestionsTags", b =>
+                {
+                    b.Property<int>("TagId");
+
+                    b.Property<int>("QuestionId");
+
+                    b.HasKey("TagId", "QuestionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("QuestionsTags");
+                });
+
+            modelBuilder.Entity("Softuni.Community.Data.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
+                });
+
             modelBuilder.Entity("Softuni.Community.Data.Models.UserInfo", b =>
                 {
                     b.Property<int>("Id")
@@ -208,9 +329,16 @@ namespace Softuni.Community.Data.Migrations
                     b.ToTable("UserInfos");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole<string>");
+
+                    b.HasDiscriminator().HasValue("IdentityRole");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -234,7 +362,7 @@ namespace Softuni.Community.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -253,11 +381,60 @@ namespace Softuni.Community.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Softuni.Community.Data.Models.Answer", b =>
+                {
+                    b.HasOne("Softuni.Community.Data.Models.CustomUser", "Publisher")
+                        .WithMany()
+                        .HasForeignKey("PublisherId");
+
+                    b.HasOne("Softuni.Community.Data.Models.Question", "Question")
+                        .WithMany("Answers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Softuni.Community.Data.Models.CustomUser", b =>
                 {
-                    b.HasOne("Softuni.Community.Data.Models.UserInfo", "MyInfo")
+                    b.HasOne("Softuni.Community.Data.Models.UserInfo", "UserInfo")
                         .WithMany()
                         .HasForeignKey("UserInfoId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Softuni.Community.Data.Models.Question", b =>
+                {
+                    b.HasOne("Softuni.Community.Data.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("Softuni.Community.Data.Models.CustomUser", "Publisher")
+                        .WithMany()
+                        .HasForeignKey("PublisherId");
+                });
+
+            modelBuilder.Entity("Softuni.Community.Data.Models.QuestionsCategories", b =>
+                {
+                    b.HasOne("Softuni.Community.Data.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Softuni.Community.Data.Models.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Softuni.Community.Data.Models.QuestionsTags", b =>
+                {
+                    b.HasOne("Softuni.Community.Data.Models.Question", "Question")
+                        .WithMany("Tags")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Softuni.Community.Data.Models.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
