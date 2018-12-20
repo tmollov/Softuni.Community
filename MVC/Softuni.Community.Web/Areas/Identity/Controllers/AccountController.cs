@@ -15,15 +15,15 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
     {
         private readonly UserManager<CustomUser> userManager;
         private readonly SignInManager<CustomUser> signInManager;
-        private readonly IDataService dataService;
+        private readonly IUserService userService;
         private readonly IMapper mapper;
 
         public AccountController(UserManager<CustomUser> userMgr,
-            SignInManager<CustomUser> signinMgr, IDataService dataService, IMapper mapper)
+            SignInManager<CustomUser> signinMgr, IUserService userService, IMapper mapper)
         {
             this.userManager = userMgr;
             this.signInManager = signinMgr;
-            this.dataService = dataService;
+            this.userService = userService;
             this.mapper = mapper;
         }
 
@@ -87,19 +87,19 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             {
                 var userInfo = new UserInfo();
                 CustomUser user = mapper.Map<CustomUser>(bindingModel);
-                user.UserInfo = dataService.AddUserInfo(userInfo);
+                user.UserInfo = userService.AddUserInfo(userInfo);
 
                 IdentityResult result
                     = userManager.CreateAsync(user, bindingModel.Password).Result;
 
-                if (dataService.IsFirstUser())
+                if (userService.IsFirstUser())
                     userManager.AddToRoleAsync(user, Role.Admin).Wait();
                 else
                     userManager.AddToRoleAsync(user, Role.User).Wait();
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction(ActionsConts.ProfileSetUp, ControllersConts.Account);
+                    return RedirectToAction(ActionsConts.ProfileSetUp);
                 }
                 else
                 {
@@ -137,7 +137,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             if (ModelState.IsValid)
             {
                 var userInfo = mapper.Map<UserInfo>(bindingModel);
-                var result = dataService.UpdateUserInfo(User.Identity.Name, userInfo);
+                var result = userService.UpdateUserInfo(User.Identity.Name, userInfo);
                 if (result != null)
                 {
                     return RedirectToAction(ActionsConts.Index, ControllersConts.Home);

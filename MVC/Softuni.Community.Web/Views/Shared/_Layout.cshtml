@@ -10,7 +10,8 @@
     <title>@ViewData["Title"]</title>
 
     <link href="~/css/fonts/exo2.css" rel="stylesheet" />
-    <link href="~/css/style.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     </environment>
@@ -22,6 +23,7 @@
               integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/css/style.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -114,7 +116,7 @@
         </script>
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
+    <script src="~/js/app.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

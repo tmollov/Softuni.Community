@@ -4,5 +4,6 @@
     {
         public const string Index = "Index";
         public const string ProfileSetUp = "ProfileSetUp";
+        public const string AllDiscussions = "All";
     }
 }

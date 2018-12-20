@@ -1,7 +1,75 @@
-﻿
+﻿@model Softuni.Community.Web.Models.ViewModels.AllQuestionViewModel
 @{
-    ViewData["Title"] = "All";
+    ViewData["Title"] = "Discussions";
 }
 
-<h1>All</h1>
+<h1 class="text-center mt-4 mb-4">Discussions</h1>
 
+<div class="w-75 mx-auto">
+    <div class="container p-0">
+        <div class="row">
+            <div class="col-sm-3 border border-dark borderDiscussion myHover">
+                <a class="nav-link text-center" asp-controller="Discussions" asp-action="AddQuestion">
+                    Add
+                    Question
+                </a>
+            </div>
+        </div>
+    </div>
+    @foreach (var item in Model.ViewModels)
+    {
+        <div class="container borderDiscussion discussionDiv myHover mt-3">
+            <div class="row mx-auto">
+                <div class="text-center w-100">
+                    <div class="col">
+                        <div>
+                            <h3>
+                                <a href="/Discussions/QuestionDetails/?Id=@item.QuestionId">@item.Title</a>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="questionStat w-100 row">
+                <div class="col-sm-1">
+                    <p class="text-center m-0"><i class="fas fa-star"></i>: @item.Rating</p>
+                </div>
+                <div class="col-sm-1">
+                    <p class="text-center m-0"><i class="fas fa-comments"></i>: @item.AnswerCount</p>
+                </div>
+                <div class="col-sm-3 row">
+                    <p class="ml-3 mr-3 m-0"><i class="fas fa-hashtag"></i>:</p>
+                    @if (item.Tags.Count > 1)
+                    {
+                        foreach (var tag in item.Tags)
+                        {
+                            <span>@tag </span>
+                        }
+                    }
+                    else
+                    {
+                        <span>@string.Join("",item.Tags)</span>
+                    }
+                </div>
+                <div class="row ml-auto">
+                    <p class="mr-3 m-0">@item.PublisherName</p>
+                    <span class="mr-3">
+                        @if (item.PublisherPicture == null)
+                        {
+                            <i class="fas fa-user-circle"></i>
+                        }
+                        else
+                        {
+                            <img class="ProfilePictureSmall" src="@item.PublisherPicture"
+                                 alt="NoImg" width="15px" height="15px" />
+                        }
+                    </span>
+                    <p class="m-0">@item.PublishTime.ToString("dd MMM yyyy")</p>
+                </div>
+            </div>
+            <hr class="line bg-dark" />
+        </div>
+    }
+
+
+</div>

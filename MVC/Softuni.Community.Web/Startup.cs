@@ -70,7 +70,8 @@ namespace Softuni.Community.Web
             IMapper mapper = mappingConfig.CreateMapper();
 
             // Adding Services
-            services.AddScoped<IDataService, DataService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IDiscussionsService, DiscussionsService>();
             services.AddSingleton(mapper);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

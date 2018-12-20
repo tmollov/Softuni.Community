@@ -2,6 +2,13 @@
 {
     public class QuestionsTags
     {
+        public QuestionsTags(){}
+        public QuestionsTags(Question question, Tag tag)
+        {
+            this.Question = question;
+            this.Tag = tag;
+        }
+
         public int QuestionId { get; set; }
         public Question Question { get; set; }
 

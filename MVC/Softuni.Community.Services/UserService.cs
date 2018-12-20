@@ -6,12 +6,12 @@ using Softuni.Community.Services.Interfaces;
 
 namespace Softuni.Community.Services
 {
-    public class DataService : IDataService
+    public class UserService : IUserService
     {
         private readonly SuCDbContext context;
         private readonly UserManager<CustomUser> userMgr;
 
-        public DataService(SuCDbContext context,UserManager<CustomUser> userMgr)
+        public UserService(SuCDbContext context,UserManager<CustomUser> userMgr)
         {
             this.context = context;
             this.userMgr = userMgr;
@@ -47,6 +47,11 @@ namespace Softuni.Community.Services
 
             // Return null if process is failed
             return null;
+        }
+
+        public CustomUser GetUserByUserName(string username)
+        {
+            return this.userMgr.FindByNameAsync(username).Result;
         }
     }
 }

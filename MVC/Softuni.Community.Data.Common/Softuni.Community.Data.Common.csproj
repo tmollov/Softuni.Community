@@ -4,8 +4,4 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Softuni.Community.Data.Models\Softuni.Community.Data.Models.csproj" />
-  </ItemGroup>
-
 </Project>

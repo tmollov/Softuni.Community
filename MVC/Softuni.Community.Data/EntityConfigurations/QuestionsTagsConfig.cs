@@ -11,10 +11,10 @@ namespace Softuni.Community.Data.EntityConfigurations
             builder
                 .HasKey(x => new { x.TagId, x.QuestionId });
 
-            builder
-                .HasOne(x => x.Question)
-                .WithMany(x => x.Tags)
-                .OnDelete(DeleteBehavior.Restrict);
+            //builder
+            //    .HasOne(x => x.Question)
+            //    .WithMany(x => x.Tags)
+            //    .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

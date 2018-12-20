@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Softuni.Community.Data.Models\Softuni.Community.Data.Models.csproj" />
+    <ProjectReference Include="..\Softuni.Community.Web.Models\Softuni.Community.Web.Models.csproj" />
   </ItemGroup>
 
 </Project>

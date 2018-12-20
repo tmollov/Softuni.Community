@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Softuni.Community.Data;
 
 namespace Softuni.Community.Data.Migrations
 {
     [DbContext(typeof(SuCDbContext))]
-    partial class SuCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181220132722_DiscussionsModified_QuestionTable")]
+    partial class DiscussionsModified_QuestionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,6 +157,9 @@ namespace Softuni.Community.Data.Migrations
 
                     b.Property<int>("Rating");
 
+                    b.Property<string>("Title")
+                        .IsRequired();
+
                     b.HasKey("Id");
 
                     b.HasIndex("PublisherId");
@@ -281,8 +286,6 @@ namespace Softuni.Community.Data.Migrations
 
                     b.Property<string>("LastName")
                         .HasMaxLength(50);
-
-                    b.Property<string>("ProfilePictureUrl");
 
                     b.HasKey("Id");
 

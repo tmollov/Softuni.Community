@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Softuni.Community.Data;
 
 namespace Softuni.Community.Data.Migrations
 {
     [DbContext(typeof(SuCDbContext))]
-    partial class SuCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181220135201_AddedProfilePicUrlProp_to_UserInfoTable")]
+    partial class AddedProfilePicUrlProp_to_UserInfoTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,6 +156,9 @@ namespace Softuni.Community.Data.Migrations
                     b.Property<int>("QuestionId");
 
                     b.Property<int>("Rating");
+
+                    b.Property<string>("Title")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

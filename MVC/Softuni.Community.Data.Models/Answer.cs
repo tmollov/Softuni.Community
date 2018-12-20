@@ -5,17 +5,23 @@ namespace Softuni.Community.Data.Models
 {
     public class Answer
     {
-        public int Id { get; set; }
+        public Answer(){}
+        public Answer(string content, CustomUser publisher, Question question)
+        {
+            this.Content = content;
+            this.Publisher = publisher;
+            this.Question = question;
+            this.PublishTime = DateTime.Now;
+        }
 
-        [Required]
-        public string Title { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Content { get; set; }
 
         public DateTime PublishTime { get; set; }
 
-        public int Rating { get; set; }  
+        public int Rating { get; set; }
 
         public string PublisherId { get; set; }
         public CustomUser Publisher { get; set; }

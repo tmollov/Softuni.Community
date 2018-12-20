@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Softuni.Community.Data;
 
 namespace Softuni.Community.Data.Migrations
 {
     [DbContext(typeof(SuCDbContext))]
-    partial class SuCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181220122406_DiscussionsModified_CustomUser")]
+    partial class DiscussionsModified_CustomUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,6 +157,9 @@ namespace Softuni.Community.Data.Migrations
 
                     b.Property<int>("Rating");
 
+                    b.Property<string>("Title")
+                        .IsRequired();
+
                     b.HasKey("Id");
 
                     b.HasIndex("PublisherId");
@@ -248,6 +253,19 @@ namespace Softuni.Community.Data.Migrations
                     b.ToTable("Questions");
                 });
 
+            modelBuilder.Entity("Softuni.Community.Data.Models.QuestionsTags", b =>
+                {
+                    b.Property<int>("TagId");
+
+                    b.Property<int>("QuestionId");
+
+                    b.HasKey("TagId", "QuestionId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("QuestionsTags");
+                });
+
             modelBuilder.Entity("Softuni.Community.Data.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -256,11 +274,7 @@ namespace Softuni.Community.Data.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int>("QuestionId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
 
                     b.ToTable("Tags");
                 });
@@ -281,8 +295,6 @@ namespace Softuni.Community.Data.Migrations
 
                     b.Property<string>("LastName")
                         .HasMaxLength(50);
-
-                    b.Property<string>("ProfilePictureUrl");
 
                     b.HasKey("Id");
 
@@ -368,11 +380,16 @@ namespace Softuni.Community.Data.Migrations
                         .HasForeignKey("PublisherId");
                 });
 
-            modelBuilder.Entity("Softuni.Community.Data.Models.Tag", b =>
+            modelBuilder.Entity("Softuni.Community.Data.Models.QuestionsTags", b =>
                 {
                     b.HasOne("Softuni.Community.Data.Models.Question", "Question")
                         .WithMany("Tags")
                         .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Softuni.Community.Data.Models.Tag", "Tag")
+                        .WithMany()
+                        .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

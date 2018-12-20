@@ -5,8 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Softuni.Community.Data\Softuni.Community.Data.csproj" />
     <ProjectReference Include="..\Softuni.Community.Services.Interfaces\Softuni.Community.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\Softuni.Community.Web.Models\Softuni.Community.Web.Models.csproj" />
   </ItemGroup>
 
 </Project>

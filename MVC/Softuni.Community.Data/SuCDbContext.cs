@@ -17,23 +17,17 @@ namespace Softuni.Community.Data
 
         public DbSet<Tag> Tags { get; set; }
 
-        public DbSet<Category> Categories { get; set; }
-
         public DbSet<Answer> Answers { get; set; }
 
         public DbSet<Question> Questions { get; set; }
 
-        public DbSet<QuestionsTags> QuestionsTags { get; set; }
-
-        public DbSet<QuestionsCategories> QuestionsCategories { get; set; }
+        //public DbSet<QuestionsTags> QuestionsTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new QuestionsTagsConfig());
+            //modelBuilder.ApplyConfiguration(new QuestionsTagsConfig());
 
             modelBuilder.ApplyConfiguration(new QuestionConfig());
-            
-            modelBuilder.ApplyConfiguration(new QuestionsCategoriesConfig());
             /* Adding default Identity model configurations
              * see more @ https://docs.microsoft.com/en-us/aspnet/core/security/authentication/customize-identity-model?view=aspnetcore-2.2
              */
@@ -72,6 +66,10 @@ namespace Softuni.Community.Data
 
                 // Each User can have many entries in the UserRole join table
                 b.HasMany<IdentityUserRole<string>>().WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
+
+                ////
+                b.HasMany(x => x.Answers).WithOne(x => x.Publisher).HasForeignKey(x => x.PublisherId);
+                b.HasMany(x => x.Questions).WithOne(x => x.Publisher).HasForeignKey(x => x.PublisherId);
             });
             modelBuilder.Entity<IdentityUserClaim<string>>(b =>
             {

@@ -1,0 +1,126 @@
+﻿@model Softuni.Community.Web.Models.ViewModels.QuestionDetailsViewModel
+@{
+    ViewData["Title"] = "Question Details";
+}
+
+<div class="w-75 mx-auto">
+    <!--Question-->
+    <div class="row border">
+        @if (User.Identity.Name != Model.Question.PublisherName)
+        {
+            <div class="col-1 my-auto">
+                <button class="ratingBtn ratingUp">
+                    <i class="fas fa-thumbs-up"></i>
+                </button>
+                <p class="p-0 m-0">@Model.Question.Rating</p>
+                <!--Add Green Red colours-->
+                <button class="ratingBtn ratingDown">
+                    <i class="fas fa-thumbs-down"></i>
+                </button>
+            </div>
+        }
+
+        <div class="col-10 m-0 pb-4 p-0">
+            <div class="w-50 mx-auto">
+                <h1 class="text-center">@Model.Question.Title</h1>
+                <hr class="line bg-dark" />
+            </div>
+            <div class="w-75 mx-auto text-center">
+                <h4 class="w-100">@Model.Question.Content</h4>
+            </div>
+        </div>
+        <div class="col-1 my-auto mx-auto m-0 p-0">
+            <div class="text-center my-auto">
+                @if (Model.Question.PublisherPicture != null)
+                {
+                    <img src="@Model.Question.PublisherPicture" width="50%" height="50%">
+                }
+                else
+                {
+                    <i class="fas fa-user-circle"></i>
+                }
+                <p>@Model.Question.PublisherName</p>
+            </div>
+        </div>
+        <div class="row border w-100 m-0 p-0 ">
+            <div class="col my-auto p-2 m-2 text-left">
+                <p class="my-auto">
+                    Tags:
+                    @foreach (var item in Model.Question.Tags)
+                    {
+                        <span>@item </span>
+                    }
+                </p>
+            </div>
+
+            <div class="col mr-auto text-right">
+                <p class="m-0">Category: @Model.Question.Category</p>
+                <p class="m-0 pb-0">Published On: @Model.Question.PublishTime.ToString("dd MMM yyyy / HH:MM")</p>
+            </div>
+
+        </div>
+    </div>
+    <!--Add Answer/Reply -->
+    <div class="row pt-3 p-0 text-center">
+        <div class="mx-auto">
+            <div class="border border-dark borderDiscussion">
+                <button id="addAnswerBtn" class="nav-link text-center addAnswerBtn">
+                    Add Answer
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="replyDiv" class="row border mt-3" style="display: none">
+        <form class="row w-100 m-0 p-0" method="post" asp-controller="Discussions" asp-action="AddAnswer">
+            <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
+            <label class="text-center"></label>
+            <textarea id="replyText" name="Content" class="col-11" row="100%" cols="100%" placeholder="Your answer here..."></textarea>
+            <div class="col-1 my-auto">
+                <button class="addAnswerBtn border border-secondary p-3" type="submit">Reply</button>
+            </div>
+        </form>
+    </div>
+    <!--Answers-->
+    @foreach (var answer in Model.Answers)
+    {
+        <div class="row border mt-3">
+            @if (User.Identity.Name != answer.PublisherName)
+            {
+                <div class="col-1 my-auto">
+                    <button class="ratingBtn ratingUp">
+                        <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <p class="p-0 m-0">@answer.Rating</p>
+                    <!--Add Green Red colours-->
+                    <button class="ratingBtn ratingDown">
+                        <i class="fas fa-thumbs-down"></i>
+                    </button>
+                </div>
+            }
+            <div class="col-10 m-0 p-0 my-auto">
+                <div class="mx-auto text-center">
+                    <h4 class="w-100">@answer.Content</h4>
+                </div>
+            </div>
+            <div class="col-1 my-auto mx-auto m-0 p-0">
+                <div class="text-center my-auto">
+                    @if (answer.PublisherPicture != null)
+                    {
+                        <img src="@answer.PublisherPicture" width="50%" height="50%">
+                    }
+                    else
+                    {
+                        <i class="fas fa-user-circle"></i>
+                    }
+                    <p>@answer.PublisherName</p>
+                </div>
+            </div>
+            <div class="row border w-100 m-0 p-0 ">
+                <div class="col mr-auto text-right">
+                    <p class="m-0 pb-0">Published On: @answer.PublishTime.ToString("dd MMM yyyy / HH:")</p>
+                </div>
+
+            </div>
+        </div>
+    }
+</div>

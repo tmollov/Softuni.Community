@@ -1,8 +1,63 @@
 ﻿body {
-    font-family: "Exo 2",sans-serif;
+    font-family: "Exo 2", sans-serif;
 }
 
 .borderDiscussion {
     border: 2px;
     border-radius: 5px;
+    border-color: black;
+}
+
+.myHover:hover {
+    color: white;
+    background-color: black;
+    cursor: pointer;
+    text-decoration: none;
+}
+.myHover:hover a {
+    color: white;
+}
+
+.line {
+    height: 4px;
+}
+
+.ProfilePictureSmall {
+    border-radius: 25%;
+}
+
+a {
+    color: black;
+}
+.ratingBtn{
+    border: none;
+    background: none;
+}
+.ratingBtn:hover{
+    cursor: pointer;
+}
+
+.ratingDown:hover{
+    color: red;
+}
+
+.ratingUp:hover{
+    color: green;
+}
+
+#addAnswerDiv{
+    display: none;
+}
+
+.addAnswerBtn {
+    color: black;
+    background: none;
+    border-style: none;
+}
+.addAnswerBtn:hover {
+    color: white;
+    background: none;
+    background-color: black;
+    border-style: none;
+    cursor: pointer;
 }
