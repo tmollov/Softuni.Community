@@ -61,3 +61,23 @@ a {
     border-style: none;
     cursor: pointer;
 }
+
+.publishTimeAnswer {
+    display:inline;
+}
+
+#replyText {
+    resize: none;
+}
+
+.liked{
+    color: green;
+}
+
+.disliked{
+    color: red;
+}
+
+.neutral{
+    color: black;
+}

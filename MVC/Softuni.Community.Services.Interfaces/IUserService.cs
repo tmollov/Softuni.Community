@@ -8,5 +8,6 @@ namespace Softuni.Community.Services.Interfaces
         UserInfo AddUserInfo(UserInfo userInfo);
         UserInfo UpdateUserInfo(string username, UserInfo userInfo);
         CustomUser GetUserByUserName(string username);
+        string GetUserId(string username);
     }
 }

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Softuni.Community.Services.Interfaces;
@@ -29,6 +30,21 @@ namespace Softuni.Community.Web.Controllers
 
             return View(viewModel);
         }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult DeleteAnswer(DeleteAnswerBindingModel bindingModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var answer = discussService.DeleteAnswer(bindingModel.AnswerId, bindingModel.QuestionId);
+                if (answer == null)
+                {
+                    throw new Exception("Answer didnt found");
+                }
+            }
+            return Redirect($"/Discussions/QuestionDetails/{bindingModel.QuestionId}");
+        }
         
         [Authorize]
         [HttpPost]
@@ -37,9 +53,11 @@ namespace Softuni.Community.Web.Controllers
             if (ModelState.IsValid)
             {
                 var answer = discussService.AddAnswer(bindingModel.Content,User.Identity.Name,bindingModel.QuestionId);
-
+                if (answer == null)
+                {
+                    throw new Exception("Cannot add answer");
+                }
             }
-
             return Redirect($"/Discussions/QuestionDetails/{bindingModel.QuestionId}");
         }
 
@@ -48,12 +66,20 @@ namespace Softuni.Community.Web.Controllers
         {
             var questionViewModel = discussService.GetQuestionViewModel(id);
             var answersViewModels = discussService.GetAnswersViewModels(id);
-
-            return this.View(new QuestionDetailsViewModel()
+            var isUserLikeQuestion = discussService.IsUserLikesQuestion(User.Identity.Name);
+            var isUserDisLikeQuestion = discussService.IsUserLikesQuestion(User.Identity.Name);
+            var userLikedAnswers = discussService.GetUserLikedAnswersIdList(User.Identity.Name);
+            var userDisLikedAnswers = discussService.GetUserDisLikedAnswersIdList(User.Identity.Name);
+            var res = new QuestionDetailsViewModel()
             {
                 Question = questionViewModel,
-                Answers = answersViewModels
-            });
+                Answers = answersViewModels,
+                IsUserLikeQuestion = isUserLikeQuestion,
+                IsUserDIsLikeQuestion = isUserDisLikeQuestion,
+                ListOfLikedAnswers = userLikedAnswers,
+                ListOfDisLikedAnswers = userDisLikedAnswers
+            };
+            return this.View(res);
         }
 
         [Authorize]

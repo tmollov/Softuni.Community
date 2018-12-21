@@ -62,6 +62,10 @@ namespace Softuni.Community.Web
             services.AddAuthentication();
 
 
+            //Addding CORS
+            services.AddCors();
+            
+
             // Adding AutoMapper
             var mappingConfig = new MapperConfiguration(mc =>
             {
@@ -103,8 +107,19 @@ namespace Softuni.Community.Web
 
             app.UseAuthentication();
 
+            // Using CORS
+            app.UseCors(builder =>
+                builder.AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .AllowAnyOrigin()
+            );
+
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                    name: "api",
+                    template: "api/[controller]"
+                );
                 routes.MapRoute(
                     name: "areas",
                     template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"

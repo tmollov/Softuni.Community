@@ -9,13 +9,28 @@
         @if (User.Identity.Name != Model.Question.PublisherName)
         {
             <div class="col-1 my-auto">
+
                 <button class="ratingBtn ratingUp">
-                    <i class="fas fa-thumbs-up"></i>
+                    @if (Model.IsUserLikeQuestion)
+                    {
+                        <i class="fas fa-thumbs-up liked"></i>
+                    }
+                    else
+                    {
+                        <i class="fas fa-thumbs-up"></i>
+                    }
                 </button>
                 <p class="p-0 m-0">@Model.Question.Rating</p>
                 <!--Add Green Red colours-->
                 <button class="ratingBtn ratingDown">
-                    <i class="fas fa-thumbs-down"></i>
+                    @if (Model.IsUserDIsLikeQuestion)
+                    {
+                        <i class="fas fa-thumbs-down disliked"></i>
+                    }
+                    else
+                    {
+                        <i class="fas fa-thumbs-down"></i>
+                    }
                 </button>
             </div>
         }
@@ -70,11 +85,11 @@
             </div>
         </div>
     </div>
-    <div id="replyDiv" class="row border mt-3" style="display: none">
+    <div id="replyDiv" class="row mt-3" style="display: none">
         <form class="row w-100 m-0 p-0" method="post" asp-controller="Discussions" asp-action="AddAnswer">
             <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
-            <label class="text-center"></label>
-            <textarea id="replyText" name="Content" class="col-11" row="100%" cols="100%" placeholder="Your answer here..."></textarea>
+            <textarea id="replyText" class="col-11 text-center" name="Content" row="100%" cols="100%" maxlength="250" placeholder="Your answer here..."></textarea>
+
             <div class="col-1 my-auto">
                 <button class="addAnswerBtn border border-secondary p-3" type="submit">Reply</button>
             </div>
@@ -84,43 +99,77 @@
     @foreach (var answer in Model.Answers)
     {
         <div class="row border mt-3">
+
             @if (User.Identity.Name != answer.PublisherName)
             {
                 <div class="col-1 my-auto">
-                    <button class="ratingBtn ratingUp">
-                        <i class="fas fa-thumbs-up"></i>
+                    <button class="ratingBtn ratingUp" onclick="LikeAnswer(this)">
+                        @if (Model.ListOfLikedAnswers.Contains(answer.AnswerId))
+                        {
+                            <i class="fas fa-thumbs-up liked"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-thumbs-up"></i>
+                        }
                     </button>
                     <p class="p-0 m-0">@answer.Rating</p>
+                    <input type="text" name="AnswerId" value="@answer.AnswerId" hidden />
                     <!--Add Green Red colours-->
-                    <button class="ratingBtn ratingDown">
-                        <i class="fas fa-thumbs-down"></i>
+                    <button class="ratingBtn ratingDown" onclick="DislikeAnswer(this)">
+                        @if (Model.ListOfDisLikedAnswers.Contains(answer.AnswerId))
+                        {
+                            <i class="fas fa-thumbs-down disliked"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-thumbs-down"></i>
+                        }
                     </button>
                 </div>
+
             }
-            <div class="col-10 m-0 p-0 my-auto">
+            else
+            {
+                <div class="col-1 m-0 p-0 my-auto">
+                    <form class="col-1 my-auto" method="post" asp-controller="Discussions" asp-action="DeleteAnswer">
+                        <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
+                        <input type="text" name="AnswerId" value="@answer.AnswerId" hidden />
+                        <div class="my-auto">
+                            <button class="addAnswerBtn border border-secondary p-3" type="submit">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            }
+
+            <div class="col-9 m-0 p-0 my-auto">
                 <div class="mx-auto text-center">
-                    <h4 class="w-100">@answer.Content</h4>
+                    <h4 class="w-100 pl-3 pr-3">@answer.Content</h4>
                 </div>
             </div>
-            <div class="col-1 my-auto mx-auto m-0 p-0">
+
+            <div class="col-2 border-left my-auto mx-auto m-0 p-0">
                 <div class="text-center my-auto">
                     @if (answer.PublisherPicture != null)
                     {
-                        <img src="@answer.PublisherPicture" width="50%" height="50%">
+                        <img class="m-0 p-0" src="@answer.PublisherPicture" width="50%" height="50%">
                     }
                     else
                     {
                         <i class="fas fa-user-circle"></i>
                     }
-                    <p>@answer.PublisherName</p>
+                    <p class="m-0 p-0">@answer.PublisherName</p>
+                </div>
+                <div class="m-0 p-0">
+                    <div class="text-right">
+                        <p class="border-top m-0 pb-0 pr-1 publishTimeAnswer">Published On: @answer.PublishTime.ToString("dd MMM yyyy / HH:mm")</p>
+                    </div>
                 </div>
             </div>
-            <div class="row border w-100 m-0 p-0 ">
-                <div class="col mr-auto text-right">
-                    <p class="m-0 pb-0">Published On: @answer.PublishTime.ToString("dd MMM yyyy / HH:")</p>
-                </div>
 
-            </div>
         </div>
     }
+    <div class="row mt-3">
+
+    </div>
 </div>

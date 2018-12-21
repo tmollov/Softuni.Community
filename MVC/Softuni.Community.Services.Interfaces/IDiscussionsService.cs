@@ -7,6 +7,14 @@ namespace Softuni.Community.Services.Interfaces
 {
     public interface IDiscussionsService
     {
+        IList<int> GetUserLikedAnswersIdList(string username);
+        IList<int> GetUserDisLikedAnswersIdList(string username);
+
+        bool IsUserDisLikesQuestion(string username);
+        bool IsUserLikesQuestion(string username);
+
+        Answer RateAnswer(AnswerRatingBindingModel model);
+        Answer DeleteAnswer(int AnswerId, int QuestionId);
         ICollection<AnswerViewModel> GetAnswersViewModels(int id);
         QuestionViewModel GetQuestionViewModel(int id);
         ICollection<QuestionViewModel> GetQuestionViewModels();

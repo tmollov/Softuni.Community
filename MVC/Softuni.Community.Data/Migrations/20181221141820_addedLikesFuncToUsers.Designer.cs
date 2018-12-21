@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Softuni.Community.Data;
 
 namespace Softuni.Community.Data.Migrations
 {
     [DbContext(typeof(SuCDbContext))]
-    partial class SuCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181221141820_addedLikesFuncToUsers")]
+    partial class addedLikesFuncToUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -265,23 +267,6 @@ namespace Softuni.Community.Data.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("Softuni.Community.Data.Models.UserAnswerDisLikes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AnswerId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersAnswerDislikes");
-                });
-
             modelBuilder.Entity("Softuni.Community.Data.Models.UserAnswerLikes", b =>
                 {
                     b.Property<int>("Id")
@@ -290,13 +275,9 @@ namespace Softuni.Community.Data.Migrations
 
                     b.Property<int>("AnswerId");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersAnswerLikes");
+                    b.ToTable("UserAnswerLikes");
                 });
 
             modelBuilder.Entity("Softuni.Community.Data.Models.UserInfo", b =>
@@ -323,23 +304,6 @@ namespace Softuni.Community.Data.Migrations
                     b.ToTable("UserInfos");
                 });
 
-            modelBuilder.Entity("Softuni.Community.Data.Models.UserQuestionDisLikes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("QuestionId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersQuestionDislikes");
-                });
-
             modelBuilder.Entity("Softuni.Community.Data.Models.UserQuestionLikes", b =>
                 {
                     b.Property<int>("Id")
@@ -348,13 +312,9 @@ namespace Softuni.Community.Data.Migrations
 
                     b.Property<int>("QuestionId");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersQuestionLikes");
+                    b.ToTable("UserQuestionLikes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -442,34 +402,6 @@ namespace Softuni.Community.Data.Migrations
                         .WithMany("Tags")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Softuni.Community.Data.Models.UserAnswerDisLikes", b =>
-                {
-                    b.HasOne("Softuni.Community.Data.Models.CustomUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Softuni.Community.Data.Models.UserAnswerLikes", b =>
-                {
-                    b.HasOne("Softuni.Community.Data.Models.CustomUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Softuni.Community.Data.Models.UserQuestionDisLikes", b =>
-                {
-                    b.HasOne("Softuni.Community.Data.Models.CustomUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Softuni.Community.Data.Models.UserQuestionLikes", b =>
-                {
-                    b.HasOne("Softuni.Community.Data.Models.CustomUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

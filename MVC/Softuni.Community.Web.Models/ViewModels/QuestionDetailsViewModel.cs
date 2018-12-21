@@ -7,5 +7,13 @@ namespace Softuni.Community.Web.Models.ViewModels
         public QuestionViewModel Question { get; set; }
 
         public ICollection<AnswerViewModel> Answers { get; set; }
+
+        public bool IsUserLikeQuestion { get; set; }
+
+        public bool IsUserDIsLikeQuestion { get; set; }
+
+        public IList<int> ListOfLikedAnswers { get; set; }
+
+        public IList<int> ListOfDisLikedAnswers { get; set; }
     }
 }

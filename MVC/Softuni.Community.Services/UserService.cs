@@ -53,5 +53,10 @@ namespace Softuni.Community.Services
         {
             return this.userMgr.FindByNameAsync(username).Result;
         }
+
+        public string GetUserId(string username)
+        {
+            return this.userMgr.FindByNameAsync(username).Result.Id;
+        }
     }
 }

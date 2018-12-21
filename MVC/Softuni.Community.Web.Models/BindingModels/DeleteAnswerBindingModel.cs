@@ -2,14 +2,12 @@
 
 namespace Softuni.Community.Web.Models.BindingModels
 {
-    public class AnswerBindingModel
+    public class DeleteAnswerBindingModel
     {
         [Required]
-        [DataType(DataType.MultilineText)]
         public int QuestionId { get; set; }
 
         [Required]
-        [DataType(DataType.MultilineText)]
-        public string Content { get; set; }
+        public int AnswerId { get; set; }
     }
 }

@@ -24,7 +24,70 @@ namespace Softuni.Community.Services
             this.userService = userService;
         }
 
-        
+        public bool IsUserLikedAnswer(int answerId, string username)
+        {
+            return this.context.UsersAnswerLikes.Any(x => x.User.UserName == username && x.AnswerId == answerId);
+        }
+        public bool IsUserDisLikedAnswer(int answerId, string username)
+        {
+            return this.context.UsersAnswerDislikes.Any(x => x.User.UserName == username && x.AnswerId == answerId);
+        }
+
+        public Answer RateAnswer(AnswerRatingBindingModel model)
+        {
+            var answer = this.context.Answers.FirstOrDefault(x => x.Id == model.AnswerId);
+            var user = userService.GetUserByUserName(model.Username);
+            
+            if (model.Rating == 1)
+            {
+                if (!IsUserLikedAnswer(model.AnswerId,model.Username))
+                {
+                    var Answer = new UserAnswerLikes(answer.Id,user);
+                    this.context.UsersAnswerLikes.Add(Answer);
+                    if (IsUserDisLikedAnswer(model.AnswerId,model.Username))
+                    {
+                        var dislikedAnswer = this.context.UsersAnswerDislikes.FirstOrDefault(x=>x.User.UserName == model.Username && x.AnswerId== model.AnswerId);
+                        this.context.UsersAnswerDislikes.Remove(dislikedAnswer);
+                        this.context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                if (!IsUserDisLikedAnswer(model.AnswerId, model.Username))
+                {
+                    var Answer = new UserAnswerDisLikes(answer.Id,user);
+                    this.context.UsersAnswerDislikes.Add(Answer);
+
+                    if (IsUserLikedAnswer(model.AnswerId,model.Username))
+                    {
+                        var likedAnswer = this.context.UsersAnswerLikes.FirstOrDefault(x=>x.User.UserName == model.Username && x.AnswerId== model.AnswerId);
+                        this.context.UsersAnswerLikes.Remove(likedAnswer);
+                        this.context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+           
+            answer.Rating += model.Rating;
+            this.context.SaveChanges();
+            return answer;
+        }
+
+        public Answer DeleteAnswer(int AnswerId, int QuestionId)
+        {
+            var answer = this.context.Answers.FirstOrDefault(x => x.Id == AnswerId && x.QuestionId == QuestionId);
+            this.context.Answers.Remove(answer);
+            this.context.SaveChanges();
+            return answer;
+        }
 
         public ICollection<AnswerViewModel> GetAnswersViewModels(int id)
         {
@@ -98,6 +161,30 @@ namespace Softuni.Community.Services
             question.Tags = tags;
             this.context.SaveChanges();
             return question;
+        }
+
+        public bool IsUserLikesQuestion(string username)
+        {
+            var userId = userService.GetUserId(username);
+            return this.context.UsersQuestionLikes.Any(x => x.UserId == userId);
+        }
+
+        public bool IsUserDisLikesQuestion(string username)
+        {
+            var userId = userService.GetUserId(username);
+            return this.context.UsersQuestionDislikes.Any(x => x.UserId == userId);
+        }
+
+        public IList<int> GetUserLikedAnswersIdList(string username)
+        {
+            return this.context.UsersAnswerLikes.Include(x => x.User)
+                .Where(x => x.User.UserName == username).Select(x=>x.AnswerId).ToList();
+        }
+
+        public IList<int> GetUserDisLikedAnswersIdList(string username)
+        {
+            return this.context.UsersAnswerDislikes.Include(x => x.User)
+                .Where(x => x.User.UserName == username).Select(x=>x.AnswerId).ToList();
         }
     }
 }
