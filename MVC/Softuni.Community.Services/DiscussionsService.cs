@@ -24,11 +24,11 @@ namespace Softuni.Community.Services
             this.userService = userService;
         }
 
-        public bool IsUserLikedAnswer(int answerId, string username)
+        private bool IsUserLikedAnswer(int answerId, string username)
         {
             return this.context.UsersAnswerLikes.Any(x => x.User.UserName == username && x.AnswerId == answerId);
         }
-        public bool IsUserDisLikedAnswer(int answerId, string username)
+        private bool IsUserDisLikedAnswer(int answerId, string username)
         {
             return this.context.UsersAnswerDislikes.Any(x => x.User.UserName == username && x.AnswerId == answerId);
         }
@@ -79,6 +79,69 @@ namespace Softuni.Community.Services
             answer.Rating += model.Rating;
             this.context.SaveChanges();
             return answer;
+        }
+
+        public Question RateQuestion(QuestionRatingBindingModel model)
+        {
+            var user = userService.GetUserByUserName(model.Username);
+            
+            if (model.Rating == 1)
+            {
+                if (!IsUserLikedQuestion(model.QuestionId,model.Username))
+                {
+                    var Question = new UserQuestionLikes(model.QuestionId,user);
+                    this.context.UsersQuestionLikes.Add(Question);
+                    if (IsUserDisLikedQuestion(model.QuestionId,model.Username))
+                    {
+                        var dislikedQuestion = this.context.UsersQuestionDislikes
+                            .FirstOrDefault(x=>x.User.UserName == model.Username && x.QuestionId== model.QuestionId);
+                        this.context.UsersQuestionDislikes.Remove(dislikedQuestion);
+                        this.context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                if (!IsUserDisLikedQuestion(model.QuestionId, model.Username))
+                {
+                    var Question = new UserQuestionDisLikes(model.QuestionId,user);
+                    this.context.UsersQuestionDislikes.Add(Question);
+
+                    if (IsUserLikedQuestion(model.QuestionId,model.Username))
+                    {
+                        var likedQuestion = this.context.UsersQuestionLikes
+                            .FirstOrDefault(x=>x.User.UserName == model.Username && x.QuestionId == model.QuestionId);
+                        this.context.UsersQuestionLikes.Remove(likedQuestion);
+                        this.context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+           
+            var question = this.context.Questions.FirstOrDefault(x => x.Id == model.QuestionId);
+            question.Rating += model.Rating;
+            this.context.SaveChanges();
+            return question;
+        }
+
+        private bool IsUserDisLikedQuestion(int questionId, string username)
+        {
+            return this.context.UsersQuestionDislikes
+                .Include(x=>x.User)
+                .Any(x => x.User.UserName == username && x.QuestionId == questionId);
+        }
+        private bool IsUserLikedQuestion(int questionId, string username)
+        {
+            return this.context.UsersQuestionLikes
+                .Include(x=>x.User)
+                .Any(x => x.User.UserName == username && x.QuestionId == questionId);
         }
 
         public Answer DeleteAnswer(int AnswerId, int QuestionId)

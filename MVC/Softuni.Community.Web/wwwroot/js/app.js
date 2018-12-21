@@ -1,4 +1,5 @@
-﻿let postUrl = "https://localhost:5001/api/answers/";
+﻿let answersBase = "https://localhost:5001/api/answers/";
+let questionsBase = "https://localhost:5001/api/questions/";
 
 (() => {
     let clicked = false;
@@ -28,7 +29,7 @@ function LikeAnswer(e) {
 
         $.ajax({
             method: "POST",
-            url: postUrl,
+            url: answersBase,
             contentType: "application/json",
             data: JSON.stringify({ Rating: 1, AnswerId: answerId, Username: username })
         }).then(function (res) {
@@ -53,7 +54,7 @@ function DislikeAnswer(e) {
         let iconDown = $(e).parent().find(".ratingDown i");
         $.ajax({
             method: "POST",
-            url: postUrl,
+            url: answersBase,
             contentType: "application/json",
             data: JSON.stringify({ Rating: -1, AnswerId: answerId, Username: username })
         }).then(function (res) {
@@ -68,23 +69,24 @@ function DislikeAnswer(e) {
 }
 
 function LikeQuestion(e) {
-    if ($(e).css("color") == "green") {
+    if ($(e).css("color") == "red") {
         return;
     } else {
         let currentRating = $(e).parent().find("p");
-        let answerId = $(e).parent().find("input").val();
+        let questionId = $(e).parent().find("input").val();
         let username = $("#Username").text();
-
+        let iconUp = $(e).parent().find(".ratingUp i");
+        let iconDown = $(e).parent().find(".ratingDown i");
         $.ajax({
             method: "POST",
-            url: postUrl,
+            url: questionsBase,
             contentType: "application/json",
-            data: JSON.stringify({ Rating: 1, AnswerId: answerId, Username: username })
+            data: JSON.stringify({ Rating: 1, QuestionId: questionId, Username: username })
         }).then(function (res) {
             let updatedRating = Number(currentRating.text())+1;
             currentRating.text(updatedRating);
-            $(e).css("color", "green");
-            $(".ratingDown").css("color", "black");
+            iconUp.removeClass("neutral").addClass("liked");
+            iconDown.removeClass("disliked").addClass("neutral");
         }).catch(function (res) {
             console.log(res);
         })
@@ -96,19 +98,20 @@ function DislikeQuestion(e) {
         return;
     } else {
         let currentRating = $(e).parent().find("p");
-        let answerId = $(e).parent().find("input").val();
+        let questionId = $(e).parent().find("input").val();
         let username = $("#Username").text();
-
+        let iconUp = $(e).parent().find(".ratingUp i");
+        let iconDown = $(e).parent().find(".ratingDown i");
         $.ajax({
             method: "POST",
-            url: postUrl,
+            url: questionsBase,
             contentType: "application/json",
-            data: JSON.stringify({ Rating: -1, AnswerId: answerId, Username: username })
+            data: JSON.stringify({ Rating: -1, QuestionId: questionId, Username: username })
         }).then(function (res) {
             let updatedRating = Number(currentRating.text())-1;
             currentRating.text(updatedRating);
-            $(e).css("color","red");
-            $(".ratingUp").css("color", "black");
+            iconUp.removeClass("liked").addClass("neutral");
+            iconDown.removeClass("neutral").addClass("disliked");
         }).catch(function (res) {
             console.log(res);
         })

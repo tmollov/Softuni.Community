@@ -14,6 +14,7 @@ namespace Softuni.Community.Services.Interfaces
         bool IsUserLikesQuestion(string username);
 
         Answer RateAnswer(AnswerRatingBindingModel model);
+        Question RateQuestion(QuestionRatingBindingModel model);
         Answer DeleteAnswer(int AnswerId, int QuestionId);
         ICollection<AnswerViewModel> GetAnswersViewModels(int id);
         QuestionViewModel GetQuestionViewModel(int id);

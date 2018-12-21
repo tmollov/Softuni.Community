@@ -67,7 +67,7 @@ namespace Softuni.Community.Web.Controllers
             var questionViewModel = discussService.GetQuestionViewModel(id);
             var answersViewModels = discussService.GetAnswersViewModels(id);
             var isUserLikeQuestion = discussService.IsUserLikesQuestion(User.Identity.Name);
-            var isUserDisLikeQuestion = discussService.IsUserLikesQuestion(User.Identity.Name);
+            var isUserDisLikeQuestion = discussService.IsUserDisLikesQuestion(User.Identity.Name);
             var userLikedAnswers = discussService.GetUserLikedAnswersIdList(User.Identity.Name);
             var userDisLikedAnswers = discussService.GetUserDisLikedAnswersIdList(User.Identity.Name);
             var res = new QuestionDetailsViewModel()

@@ -9,8 +9,8 @@
         @if (User.Identity.Name != Model.Question.PublisherName)
         {
             <div class="col-1 my-auto">
-
-                <button class="ratingBtn ratingUp">
+                <input type="text" value="@Model.Question.QuestionId" hidden />
+                <button class="ratingBtn ratingUp" onclick="LikeQuestion(this)">
                     @if (Model.IsUserLikeQuestion)
                     {
                         <i class="fas fa-thumbs-up liked"></i>
@@ -22,7 +22,7 @@
                 </button>
                 <p class="p-0 m-0">@Model.Question.Rating</p>
                 <!--Add Green Red colours-->
-                <button class="ratingBtn ratingDown">
+                <button class="ratingBtn ratingDown" onclick="DislikeQuestion(this)">
                     @if (Model.IsUserDIsLikeQuestion)
                     {
                         <i class="fas fa-thumbs-down disliked"></i>
@@ -63,7 +63,7 @@
                     Tags:
                     @foreach (var item in Model.Question.Tags)
                     {
-                        <span>@item </span>
+                        <span>@item /</span>
                     }
                 </p>
             </div>
