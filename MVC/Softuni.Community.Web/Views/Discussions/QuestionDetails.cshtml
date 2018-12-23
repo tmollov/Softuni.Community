@@ -21,9 +21,8 @@
                     }
                 </button>
                 <p class="p-0 m-0">@Model.Question.Rating</p>
-                <!--Add Green Red colours-->
                 <button class="ratingBtn ratingDown" onclick="DislikeQuestion(this)">
-                    @if (Model.IsUserDIsLikeQuestion)
+                    @if (Model.IsUserDisLikeQuestion)
                     {
                         <i class="fas fa-thumbs-down disliked"></i>
                     }

@@ -10,7 +10,7 @@ namespace Softuni.Community.Web.Models.ViewModels
 
         public bool IsUserLikeQuestion { get; set; }
 
-        public bool IsUserDIsLikeQuestion { get; set; }
+        public bool IsUserDisLikeQuestion { get; set; }
 
         public IList<int> ListOfLikedAnswers { get; set; }
 

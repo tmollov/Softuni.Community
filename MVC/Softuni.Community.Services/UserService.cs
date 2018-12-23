@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Microsoft.AspNetCore.Identity;
 using Softuni.Community.Data;
 using Softuni.Community.Data.Models;
 using Softuni.Community.Services.Interfaces;
@@ -9,14 +8,12 @@ namespace Softuni.Community.Services
     public class UserService : IUserService
     {
         private readonly SuCDbContext context;
-        private readonly UserManager<CustomUser> userMgr;
-
-        public UserService(SuCDbContext context,UserManager<CustomUser> userMgr)
+        public UserService(SuCDbContext context)
         {
             this.context = context;
-            this.userMgr = userMgr;
         }
 
+        //Tested
         public UserInfo AddUserInfo(UserInfo userInfo)
         {
             this.context.UserInfos.Add(userInfo);
@@ -24,39 +21,24 @@ namespace Softuni.Community.Services
             return userInfo;
         }
 
+        //Tested
         public bool IsFirstUser()
         {
             return context.Users.Count() == 1;
         }
 
-        public UserInfo UpdateUserInfo(string username, UserInfo newUserInfo)
+        public UserInfo UpdateUserInfo(CustomUser user, UserInfo newUserInfo)
         {
-            CustomUser user = userMgr.FindByNameAsync(username).Result;
-            if (user != null)
-            {
-                var userInfo = this.context.UserInfos.FirstOrDefault(x => x.Id == user.UserInfoId);
-                userInfo.FirstName = newUserInfo.FirstName;
-                userInfo.LastName = newUserInfo.LastName;
-                userInfo.BirthDate = newUserInfo.BirthDate;
-                userInfo.AboutMe = newUserInfo.AboutMe;
-                this.context.SaveChanges();
-                
-                // Return same entity if process is succesfull
-                return newUserInfo;
-            }
+            var userInfo = this.context.UserInfos.FirstOrDefault(x => x.Id == user.UserInfoId);
+            userInfo.FirstName = newUserInfo.FirstName;
+            userInfo.LastName = newUserInfo.LastName;
+            userInfo.BirthDate = newUserInfo.BirthDate;
+            userInfo.AboutMe = newUserInfo.AboutMe;
+            userInfo.ProfilePictureUrl = newUserInfo.ProfilePictureUrl;
+            this.context.SaveChanges();
 
-            // Return null if process is failed
-            return null;
-        }
-
-        public CustomUser GetUserByUserName(string username)
-        {
-            return this.userMgr.FindByNameAsync(username).Result;
-        }
-
-        public string GetUserId(string username)
-        {
-            return this.userMgr.FindByNameAsync(username).Result.Id;
+            // Return update entity if process is succesfull
+            return userInfo;
         }
     }
 }

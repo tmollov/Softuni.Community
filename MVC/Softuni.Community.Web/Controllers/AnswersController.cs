@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Softuni.Community.Data.Models;
 using Softuni.Community.Services.Interfaces;
 using Softuni.Community.Web.Models.BindingModels;
 
@@ -8,10 +10,12 @@ namespace Softuni.Community.Web.Controllers
     public class AnswersController : ApiController
     {
         private readonly IDiscussionsService discussionsService;
+        private readonly UserManager<CustomUser> userMgr;
 
-        public AnswersController(IDiscussionsService discussionsService)
+        public AnswersController(IDiscussionsService discussionsService, UserManager<CustomUser> userMgr)
         {
             this.discussionsService = discussionsService;
+            this.userMgr = userMgr;
         }
 
         // Like 
@@ -21,7 +25,8 @@ namespace Softuni.Community.Web.Controllers
         [ProducesDefaultResponseType]
         public ActionResult<AnswerRatingBindingModel> Post(AnswerRatingBindingModel bindingModel)
         {
-            var answer = discussionsService.RateAnswer(bindingModel);
+            var user = userMgr.FindByNameAsync(bindingModel.Username).Result;
+            var answer = discussionsService.RateAnswer(bindingModel,user);
             if (answer == null)
             {
                 return NotFound();

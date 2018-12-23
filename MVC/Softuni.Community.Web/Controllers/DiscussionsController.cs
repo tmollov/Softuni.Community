@@ -1,7 +1,9 @@
 ﻿using System;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Softuni.Community.Data.Models;
 using Softuni.Community.Services.Interfaces;
 using Softuni.Community.Web.Common;
 using Softuni.Community.Web.Models.BindingModels;
@@ -13,13 +15,13 @@ namespace Softuni.Community.Web.Controllers
     {
         private readonly IDiscussionsService discussService;
         private readonly IMapper mapper;
-        private readonly IUserService userService;
+        private readonly UserManager<CustomUser> userMgr;
 
-        public DiscussionsController(IDiscussionsService discussService, IMapper mapper, IUserService userService)
+        public DiscussionsController(IDiscussionsService discussService, IMapper mapper, UserManager<CustomUser> userMgr)
         {
             this.discussService = discussService;
             this.mapper = mapper;
-            this.userService = userService;
+            this.userMgr = userMgr;
         }
 
         [AllowAnonymous]
@@ -52,7 +54,8 @@ namespace Softuni.Community.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var answer = discussService.AddAnswer(bindingModel.Content,User.Identity.Name,bindingModel.QuestionId);
+                var user = userMgr.FindByNameAsync(User.Identity.Name).Result;
+                var answer = discussService.AddAnswer(bindingModel.Content,user,bindingModel.QuestionId);
                 if (answer == null)
                 {
                     throw new Exception("Cannot add answer");
@@ -66,8 +69,8 @@ namespace Softuni.Community.Web.Controllers
         {
             var questionViewModel = discussService.GetQuestionViewModel(id);
             var answersViewModels = discussService.GetAnswersViewModels(id);
-            var isUserLikeQuestion = discussService.IsUserLikesQuestion(User.Identity.Name);
-            var isUserDisLikeQuestion = discussService.IsUserDisLikesQuestion(User.Identity.Name);
+            var isUserLikeQuestion = discussService.IsUserLikedQuestion(questionViewModel.QuestionId,User.Identity.Name);
+            var isUserDisLikeQuestion = discussService.IsUserDisLikedQuestion(questionViewModel.QuestionId,User.Identity.Name);
             var userLikedAnswers = discussService.GetUserLikedAnswersIdList(User.Identity.Name);
             var userDisLikedAnswers = discussService.GetUserDisLikedAnswersIdList(User.Identity.Name);
             var res = new QuestionDetailsViewModel()
@@ -75,7 +78,7 @@ namespace Softuni.Community.Web.Controllers
                 Question = questionViewModel,
                 Answers = answersViewModels,
                 IsUserLikeQuestion = isUserLikeQuestion,
-                IsUserDIsLikeQuestion = isUserDisLikeQuestion,
+                IsUserDisLikeQuestion = isUserDisLikeQuestion,
                 ListOfLikedAnswers = userLikedAnswers,
                 ListOfDisLikedAnswers = userDisLikedAnswers
             };
@@ -94,7 +97,8 @@ namespace Softuni.Community.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                discussService.AddQuestion(bindingModel, User.Identity.Name);
+                var user = userMgr.FindByNameAsync(User.Identity.Name).Result;
+                discussService.AddQuestion(bindingModel, user);
                 return RedirectToAction(ActionsConts.AllDiscussions, ControllersConts.Discussions);
             }
             return View(bindingModel);

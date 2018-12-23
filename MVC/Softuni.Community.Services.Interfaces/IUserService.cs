@@ -6,8 +6,6 @@ namespace Softuni.Community.Services.Interfaces
     {
         bool IsFirstUser();
         UserInfo AddUserInfo(UserInfo userInfo);
-        UserInfo UpdateUserInfo(string username, UserInfo userInfo);
-        CustomUser GetUserByUserName(string username);
-        string GetUserId(string username);
+        UserInfo UpdateUserInfo(CustomUser user, UserInfo userInfo);
     }
 }

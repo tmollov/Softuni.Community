@@ -137,7 +137,11 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             if (ModelState.IsValid)
             {
                 var userInfo = mapper.Map<UserInfo>(bindingModel);
-                var result = userService.UpdateUserInfo(User.Identity.Name, userInfo);
+                var result = userService
+                    .UpdateUserInfo(
+                        userManager.FindByNameAsync(User.Identity.Name).Result,
+                        userInfo
+                        );
                 if (result != null)
                 {
                     return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
