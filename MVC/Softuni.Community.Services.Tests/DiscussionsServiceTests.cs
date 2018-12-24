@@ -361,31 +361,10 @@ namespace Softuni.Community.Services.Tests
             //Assert
             Assert.True(deletedAnswer == null);
         }
-        [Fact]
-        public void IsUserLikedAnswer_Must_Return_True_If_User_Liked_Given_Answer()
-        {
-            // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
-            var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
-            var testQBM = GetTestQuestionBM();
-            
-            //Act
-            db.Users.Add(testUser);
-            db.SaveChanges();
-            var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
-            var content = "Test Answer";
-            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
-            var testAnswerRatingBM = GetTestAnswerRatingBMRatingUp(answer,testUser);
-            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM,testUser);
-            //Assert
-            Assert.True(ratedAnswer != null);
-            Assert.True(ratedAnswer.Rating == 1);
-            Assert.True(ratedAnswer.QuestionId == addedQuestion.Id);
-            Assert.True(ratedAnswer.PublisherId == testUser.Id);
-            Assert.True(ratedAnswer.Content == answer.Content);
-        }
+        
+        /// <summary>
+        /// Like / Dislike addition function Tests
+        /// </summary>
         [Fact]
         public void GetUserLikedAnswersIdList_Must_Return_User_Liked_Answers_Ids_In_List()
         {
@@ -494,6 +473,165 @@ namespace Softuni.Community.Services.Tests
             //Assert
             Assert.True(userLikedAnswers.Count == 0);
         }
+        
+        [Fact]
+        public void IsUserLikedAnswer_Must_Return_True_If_User_Liked_Given_Answer()
+        {
+            // Arrange
+            var db = GetDb();
+            db.Database.EnsureDeleted();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = GetTestUser();
+            var testQBM = GetTestQuestionBM();
+            
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
+            var content = "Test Answer";
+            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
+            var testAnswerRatingBM = GetTestAnswerRatingBMRatingUp(answer,testUser);
+            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM,testUser);
+            var result = discussionsService.IsUserLikedAnswer(ratedAnswer.Id,testUser.UserName);
+            //Assert
+            Assert.True(result);
+        }
+        [Fact]
+        public void IsUserLikedAnswer_Must_Return_False_If_User_Not_Liked_Given_Answer()
+        {
+            // Arrange
+            var db = GetDb();
+            db.Database.EnsureDeleted();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = GetTestUser();
+            var testQBM = GetTestQuestionBM();
+            
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
+            var content = "Test Answer";
+            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
+            var result = discussionsService.IsUserLikedAnswer(answer.Id,testUser.UserName);
+            //Assert
+            Assert.True(!result);
+        }
+        [Fact]
+        public void IsUserDisLikedAnswer_Must_Return_True_If_User_DisLiked_Given_Answer()
+        {
+            // Arrange
+            var db = GetDb();
+            db.Database.EnsureDeleted();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = GetTestUser();
+            var testQBM = GetTestQuestionBM();
+            var content = "Test Answer";
+
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
+            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
+            var testAnswerRatingBM = GetTestAnswerRatingBMRatingDown(answer,testUser);
+            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM,testUser);
+            var result = discussionsService.IsUserDisLikedAnswer(ratedAnswer.Id,testUser.UserName);
+            //Assert
+            Assert.True(result);
+        }
+        [Fact]
+        public void IsUserDisLikedAnswer_Must_Return_False_If_User_Not_DisLiked_Given_Answer()
+        {
+            // Arrange
+            var db = GetDb();
+            db.Database.EnsureDeleted();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = GetTestUser();
+            var testQBM = GetTestQuestionBM();
+            var content = "Test Answer";
+
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
+            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
+            var result = discussionsService.IsUserDisLikedAnswer(answer.Id,testUser.UserName);
+            //Assert
+            Assert.True(!result);
+        }
+
+        [Fact]
+        public void IsUserLikedQuestion_Must_Return_True_If_User_Liked_Given_Question()
+        {
+            // Arrange
+            var db = GetDb();
+            db.Database.EnsureDeleted();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = GetTestUser();
+            var testQBM = GetTestQuestionBM();
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
+            var questionRatingBindingModel = GetTestQuestionRatingBMRatingUp(addedQuestion);
+            var ratedQuestion = discussionsService.RateQuestion(questionRatingBindingModel, testUser);
+            var result = discussionsService.IsUserLikedQuestion(ratedQuestion.Id,testUser.UserName);
+            //Assert
+            Assert.True(result);
+        }
+        [Fact]
+        public void IsUserLikedQuestion_Must_Return_False_If_User_Not_Liked_Given_Question()
+        {
+            // Arrange
+            var db = GetDb();
+            db.Database.EnsureDeleted();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = GetTestUser();
+            var testQBM = GetTestQuestionBM();
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
+            var result = discussionsService.IsUserLikedQuestion(addedQuestion.Id,testUser.UserName);
+            //Assert
+            Assert.True(!result);
+        }
+        [Fact]
+        public void IsUserDisLikedQuestion_Must_Return_True_If_User_DisLiked_Given_Question()
+        {
+            // Arrange
+            var db = GetDb();
+            db.Database.EnsureDeleted();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = GetTestUser();
+            var testQBM = GetTestQuestionBM();
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
+            var questionRatingBindingModel = GetTestQuestionRatingBMRatingDown(addedQuestion);
+            var ratedQuestion = discussionsService.RateQuestion(questionRatingBindingModel, testUser);
+            var result = discussionsService.IsUserDisLikedQuestion(ratedQuestion.Id,testUser.UserName);
+            //Assert
+            Assert.True(result);
+        }
+        [Fact]
+        public void IsUserDisLikedQuestion_Must_Return_False_If_User_Not_Liked_Given_Question()
+        {
+            // Arrange
+            var db = GetDb();
+            db.Database.EnsureDeleted();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = GetTestUser();
+            var testQBM = GetTestQuestionBM();
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
+            var result = discussionsService.IsUserDisLikedQuestion(addedQuestion.Id,testUser.UserName);
+            //Assert
+            Assert.True(!result);
+        }
+
         public SuCDbContext GetDb()
         {
             var dbOptions = new DbContextOptionsBuilder<SuCDbContext>()

@@ -230,21 +230,25 @@ namespace Softuni.Community.Services
                 .Where(x => x.User.UserName == username).Select(x => x.AnswerId).ToList();
         }
 
+        //Tested
         public bool IsUserLikedAnswer(int answerId, string username)
         {
             return this.context.UsersAnswerLikes.Any(x => x.User.UserName == username && x.AnswerId == answerId);
         }
+        //Tested
         public bool IsUserDisLikedAnswer(int answerId, string username)
         {
             return this.context.UsersAnswerDislikes.Any(x => x.User.UserName == username && x.AnswerId == answerId);
         }
 
+        //Tested
         public bool IsUserDisLikedQuestion(int questionId, string username)
         {
             return this.context.UsersQuestionDislikes
                 .Include(x => x.User)
                 .Any(x => x.User.UserName == username && x.QuestionId == questionId);
         }
+        //Tested
         public bool IsUserLikedQuestion(int questionId, string username)
         {
             return this.context.UsersQuestionLikes

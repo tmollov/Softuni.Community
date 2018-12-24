@@ -14,6 +14,7 @@
     cursor: pointer;
     text-decoration: none;
 }
+
 .myHover:hover a {
     color: white;
 }
@@ -29,23 +30,25 @@
 a {
     color: black;
 }
-.ratingBtn{
+
+.ratingBtn {
     border: none;
     background: none;
 }
-.ratingBtn:hover{
+
+.ratingBtn:hover {
     cursor: pointer;
 }
 
-.ratingDown:hover{
+.ratingDown:hover {
     color: red;
 }
 
-.ratingUp:hover{
+.ratingUp:hover {
     color: green;
 }
 
-#addAnswerDiv{
+#addAnswerDiv {
     display: none;
 }
 
@@ -54,6 +57,7 @@ a {
     background: none;
     border-style: none;
 }
+
 .addAnswerBtn:hover {
     color: white;
     background: none;
@@ -63,21 +67,31 @@ a {
 }
 
 .publishTimeAnswer {
-    display:inline;
+    display: inline;
 }
 
 #replyText {
     resize: none;
 }
 
-.liked{
+.liked {
     color: green;
 }
 
-.disliked{
+.disliked {
     color: red;
 }
 
-.neutral{
+.neutral {
     color: black;
 }
+
+.profilePic{
+    border-radius: 20%;
+}
+
+.noProfilePic {
+    width: 500px;
+    height: 500px;
+}
+ 

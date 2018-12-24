@@ -16,7 +16,6 @@ let questionsBase = "https://localhost:5001/api/questions/";
     })
 })();
 
-
 function LikeAnswer(e) {
     if ($(e).css("color") == "green") {
         return;
@@ -115,5 +114,19 @@ function DislikeQuestion(e) {
         }).catch(function (res) {
             console.log(res);
         })
+    }
+}
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#profilePic').show();
+            $('#profilePic')
+                .attr('src', e.target.result)
+        };
+
+        reader.readAsDataURL(input.files[0]);
     }
 }

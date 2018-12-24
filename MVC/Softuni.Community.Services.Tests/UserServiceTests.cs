@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,8 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Softuni.Community.Data;
 using Softuni.Community.Data.Models;
+using Softuni.Community.Web;
+using Softuni.Community.Web.Models.BindingModels;
 using Xunit;
 
 
@@ -16,6 +19,12 @@ namespace Softuni.Community.Services.Tests
 {
     public class UserServiceTests
     {
+        public IMapper mapper = new MapperConfiguration(mc =>
+        {
+            mc.AddProfile(new MappingProfile());
+        }).CreateMapper();
+
+
         [Fact]
         public void IsFirstUser_Must_Return_True_If_There_Is_Only_One_User()
         {
@@ -23,7 +32,7 @@ namespace Softuni.Community.Services.Tests
             var dbContext = this.GetDb();
             //// Clear Users
             dbContext.Database.EnsureDeleted();
-            var userService = new UserService(dbContext);
+            var userService = new UserService(dbContext,mapper);
             var testUser = GetTestUser();
 
             //Act
@@ -40,7 +49,7 @@ namespace Softuni.Community.Services.Tests
             var dbContext = this.GetDb();
             //// Clear Users
             dbContext.Database.EnsureDeleted();
-            var userService = new UserService(dbContext);
+            var userService = new UserService(dbContext,mapper);
             var testUser1 = GetTestUser();
             var testUser2 = GetTestUser();
             //Act
@@ -57,7 +66,7 @@ namespace Softuni.Community.Services.Tests
         {
             // Arrange
             var dbContext = this.GetDb();
-            var userService = new UserService(dbContext);
+            var userService = new UserService(dbContext,mapper);
             var testUserInfo = GetTestUserInfo();
             var testUserInfo1 = GetTestUserInfo();
             var testUserInfo2 = GetTestUserInfo();
@@ -78,10 +87,10 @@ namespace Softuni.Community.Services.Tests
         {
             // Arrange
             var dbContext = this.GetDb();
-            var userService = new UserService(dbContext);
+            var userService = new UserService(dbContext,mapper);
             var testUser = GetTestUser();
             var testUserInfo = GetTestUserInfo();
-            var testUserInfoUpdate = GetTestUserInfoUpdate();
+            var testUserInfoUpdate = GetTestUserInfoBMUpdate();
             //Act
             dbContext.UserInfos.Add(testUserInfo);
             dbContext.SaveChanges();
@@ -123,18 +132,20 @@ namespace Softuni.Community.Services.Tests
 
             return UserInfo;
         }
-        public UserInfo GetTestUserInfoUpdate()
+        public UserInfoBindingModel GetTestUserInfoBMUpdate()
         {
-            var UserInfo = new UserInfo()
-            {
-                BirthDate = new DateTime(1997, 2, 2),
-                FirstName = "ImUpdateFirstName",
-                LastName = "ImUpdateFirstName",
-                AboutMe = "Just a Dev",
-                ProfilePictureUrl = null
-            };
+            var UserInfoBM = mapper.Map<UserInfoBindingModel>(
 
-            return UserInfo;
+                new UserInfo()
+                {
+                    BirthDate = new DateTime(1997, 2, 2),
+                    FirstName = "ImUpdateFirstName",
+                    LastName = "ImUpdateFirstName",
+                    AboutMe = "Just a Dev",
+                    ProfilePictureUrl = null
+                });
+
+            return UserInfoBM;
         }
 
         public SuCDbContext GetDb()

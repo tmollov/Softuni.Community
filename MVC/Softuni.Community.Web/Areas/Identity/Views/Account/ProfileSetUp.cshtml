@@ -8,13 +8,12 @@
 <section>
     <h2>Final touches...</h2>
     <p>Please fill your information to finilize your account set up.</p>
-    <p>You can <a asp-controller="Home" asp-action="Index">SKIP</a></p>
+    <p>You can <a asp-controller="Home" asp-action="Index">SKIP</a> this step if you want.</p>
 </section>
 
 <div class="mb-5">
     <div class="w-25 mx-auto">
         <form method="post">
-            <h4>Create a new account.</h4>
             <hr />
             <div class="form-group">
                 <label asp-for="FirstName"></label>
@@ -33,7 +32,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="AboutMe"></label>
-                <textarea asp-for="AboutMe" class="form-control" cols="10" rows="5"></textarea>
+                <textarea asp-for="AboutMe" class="form-control" cols="10" rows="5" ></textarea>
                 <span asp-validation-for="AboutMe" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-default">Update Account</button>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -66,7 +67,7 @@ namespace Softuni.Community.Web
             services.AddCors();
             
 
-            // Adding AutoMapper
+            // Setting up AutoMapper
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
@@ -77,6 +78,14 @@ namespace Softuni.Community.Web
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IDiscussionsService, DiscussionsService>();
             services.AddSingleton(mapper);
+
+            Account account = new Account(
+                Configuration["Cloudinary:Name"],
+                Configuration["Cloudinary:Key"],
+                Configuration["Cloudinary:Secret"]);
+
+            var cloudinary = new Cloudinary(account);
+            services.AddSingleton(cloudinary);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

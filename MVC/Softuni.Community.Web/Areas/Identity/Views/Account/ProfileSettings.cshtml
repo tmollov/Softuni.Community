@@ -1,0 +1,64 @@
+﻿@model Softuni.Community.Web.Models.BindingModels.ProfilesSettingsBindingModel
+@{
+    ViewData["Title"] = "ProfileSettings";
+}
+
+<section>
+    <h1>Profile Settings</h1>
+    <hr class="line bg-dark w-25" />
+</section>
+
+
+<form method="post" class="border w-75 p-0 mx-auto" enctype="multipart/form-data" asp-area="Identity" asp-controller="Account" asp-action="ProfileSettings">
+    <div class="row">
+
+        <div class="col-6 p-5 m-0">
+            <h3>@User.Identity.Name</h3>
+            <div class="m-0 p-0 profilePic my-auto">
+                @if (Model.ProfilePictureUrl != null)
+                {
+                    <img id="profilePic" class="w-50" src="@Model.ProfilePictureUrl" style="border-radius:30%;">
+                }
+                else
+                {
+                    <img id="profilePic" class="w-50" src="@Model.ProfilePictureUrl" style="border-radius:30%;" hidden>
+                    <i class="fas fa-user-circle display-1"></i>
+                }
+            </div>
+
+            <div class="upload-btn-wrapper mt-3">
+                <label class="btn addAnswerBtn border border-dark" asp-for="ProfilePicture">Upload Picture</label>
+                <input asp-for="ProfilePicture" onchange="readURL(this);" hidden>
+            </div>
+        </div>
+        <div class="col-6 m-0 pt-3 pr-5">
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BirthDate"></label>
+                <input asp-for="BirthDate" class="form-control" />
+                <span asp-validation-for="BirthDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AboutMe"></label>
+                <textarea asp-for="AboutMe" class="form-control" cols="10" rows="5"></textarea>
+                <span asp-validation-for="AboutMe" class="text-danger"></span>
+            </div>
+            
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group mx-auto col-12">
+            <button class="btn addAnswerBtn border border-dark" type="submit">Apply Settings</button>
+        </div>
+    </div>
+</form>

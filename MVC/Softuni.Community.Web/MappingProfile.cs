@@ -10,8 +10,11 @@ namespace Softuni.Community.Web
     {
         public MappingProfile()
         {
+            this.CreateMap<ProfilesSettingsBindingModel, UserInfoBindingModel>();
             this.CreateMap<UserInfoBindingModel, UserInfo>();
             this.CreateMap<RegisterBindingModel, CustomUser>();
+            this.CreateMap<UserInfo, ProfileSettingsViewModel>();
+            this.CreateMap<UserInfo, ProfilesSettingsBindingModel>();
 
             this.CreateMap<Question, QuestionViewModel>()
                 .ForMember(x=>x.QuestionId,

@@ -1,5 +1,10 @@
-﻿using AutoMapper;
+﻿using System.IO;
+using System.Threading.Tasks;
+using AutoMapper;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Softuni.Community.Data.Models;
@@ -17,14 +22,16 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         private readonly SignInManager<CustomUser> signInManager;
         private readonly IUserService userService;
         private readonly IMapper mapper;
+        private readonly Cloudinary cloudinary;
 
         public AccountController(UserManager<CustomUser> userMgr,
-            SignInManager<CustomUser> signinMgr, IUserService userService, IMapper mapper)
+            SignInManager<CustomUser> signinMgr, IUserService userService, IMapper mapper, Cloudinary cloudinary)
         {
             this.userManager = userMgr;
             this.signInManager = signinMgr;
             this.userService = userService;
             this.mapper = mapper;
+            this.cloudinary = cloudinary;
         }
 
         [AllowAnonymous]
@@ -99,7 +106,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction(ActionsConts.ProfileSetUp);
+                    return RedirectToRoute("/Identity/Account/ProfileSetUp");
                 }
                 else
                 {
@@ -121,7 +128,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         [Authorize]
         public IActionResult ProfileSetUp()
         {
-            // Logic to add somewhere later
+            // Logic to add: If user profile is setted up redirect to profile settings
             //var user = userManager.FindByNameAsync(User.Identity.Name).Result;
             //if (!user.IsProfileSettedUp)
             //{
@@ -136,11 +143,10 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userInfo = mapper.Map<UserInfo>(bindingModel);
                 var result = userService
                     .UpdateUserInfo(
                         userManager.FindByNameAsync(User.Identity.Name).Result,
-                        userInfo
+                        bindingModel
                         );
                 if (result != null)
                 {
@@ -170,8 +176,54 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         [Authorize]
         public IActionResult ProfileSettings()
         {
+            var userInfoId = userManager.FindByNameAsync(User.Identity.Name).Result.UserInfoId;
+            var bindingModel = userService.GetProfileSettingsBindingModel(userInfoId);
 
-            return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
+            return this.View(bindingModel);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult ProfileSettings(ProfilesSettingsBindingModel bindingModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (bindingModel.ProfilePicture != null)
+                {
+                    var picPath = this.CreateTempFile(bindingModel.ProfilePicture).Result;
+                    var uploadResult = UploadImage(picPath);
+
+                    // Pass uri to binding model
+                    bindingModel.ProfilePictureUrl = uploadResult.Uri.AbsoluteUri;
+                }
+                var user = userManager.FindByNameAsync(User.Identity.Name).Result;
+                var userInfo = mapper.Map<UserInfoBindingModel>(bindingModel);
+                userService.UpdateUserInfo(user, userInfo);
+                return Redirect("/Identity/Account/ProfileSettings");
+            }
+            return View(bindingModel);
+        }
+        public ImageUploadResult UploadImage(string path)
+        {
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(path)
+            };
+
+            return cloudinary.Upload(uploadParams);
+        }
+
+
+        public async Task<string> CreateTempFile(IFormFile file)
+        {
+            var filePath = Path.GetTempFileName();
+            var stream = new FileStream(filePath, FileMode.Create);
+            using (stream)
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return filePath;
         }
 
     }
