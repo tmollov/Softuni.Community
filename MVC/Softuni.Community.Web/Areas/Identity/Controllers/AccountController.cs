@@ -164,13 +164,18 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
         }
 
+        [Authorize]
+        public IActionResult DeleteProfile()
+        {
+            return this.View();
+        }
 
         [Authorize]
         public IActionResult Profile()
         {
 
 
-            return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
+            return this.View();
         }
 
         [Authorize]
@@ -203,6 +208,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             }
             return View(bindingModel);
         }
+
         public ImageUploadResult UploadImage(string path)
         {
             var uploadParams = new ImageUploadParams()
@@ -212,8 +218,6 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
             return cloudinary.Upload(uploadParams);
         }
-
-
         public async Task<string> CreateTempFile(IFormFile file)
         {
             var filePath = Path.GetTempFileName();

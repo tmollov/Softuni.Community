@@ -122,6 +122,7 @@ function readURL(input) {
         var reader = new FileReader();
 
         reader.onload = function (e) {
+            $("#profilePicIcon").hide();
             $('#profilePic').show();
             $('#profilePic')
                 .attr('src', e.target.result)

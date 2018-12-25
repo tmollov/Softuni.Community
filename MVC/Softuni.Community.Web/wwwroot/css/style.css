@@ -95,3 +95,18 @@ a {
     height: 500px;
 }
  
+#deleteProfileLink{
+    text-decoration: none;
+    color: red;
+}
+
+#deleteProfileLink:hover{
+    text-decoration: none;
+    color: red;
+}
+
+.socialLink{
+    border-radius: 50%;
+    width: 200px;
+    height: 200px
+}

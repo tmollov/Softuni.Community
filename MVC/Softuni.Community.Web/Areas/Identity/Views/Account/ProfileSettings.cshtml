@@ -22,7 +22,7 @@
                 else
                 {
                     <img id="profilePic" class="w-50" src="@Model.ProfilePictureUrl" style="border-radius:30%;" hidden>
-                    <i class="fas fa-user-circle display-1"></i>
+                    <i id="profilePicIcon" class="fas fa-user-circle display-1"></i>
                 }
             </div>
 
@@ -60,5 +60,9 @@
         <div class="form-group mx-auto col-12">
             <button class="btn addAnswerBtn border border-dark" type="submit">Apply Settings</button>
         </div>
+       
+    </div>
+    <div class="row">
+        <p class="text-center w-100">Because of new regulation of European Union: General Data Protection Regulation (GDRP) from 25 May 2018, now you can <a id="deleteProfileLink" asp-area="Identity" asp-controller="Account" asp-action="DeleteProfile">DELETE</a> your account completely.</p>
     </div>
 </form>
