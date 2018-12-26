@@ -9,6 +9,8 @@ namespace Softuni.Community.Services.Interfaces
     {
         IList<int> GetUserLikedAnswersIdList(string username);
         IList<int> GetUserDisLikedAnswersIdList(string username);
+        ICollection<MyQuestionViewModel> GetUserQuestions(string username);
+        ICollection<MyAnswerViewModel> GetUserAnswers(string username);
 
         bool IsUserDisLikedQuestion(int questionId, string username);
         bool IsUserLikedQuestion(int questionId, string username);

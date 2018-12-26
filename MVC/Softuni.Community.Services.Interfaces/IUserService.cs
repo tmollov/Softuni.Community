@@ -11,5 +11,6 @@ namespace Softuni.Community.Services.Interfaces
         UserInfo UpdateUserInfo(CustomUser user, UserInfoBindingModel userInfo);
         ProfilesSettingsBindingModel GetProfileSettingsBindingModel(int id);
         UserInfo UpdateProfilePicture(CustomUser user, string picUri);
+        MyProfileViewModel GetProfileViewModel(int id);
     }
 }

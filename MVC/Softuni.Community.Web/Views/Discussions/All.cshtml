@@ -24,7 +24,16 @@
                     <div class="col">
                         <div>
                             <h3>
-                                <a href="/Discussions/QuestionDetails/?Id=@item.QuestionId">@item.Title</a>
+                                <a href="/Discussions/QuestionDetails/?Id=@item.QuestionId">
+                                    @if (item.Title.Length > 30)
+                                    {
+                                        @string.Join("", item.Title.Take(25));<span>...</span>
+                                    }
+                                    else
+                                    {
+                                        @item.Title
+                                    }
+                                </a>
                             </h3>
                         </div>
                     </div>

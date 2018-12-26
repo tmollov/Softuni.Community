@@ -86,7 +86,7 @@ a {
     color: black;
 }
 
-.profilePic{
+.profilePic {
     border-radius: 20%;
 }
 
@@ -94,19 +94,37 @@ a {
     width: 500px;
     height: 500px;
 }
- 
-#deleteProfileLink{
+
+#deleteProfileLink {
     text-decoration: none;
     color: red;
 }
 
-#deleteProfileLink:hover{
+#deleteProfileLink:hover {
     text-decoration: none;
     color: red;
 }
 
-.socialLink{
+.socialLink {
     border-radius: 50%;
     width: 200px;
     height: 200px
+}
+
+.funDropDown {
+    border-style: none;
+    background: none;
+}
+
+.funDropDown:hover {
+    cursor: pointer;
+}
+
+.funDropDown:focus {
+    outline: 0;
+}
+
+.scrollable{
+    overflow-y: scroll; 
+    height:200px;
 }

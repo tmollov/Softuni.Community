@@ -12,6 +12,7 @@ using Softuni.Community.Services.Interfaces;
 using Softuni.Community.Web.Common;
 using Softuni.Community.Web.Controllers;
 using Softuni.Community.Web.Models.BindingModels;
+using Softuni.Community.Web.Models.ViewModels;
 
 namespace Softuni.Community.Web.Areas.Identity.Controllers
 {
@@ -21,15 +22,21 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         private readonly UserManager<CustomUser> userManager;
         private readonly SignInManager<CustomUser> signInManager;
         private readonly IUserService userService;
+        private readonly IDiscussionsService discussionsService;
         private readonly IMapper mapper;
         private readonly Cloudinary cloudinary;
 
         public AccountController(UserManager<CustomUser> userMgr,
-            SignInManager<CustomUser> signinMgr, IUserService userService, IMapper mapper, Cloudinary cloudinary)
+            SignInManager<CustomUser> signinMgr, 
+            IUserService userService, 
+            IDiscussionsService discussionsService,
+            IMapper mapper, 
+            Cloudinary cloudinary)
         {
             this.userManager = userMgr;
             this.signInManager = signinMgr;
             this.userService = userService;
+            this.discussionsService = discussionsService;
             this.mapper = mapper;
             this.cloudinary = cloudinary;
         }
@@ -173,9 +180,17 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         [Authorize]
         public IActionResult Profile()
         {
-
-
-            return this.View();
+            var user = userManager.FindByNameAsync(User.Identity.Name).Result;
+            var questions = discussionsService.GetUserQuestions(User.Identity.Name);
+            var answers = discussionsService.GetUserAnswers(User.Identity.Name);
+            var myProfile = userService.GetProfileViewModel(user.UserInfoId);
+            var vm = new ProfileViewModel()
+            {
+                MyQuestions = questions,
+                MyAnswers = answers,
+                MyProfile = myProfile
+            };
+            return this.View(vm);
         }
 
         [Authorize]

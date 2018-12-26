@@ -27,7 +27,11 @@
 
 
   <ItemGroup>
+    <Folder Include="Areas\Fun\Data\" />
+    <Folder Include="Areas\Fun\Models\" />
     <Folder Include="Areas\Identity\Models\" />
+    <Folder Include="wwwroot\css\Games\" />
+    <Folder Include="wwwroot\js\Games\" />
   </ItemGroup>
 
 </Project>

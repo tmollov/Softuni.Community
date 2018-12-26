@@ -13,8 +13,9 @@ namespace Softuni.Community.Web
             this.CreateMap<ProfilesSettingsBindingModel, UserInfoBindingModel>();
             this.CreateMap<UserInfoBindingModel, UserInfo>();
             this.CreateMap<RegisterBindingModel, CustomUser>();
-            this.CreateMap<UserInfo, ProfileSettingsViewModel>();
+            this.CreateMap<UserInfo, MyProfileViewModel>();
             this.CreateMap<UserInfo, ProfilesSettingsBindingModel>();
+
 
             this.CreateMap<Question, QuestionViewModel>()
                 .ForMember(x=>x.QuestionId,
@@ -28,6 +29,10 @@ namespace Softuni.Community.Web
                 .ForMember(x=>x.Tags,
                     opts => opts.MapFrom(src => src.Tags.Select(a => a.Name).ToList()));
 
+            this.CreateMap<Question, MyQuestionViewModel>()
+                .ForMember(x => x.AnswerCount,
+                    opts => opts.MapFrom(src => src.Answers.Count));
+
             this.CreateMap<Answer, AnswerViewModel>()
                 .ForMember(x => x.AnswerId,
                     opts => opts.MapFrom(src => src.Id))
@@ -35,6 +40,10 @@ namespace Softuni.Community.Web
                     opts => opts.MapFrom(src => src.Publisher.UserName))
                 .ForMember(x => x.PublisherPicture,
                     opts => opts.MapFrom(src => src.Publisher.UserInfo.ProfilePictureUrl));
+
+            this.CreateMap<Answer, MyAnswerViewModel>()
+                .ForMember(x => x.QuestionTitle,
+                    opts => opts.MapFrom(src => src.Question.Title));
         }
     }
 }

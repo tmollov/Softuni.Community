@@ -54,6 +54,21 @@ namespace Softuni.Community.Services
             return vm;
         }
 
+        public ICollection<MyQuestionViewModel> GetUserQuestions(string username)
+        {
+            var questions = this.context.Questions.Include(x => x.Publisher)
+                .Where(x => x.Publisher.UserName == username).Select(x=> mapper.Map<MyQuestionViewModel>(x)).ToList();
+            return questions;
+        }
+        public ICollection<MyAnswerViewModel> GetUserAnswers(string username)
+        {
+            var answers = this.context.Answers
+                .Include(x => x.Publisher)
+                .Include(x=>x.Question)
+                .Where(x => x.Publisher.UserName == username)
+                .Select(x=> mapper.Map<MyAnswerViewModel>(x)).ToList();
+            return answers;
+        }
 
         //Tested
         public Answer DeleteAnswer(int AnswerId, int QuestionId)

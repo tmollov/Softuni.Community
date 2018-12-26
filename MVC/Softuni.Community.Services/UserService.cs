@@ -4,6 +4,7 @@ using Softuni.Community.Data;
 using Softuni.Community.Data.Models;
 using Softuni.Community.Services.Interfaces;
 using Softuni.Community.Web.Models.BindingModels;
+using Softuni.Community.Web.Models.ViewModels;
 
 namespace Softuni.Community.Services
 {
@@ -67,6 +68,13 @@ namespace Softuni.Community.Services
         {
             var model = this.context.UserInfos.FirstOrDefault(x => x.Id == id);
             var result = mapper.Map<ProfilesSettingsBindingModel>(model);
+            return result;
+        }
+
+        public MyProfileViewModel GetProfileViewModel(int id)
+        {
+            var model = this.context.UserInfos.FirstOrDefault(x => x.Id == id);
+            var result = mapper.Map<MyProfileViewModel>(model);
             return result;
         }
     }
