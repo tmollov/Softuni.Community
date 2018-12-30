@@ -1,0 +1,29 @@
+﻿@using Softuni.Community.Data.Models.Enums
+@model Softuni.Community.Web.Models.BindingModels.JokeBindingModel
+@{
+    ViewData["Title"] = "Add Joke";
+}
+
+<h1 class="text-center mt-4 mb-4">@ViewData["Title"]</h1>
+<div>
+    <div class="text-center">
+        <section class="w-25 mx-auto">
+            <form asp-area="Fun" asp-controller="Jokes" asp-action="Add" method="post">
+                <hr />
+                <div class="form-group">
+                    <label asp-for="Content">Share us your Joke</label>
+                    <textarea asp-for="Content" class="form-control" placeholder="Your Joke here..."></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Category"></label>
+                    <select asp-for="Category" asp-items="Html.GetEnumSelectList<JokeCategory>()"></select>
+                    <span asp-validation-for="Category" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default">Add Joke</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>

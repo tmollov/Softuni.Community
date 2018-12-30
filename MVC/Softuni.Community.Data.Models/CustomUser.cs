@@ -13,5 +13,7 @@ namespace Softuni.Community.Data.Models
 
         public ICollection<Question> Questions { get; set; }
         public ICollection<Answer> Answers { get; set; }
+        public ICollection<Joke> Jokes { get;set;}
+        public ICollection<Meme> Memes { get;set;}
     }
 }

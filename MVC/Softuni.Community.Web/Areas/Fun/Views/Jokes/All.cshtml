@@ -1,0 +1,81 @@
+﻿@using Softuni.Community.Data.Models.Enums;
+
+@model Softuni.Community.Web.Models.ViewModels.AllJokesViewModel
+@{
+    ViewData["Title"] = "All Jokes";
+}
+
+<h1>@ViewData["Title"]</h1>
+@if (User.IsInRole("Admin"))
+{
+    <div>
+        <a class="btn addBtn border border-dark" asp-area="Fun" asp-controller="Jokes" asp-action="Add">Add Joke</a>
+    </div>
+}
+
+<div id="tabs" class="border border-dark mt-4 p-2 w-75 mx-auto">
+    <ul>
+        <li><a href="#tabs-1">Chuch Norris</a></li>
+        <li><a href="#tabs-2">Animals</a></li>
+        <li><a href="#tabs-3">Computers</a></li>
+        <li><a href="#tabs-4">Drivers And Pilots</a></li>
+        <li><a href="#tabs-5">Ivancho</a></li>
+        <li><a href="#tabs-6">Students</a></li>
+        <li><a href="#tabs-7">Different</a></li>
+    </ul>
+    @{
+        var tabIndex = 1;
+    }
+    @foreach (var category in Enum.GetValues(typeof(JokeCategory)))
+    {
+        <div id="tabs-@tabIndex" class="p-0 m-0 scrollableDiv">
+            <div class="row m-0 ">
+                @{
+                    var enumRes = (JokeCategory)Enum.Parse(typeof(JokeCategory), category.ToString());
+                }
+
+                @foreach (var joke in Model.Jokes.Where(x => x.Category == enumRes))
+                {
+                    <div class="col-3 mt-2 p-2">
+                        <div class=" border border-dark text-left p-2">
+                            <a class="jokeLink" href="/Fun/Jokes/Details/?id=@joke.Id">@joke.Content</a>
+                            @if (User.Identity.Name != null)
+                            {
+                                <div class="border-top border-dark">
+                                    <div class="row mx-auto w-50">
+                                        <span hidden>@joke.Id</span>
+                                        <p class="mx-auto likes m-0 p-0">@joke.Likes</p>
+                                        <span>:</span>
+                                        <button class="mx-auto ratingBtn ratingUp" onclick="LikeJoke(this)">
+                                            @if (Model.UserLikedJokes.Contains(joke.Id))
+                                            {
+                                                <i class="fas fa-thumbs-up liked"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-thumbs-up"></i>
+                                            }
+                                        </button> |
+                                        <button class="mx-auto ratingBtn ratingDown" onclick="DislikeJoke(this)">
+                                            @if (Model.UserDislikedJokes.Contains(joke.Id))
+                                            {
+                                                <i class="fas fa-thumbs-down disliked"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fas fa-thumbs-down"></i>
+                                            }
+                                        </button>
+                                        <span>:</span>
+                                        <p class="mx-auto dislikes m-0 p-0">@joke.Dislikes</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        tabIndex++;
+    }
+</div>

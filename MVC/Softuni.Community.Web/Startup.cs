@@ -65,7 +65,7 @@ namespace Softuni.Community.Web
 
             //Addding CORS
             services.AddCors();
-            
+
 
             // Setting up AutoMapper
             var mappingConfig = new MapperConfiguration(mc =>
@@ -77,6 +77,8 @@ namespace Softuni.Community.Web
             // Adding Services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IDiscussionsService, DiscussionsService>();
+            services.AddScoped<IJokesService,JokesService>();
+            //services.AddScoped<IMemesService,MemesService>();
             services.AddSingleton(mapper);
 
             Account account = new Account(
@@ -104,6 +106,8 @@ namespace Softuni.Community.Web
                 app.UseHsts();
             }
 
+
+
             // Disabled Scope Validation for easy role adding
             // Adding Admin Role
             CreateRole(app.ApplicationServices, Configuration, Role.Admin).Wait();
@@ -122,6 +126,7 @@ namespace Softuni.Community.Web
                        .AllowAnyMethod()
                        .AllowAnyOrigin()
             );
+
 
             app.UseMvc(routes =>
             {

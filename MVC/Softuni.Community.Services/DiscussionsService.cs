@@ -57,7 +57,8 @@ namespace Softuni.Community.Services
         public ICollection<MyQuestionViewModel> GetUserQuestions(string username)
         {
             var questions = this.context.Questions.Include(x => x.Publisher)
-                .Where(x => x.Publisher.UserName == username).Select(x=> mapper.Map<MyQuestionViewModel>(x)).ToList();
+                .Where(x => x.Publisher.UserName == username)
+                .Select(x=> mapper.Map<MyQuestionViewModel>(x)).ToList();
             return questions;
         }
         public ICollection<MyAnswerViewModel> GetUserAnswers(string username)

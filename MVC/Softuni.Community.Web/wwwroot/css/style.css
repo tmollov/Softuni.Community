@@ -52,13 +52,27 @@ a {
     display: none;
 }
 
-.addAnswerBtn {
+.addBtn {
     color: black;
     background: none;
     border-style: none;
 }
 
-.addAnswerBtn:hover {
+.addBtn:hover {
+    color: white;
+    background: none;
+    background-color: black;
+    border-style: none;
+    cursor: pointer;
+}
+
+.ui-tabs {
+    color: black;
+    background: none;
+    border-style: none;
+}
+
+.ui-tabs .ui-tabs-active {
     color: white;
     background: none;
     background-color: black;
@@ -124,7 +138,23 @@ a {
     outline: 0;
 }
 
-.scrollable{
-    overflow-y: scroll; 
-    height:200px;
+.scrollable {
+    overflow-y: scroll;
+    height: 150px;
+}
+
+.scrollableDiv {
+    overflow-y: scroll;
+    height: 600px;
+}
+
+.jokeLink {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+}
+
+.delete:hover{
+    text-decoration: none;
+    color: red;
 }

@@ -21,11 +21,17 @@ namespace Softuni.Community.Data
 
         public DbSet<Question> Questions { get; set; }
 
+        public DbSet<Joke> Jokes { get; set; }
+        public DbSet<Meme> Memes { get; set; }
+
         public DbSet<UserAnswerLikes> UsersAnswerLikes { get; set; }
         public DbSet<UserAnswerDisLikes> UsersAnswerDislikes{ get; set; }
 
         public DbSet<UserQuestionLikes> UsersQuestionLikes { get; set; }
         public DbSet<UserQuestionDisLikes> UsersQuestionDislikes { get; set; }
+
+        public DbSet<UserJokeLikes> UsersJokeLikes { get; set; }
+        public DbSet<UserJokeDislikes> UsersJokeDislikes { get; set; }
 
         //public DbSet<QuestionsTags> QuestionsTags { get; set; }
 

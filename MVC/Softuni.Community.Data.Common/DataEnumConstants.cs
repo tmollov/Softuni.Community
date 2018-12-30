@@ -2,6 +2,9 @@
 {
     public class DataEnumConstants
     {
+        // Template
+        // public const string  = "";
+        // Questions Categories
         public const string Other = "Other";
         public const string Development = " Development";
         public const string WebDevelopment = "Web" + Development;
@@ -14,7 +17,10 @@
         public const string JavaScript = "JavaScript" + Development;
         public const string PHP = "PHP" + Development;
         public const string Python = "Python" + Development;
-        // Template
-        // public const string  = "";
+
+        // Jokes Categories
+        public const string ChuckNorris = "Chuck Norris";
+        public const string DriversAndPilots = "Drivers and Pilots";
+
     }
 }

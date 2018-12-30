@@ -1,6 +1,6 @@
 ﻿let answersBase = "https://localhost:5001/api/answers/";
 let questionsBase = "https://localhost:5001/api/questions/";
-
+let jokeBase = "https://localhost:5001/api/jokes/";
 (() => {
     let clicked = false;
     $("#addAnswerBtn").click(function () {
@@ -32,7 +32,7 @@ function LikeAnswer(e) {
             contentType: "application/json",
             data: JSON.stringify({ Rating: 1, AnswerId: answerId, Username: username })
         }).then(function (res) {
-            let updatedRating = Number(currentRating.text())+1;
+            let updatedRating = Number(currentRating.text()) + 1;
             currentRating.text(updatedRating);
             iconUp.removeClass("neutral").addClass("liked");
             iconDown.removeClass("disliked").addClass("neutral");
@@ -57,7 +57,7 @@ function DislikeAnswer(e) {
             contentType: "application/json",
             data: JSON.stringify({ Rating: -1, AnswerId: answerId, Username: username })
         }).then(function (res) {
-            let updatedRating = Number(currentRating.text())-1;
+            let updatedRating = Number(currentRating.text()) - 1;
             currentRating.text(updatedRating);
             iconUp.removeClass("liked").addClass("neutral");
             iconDown.removeClass("neutral").addClass("disliked");
@@ -82,7 +82,7 @@ function LikeQuestion(e) {
             contentType: "application/json",
             data: JSON.stringify({ Rating: 1, QuestionId: questionId, Username: username })
         }).then(function (res) {
-            let updatedRating = Number(currentRating.text())+1;
+            let updatedRating = Number(currentRating.text()) + 1;
             currentRating.text(updatedRating);
             iconUp.removeClass("neutral").addClass("liked");
             iconDown.removeClass("disliked").addClass("neutral");
@@ -107,7 +107,7 @@ function DislikeQuestion(e) {
             contentType: "application/json",
             data: JSON.stringify({ Rating: -1, QuestionId: questionId, Username: username })
         }).then(function (res) {
-            let updatedRating = Number(currentRating.text())-1;
+            let updatedRating = Number(currentRating.text()) - 1;
             currentRating.text(updatedRating);
             iconUp.removeClass("liked").addClass("neutral");
             iconDown.removeClass("neutral").addClass("disliked");
@@ -116,6 +116,68 @@ function DislikeQuestion(e) {
         })
     }
 }
+
+
+function LikeJoke(e) {
+    if ($(e).css("color") == "green") {
+        return;
+    } else {
+        let currentLikes = $(e).parent().find("p.likes");
+        let currentDislikes = $(e).parent().find("p.dislikes");
+        let jokeId = $(e).parent().find("span").text().replace("::","");
+        let username = $("#Username").text();
+        let iconUp = $(e).parent().find(".ratingUp i");
+        let iconDown = $(e).parent().find(".ratingDown i");
+
+        $.ajax({
+            method: "POST",
+            url: jokeBase,
+            contentType: "application/json",
+            data: JSON.stringify({ Rating: 1, JokeId: jokeId, Username: username })
+        }).then(function (res) {
+            currentLikes.text(Number(currentLikes.text()) + 1);
+            currentDislikes.text(Number(currentLikes.text()) - 1);
+
+            iconUp.removeClass("neutral").addClass("liked");
+            iconDown.removeClass("disliked").addClass("neutral");
+        }).catch(function (res) {
+            console.log(res);
+        })
+    }
+}
+
+function DislikeJoke(e) {
+    if ($(e).css("color") == "green") {
+        return;
+    } else {
+        let currentLikes = $(e).parent().find("p.likes");
+        let currentDislikes = $(e).parent().find("p.dislikes");
+        let jokeId = $(e).parent().find("span").text().replace("::","");
+        let username = $("#Username").text();
+        let iconUp = $(e).parent().find(".ratingUp i");
+        let iconDown = $(e).parent().find(".ratingDown i");
+
+
+        $.ajax({
+            method: "POST",
+            url: jokeBase,
+            contentType: "application/json",
+            data: JSON.stringify({ Rating: -1, JokeId: jokeId, Username: username })
+        }).then(function (res) {
+            currentLikes.text(Number(currentLikes.text()) - 1);
+            currentDislikes.text(Number(currentLikes.text()) + 1);
+
+            iconDown.removeClass("neutral").addClass("disliked");
+            iconUp.removeClass("liked").addClass("neutral");
+        }).catch(function (res) {
+            console.log(res);
+        });
+    }
+}
+
+
+
+
 
 function readURL(input) {
     if (input.files && input.files[0]) {
@@ -131,3 +193,8 @@ function readURL(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+// jquery Tabs
+$(function () {
+    $("#tabs").tabs();
+});

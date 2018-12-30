@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Softuni.Community.Data;
 
 namespace Softuni.Community.Data.Migrations
 {
     [DbContext(typeof(SuCDbContext))]
-    partial class SuCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181226163411_added_categories_to_jokes")]
+    partial class added_categories_to_jokes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -372,40 +374,6 @@ namespace Softuni.Community.Data.Migrations
                     b.ToTable("UserInfos");
                 });
 
-            modelBuilder.Entity("Softuni.Community.Data.Models.UserJokeDislikes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("JokeId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersJokeDislikes");
-                });
-
-            modelBuilder.Entity("Softuni.Community.Data.Models.UserJokeLikes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("JokeId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersJokeLikes");
-                });
-
             modelBuilder.Entity("Softuni.Community.Data.Models.UserQuestionDisLikes", b =>
                 {
                     b.Property<int>("Id")
@@ -549,20 +517,6 @@ namespace Softuni.Community.Data.Migrations
                 });
 
             modelBuilder.Entity("Softuni.Community.Data.Models.UserAnswerLikes", b =>
-                {
-                    b.HasOne("Softuni.Community.Data.Models.CustomUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Softuni.Community.Data.Models.UserJokeDislikes", b =>
-                {
-                    b.HasOne("Softuni.Community.Data.Models.CustomUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Softuni.Community.Data.Models.UserJokeLikes", b =>
                 {
                     b.HasOne("Softuni.Community.Data.Models.CustomUser", "User")
                         .WithMany()

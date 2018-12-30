@@ -1,0 +1,30 @@
+﻿@model Softuni.Community.Web.Models.ViewModels.JokeViewModel
+@{
+    ViewData["Title"] = "Joke Details";
+}
+
+<h1 class="text-center mt-4 mb-4">@ViewData["Title"]</h1>
+<div>
+    <div class="text-center">
+        <section class="w-50 mx-auto">
+            <div class="m-5 p-0">
+                <div class="text-left p-2">
+                    <h2 class="jokeLink">@Model.Content</h2>
+                    @if (User.Identity.Name != null)
+                    {
+                        <div class="border-top mt-5 border-dark">
+                            <p class="m-0 text-center">@Model.Likes:<button class="ratingBtn ratingUp"><i class="fas fa-thumbs-up"></i></button> | <button class="ratingBtn ratingDown"><i class="fas fa-thumbs-down"></i></button>:@Model.Dislikes</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="mx-auto">
+            <p>Need modifications? <a class="delete" href="/Fun/Jokes/Edit/?id=@Model.Id">EDIT</a> it.</p>
+            <p>You can also <a class="delete" href="/Fun/Jokes/Delete/?id=@Model.Id">DELETE</a> it.</p>
+        </div>
+    }
+</div>

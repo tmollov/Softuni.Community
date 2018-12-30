@@ -16,6 +16,11 @@ namespace Softuni.Community.Web
             this.CreateMap<UserInfo, MyProfileViewModel>();
             this.CreateMap<UserInfo, ProfilesSettingsBindingModel>();
 
+            this.CreateMap<JokeBindingModel, Joke>();
+            this.CreateMap<Joke, JokeEditBindingModel>();
+            this.CreateMap<Joke, JokeViewModel>()
+                .ForMember(x => x.Publisher,
+                    opts => opts.MapFrom(src => src.Publisher.UserName));
 
             this.CreateMap<Question, QuestionViewModel>()
                 .ForMember(x=>x.QuestionId,
