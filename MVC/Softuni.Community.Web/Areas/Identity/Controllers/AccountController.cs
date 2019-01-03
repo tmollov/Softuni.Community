@@ -45,8 +45,9 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         [AllowAnonymous]
         public IActionResult Login(string ReturnUrl)
         {
-            ViewData["Redirection"] = ReturnUrl;
-            return View();
+            var vm = new LoginBindingModel() {ReturnUrl = ReturnUrl };
+
+            return View(vm);
         }
 
         [HttpPost]
@@ -70,9 +71,9 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
                         if (result.Succeeded)
                         {
-                            if (ViewData["Redirection"] != null)
+                            if (bindingModel.ReturnUrl != null)
                             {
-                                return Redirect(ViewData["Redirection"].ToString());
+                                return Redirect(bindingModel.ReturnUrl);
                             }
                             return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
                         } 

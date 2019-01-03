@@ -14,5 +14,7 @@ namespace Softuni.Community.Web.Models.BindingModels
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 }
