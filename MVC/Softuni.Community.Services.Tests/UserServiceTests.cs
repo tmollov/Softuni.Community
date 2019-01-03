@@ -107,6 +107,82 @@ namespace Softuni.Community.Services.Tests
             Assert.True(result.ProfilePictureUrl == testUserInfoUpdate.ProfilePictureUrl);
         }
 
+        [Fact]
+        public void UpdateProfilePicture_Must_Return_Updated_UserInfo()
+        {
+            // Arrange
+            var dbContext = this.GetDb();
+            var userService = new UserService(dbContext,mapper);
+            var testUser = GetTestUser();
+            var testUserInfo = GetTestUserInfo();
+            //Act
+            dbContext.UserInfos.Add(testUserInfo);
+            dbContext.SaveChanges();
+
+            testUser.UserInfo = testUserInfo;
+            dbContext.Users.Add(testUser);
+            dbContext.SaveChanges();
+            var result = userService.UpdateProfilePicture(testUser, null);
+
+            //Assert
+            Assert.True(result.FirstName == testUserInfo.FirstName);
+            Assert.True(result.LastName == testUserInfo.LastName);
+            Assert.True(result.BirthDate == testUserInfo.BirthDate);
+            Assert.True(result.AboutMe == testUserInfo.AboutMe);
+            Assert.True(result.ProfilePictureUrl == null);
+        }
+
+        [Fact]
+        public void GetProfileSettingsBindingModel_Must_Return_BindingModel()
+        {
+            // Arrange
+            var dbContext = this.GetDb();
+            var userService = new UserService(dbContext,mapper);
+            var testUser = GetTestUser();
+            var testUserInfo = GetTestUserInfo();
+            //Act
+            dbContext.UserInfos.Add(testUserInfo);
+            dbContext.SaveChanges();
+
+            testUser.UserInfo = testUserInfo;
+            dbContext.Users.Add(testUser);
+            dbContext.SaveChanges();
+            var result = userService.GetProfileSettingsBindingModel(testUserInfo.Id);
+
+            //Assert
+            Assert.True(result.FirstName == testUserInfo.FirstName);
+            Assert.True(result.LastName == testUserInfo.LastName);
+            Assert.True(result.BirthDate == testUserInfo.BirthDate);
+            Assert.True(result.AboutMe == testUserInfo.AboutMe);
+            Assert.True(result.ProfilePictureUrl == testUserInfo.ProfilePictureUrl);
+        }
+
+        [Fact]
+        public void GetProfileViewModel_Must_Return_ViewModel()
+        {
+            // Arrange
+            var dbContext = this.GetDb();
+            var userService = new UserService(dbContext,mapper);
+            var testUser = GetTestUser();
+            var testUserInfo = GetTestUserInfo();
+            //Act
+            dbContext.UserInfos.Add(testUserInfo);
+            dbContext.SaveChanges();
+
+            testUser.UserInfo = testUserInfo;
+            dbContext.Users.Add(testUser);
+            dbContext.SaveChanges();
+            var result = userService.GetProfileViewModel(testUserInfo.Id);
+
+            //Assert
+            Assert.True(result.FirstName == testUserInfo.FirstName);
+            Assert.True(result.LastName == testUserInfo.LastName);
+            Assert.True(result.BirthDate == testUserInfo.BirthDate);
+            Assert.True(result.AboutMe == testUserInfo.AboutMe);
+            Assert.True(result.ProfilePictureUrl == testUserInfo.ProfilePictureUrl);
+        }
+
+
         public CustomUser GetTestUser()
         {
             var testUser = new CustomUser()
@@ -114,7 +190,7 @@ namespace Softuni.Community.Services.Tests
                 Id = Guid.NewGuid().ToString(),
                 Email = "mail@mail.com",
                 UserName = "TestUser",
-                PasswordHash = "MySecretPass1"
+                PasswordHash = "MySecretPass1",
             };
             return testUser;
         }
@@ -142,7 +218,7 @@ namespace Softuni.Community.Services.Tests
                     FirstName = "ImUpdateFirstName",
                     LastName = "ImUpdateFirstName",
                     AboutMe = "Just a Dev",
-                    ProfilePictureUrl = null
+                    ProfilePictureUrl = "http://deafhhcenter.org/wp-content/uploads/2017/12/profile-default.jpg"
                 });
 
             return UserInfoBM;
@@ -155,79 +231,6 @@ namespace Softuni.Community.Services.Tests
                 .Options;
             var dbContext = new SuCDbContext(dbOptions);
             return dbContext;
-        }
-
-        public static Mock<UserManager<CustomUser>> MockUserManager<CustomUser>(List<CustomUser> ls) where CustomUser : class
-        {
-            var store = new Mock<IUserStore<CustomUser>>();
-            var mgr = new Mock<UserManager<CustomUser>>(store.Object, null, null, null, null, null, null, null, null);
-            mgr.Object.UserValidators.Add(new UserValidator<CustomUser>());
-            mgr.Object.PasswordValidators.Add(new PasswordValidator<CustomUser>());
-
-            mgr.Setup(x => x.DeleteAsync(It.IsAny<CustomUser>()))
-                .ReturnsAsync(IdentityResult.Success);
-            mgr.Setup(x => x.CreateAsync(It.IsAny<CustomUser>(), It.IsAny<string>()))
-                .ReturnsAsync(IdentityResult.Success).Callback<CustomUser, string>((x, y) => ls.Add(x));
-            mgr.Setup(x => x.UpdateAsync(It.IsAny<CustomUser>()))
-                .ReturnsAsync(IdentityResult.Success);
-            //mgr.Setup(x => x.FindByNameAsync(It.IsAny<string>()))
-            //    .ReturnsAsync(CustomUser);
-
-            return mgr;
-        }
-        public UserManager<CustomUser> GetUserManager()
-        {
-            var mockUserStore = new Mock<IUserStore<CustomUser>>();
-            var mockIOption = new Mock<IOptions<IdentityOptions>>();
-            var mockIPasswordHasher = new Mock<PasswordHasher<CustomUser>>();
-            var mockIUserValidator = new Mock<IEnumerable<IUserValidator<CustomUser>>>();
-            var mockIPasswordValidator = new Mock<IEnumerable<IPasswordValidator<CustomUser>>>();
-            var mockILookupNormalizer = new Mock<ILookupNormalizer>();
-            var mockIdentityErrorDecriber = new Mock<IdentityErrorDescriber>();
-            var mockIServiceProvider = new Mock<IServiceProvider>();
-            var mockILogger = new Mock<ILogger<UserManager<CustomUser>>>();
-
-            var userManager = new UserManager<CustomUser>(mockUserStore.Object,
-                mockIOption.Object,
-                mockIPasswordHasher.Object,
-                mockIUserValidator.Object,
-                mockIPasswordValidator.Object,
-                mockILookupNormalizer.Object,
-                mockIdentityErrorDecriber.Object,
-                mockIServiceProvider.Object,
-                mockILogger.Object);
-            return userManager;
-        }
-        public class FakeUserManager : UserManager<CustomUser>
-        {
-
-            public FakeUserManager()
-                : base(new Mock<IUserStore<CustomUser>>().Object, null, null, null, null, null, null, null, null)
-            { }
-
-            public override Task<IdentityResult> CreateAsync(CustomUser user, string password)
-            {
-                var cansellationToken = new CancellationToken();
-                var res = this.Store.CreateAsync(user, cansellationToken);
-                return res;
-            }
-
-            public override Task<CustomUser> FindByNameAsync(string username)
-            {
-                var cansellationToken = new CancellationToken();
-                return this.Store.FindByNameAsync(username, cansellationToken);
-            }
-
-            public override Task<IdentityResult> AddToRoleAsync(CustomUser user, string role)
-            {
-                return Task.FromResult(IdentityResult.Success);
-            }
-
-            public override Task<string> GenerateEmailConfirmationTokenAsync(CustomUser user)
-            {
-                return Task.FromResult(Guid.NewGuid().ToString());
-            }
-
         }
     }
 }

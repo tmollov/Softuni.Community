@@ -54,16 +54,18 @@ namespace Softuni.Community.Services
             return userInfo;
         }
 
+        //Tested
         public UserInfo UpdateProfilePicture(CustomUser user, string picUri)
         {
             var userInfo = this.context.UserInfos.FirstOrDefault(x => x.Id == user.UserInfoId);
             userInfo.ProfilePictureUrl = picUri;
             this.context.SaveChanges();
 
-            // Return update entity if process is succesfull
+            // Return updated UserInfo entity if process is succesfull
             return userInfo;
         }
 
+        //Tested
         public ProfilesSettingsBindingModel GetProfileSettingsBindingModel(int id)
         {
             var model = this.context.UserInfos.FirstOrDefault(x => x.Id == id);
