@@ -21,6 +21,7 @@ namespace Softuni.Community.Services
             this.mapper = mapper;
         }
 
+        //Tested
         public Joke AddJoke(JokeBindingModel model, CustomUser publisher)
         {
             var joke = this.mapper.Map<Joke>(model);
@@ -31,21 +32,7 @@ namespace Softuni.Community.Services
             return joke;
         }
 
-        public AllJokesViewModel GetAllJokes()
-        {
-            var jokes = this.context.Jokes
-                .Include(x => x.Publisher)
-                .Select(x => mapper.Map<JokeViewModel>(x))
-                .ToList();
-            ;
-
-            var vm = new AllJokesViewModel()
-            {
-                Jokes = jokes
-            };
-            return vm;
-        }
-
+        //Tested
         public Joke DeleteJoke(int id)
         {
             var joke = this.context.Jokes.FirstOrDefault(x => x.Id == id);
@@ -54,13 +41,7 @@ namespace Softuni.Community.Services
             return joke;
         }
 
-        public T GetJoke<T>(int id)
-        {
-            var joke = this.context.Jokes.Include(x => x.Publisher).FirstOrDefault(x => x.Id == id);
-            var result = mapper.Map<T>(joke);
-            return result;
-        }
-
+        //Tested
         public Joke EditJoke(JokeEditBindingModel model)
         {
             var jokeToEdit = this.context.Jokes.FirstOrDefault(x => x.Id == model.Id);
@@ -70,6 +51,7 @@ namespace Softuni.Community.Services
             return jokeToEdit;
         }
 
+        //Tested
         public Joke RateJoke(JokeRatingBindingModel ratingModel, CustomUser user)
         {
             var joke = this.context.Jokes.FirstOrDefault(x => x.Id == ratingModel.JokeId);
@@ -116,25 +98,53 @@ namespace Softuni.Community.Services
             return joke;
         }
 
+        //Tested
+        public T GetJoke<T>(int id)
+        {
+            var joke = this.context.Jokes.Include(x => x.Publisher).FirstOrDefault(x => x.Id == id);
+            var result = mapper.Map<T>(joke);
+            return result;
+        }
+
+        //Tested
+        public AllJokesViewModel GetAllJokes()
+        {
+            var jokes = this.context.Jokes
+                .Include(x => x.Publisher)
+                .Select(x => mapper.Map<JokeViewModel>(x))
+                .ToList();
+            ;
+
+            var vm = new AllJokesViewModel()
+            {
+                Jokes = jokes
+            };
+            return vm;
+        }
+
+        //Tested
         public bool IsUserDisLikedJoke(int jokeId, string userId)
         {
             var result = this.context.UsersJokeDislikes.Any(x => x.JokeId == jokeId && x.UserId == userId);
             return result;
         }
 
+        //Tested
         public bool IsUserLikedJoke(int jokeId, string userId)
         {
             var result = this.context.UsersJokeLikes.Any(x => x.JokeId == jokeId && x.UserId == userId);
             return result;
         }
 
+        //Tested
         public IList<int> GetUserLikedJokesIdList(string userId)
         {
             var ids = this.context.UsersJokeLikes.Where(x => x.UserId == userId).Select(x => x.JokeId).ToList();
             return ids;
         }
 
-        public IList<int> GetUserDisikedJokesIdList(string userId)
+        //Tested
+        public IList<int> GetUserDislikedJokesIdList(string userId)
         {
             var ids = this.context.UsersJokeDislikes.Where(x => x.UserId == userId).Select(x => x.JokeId).ToList();
             return ids;

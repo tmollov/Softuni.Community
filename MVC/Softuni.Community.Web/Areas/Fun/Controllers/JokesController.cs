@@ -76,7 +76,7 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
             {
                 var userId = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
                 viewModel.UserLikedJokes = jokesService.GetUserLikedJokesIdList(userId);
-                viewModel.UserDislikedJokes = jokesService.GetUserDisikedJokesIdList(userId);
+                viewModel.UserDislikedJokes = jokesService.GetUserDislikedJokesIdList(userId);
             }
             return View(viewModel);
         }

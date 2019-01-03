@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Moq;
 using Softuni.Community.Data;
 using Softuni.Community.Data.Models;
 using Softuni.Community.Web;
@@ -32,7 +25,7 @@ namespace Softuni.Community.Services.Tests
             var dbContext = this.GetDb();
             //// Clear Users
             dbContext.Database.EnsureDeleted();
-            var userService = new UserService(dbContext,mapper);
+            var userService = new UserService(dbContext, mapper);
             var testUser = GetTestUser();
 
             //Act
@@ -49,7 +42,7 @@ namespace Softuni.Community.Services.Tests
             var dbContext = this.GetDb();
             //// Clear Users
             dbContext.Database.EnsureDeleted();
-            var userService = new UserService(dbContext,mapper);
+            var userService = new UserService(dbContext, mapper);
             var testUser1 = GetTestUser();
             var testUser2 = GetTestUser();
             //Act
@@ -66,7 +59,7 @@ namespace Softuni.Community.Services.Tests
         {
             // Arrange
             var dbContext = this.GetDb();
-            var userService = new UserService(dbContext,mapper);
+            var userService = new UserService(dbContext, mapper);
             var testUserInfo = GetTestUserInfo();
             var testUserInfo1 = GetTestUserInfo();
             var testUserInfo2 = GetTestUserInfo();
@@ -87,7 +80,7 @@ namespace Softuni.Community.Services.Tests
         {
             // Arrange
             var dbContext = this.GetDb();
-            var userService = new UserService(dbContext,mapper);
+            var userService = new UserService(dbContext, mapper);
             var testUser = GetTestUser();
             var testUserInfo = GetTestUserInfo();
             var testUserInfoUpdate = GetTestUserInfoBMUpdate();
@@ -112,7 +105,7 @@ namespace Softuni.Community.Services.Tests
         {
             // Arrange
             var dbContext = this.GetDb();
-            var userService = new UserService(dbContext,mapper);
+            var userService = new UserService(dbContext, mapper);
             var testUser = GetTestUser();
             var testUserInfo = GetTestUserInfo();
             //Act
@@ -137,7 +130,7 @@ namespace Softuni.Community.Services.Tests
         {
             // Arrange
             var dbContext = this.GetDb();
-            var userService = new UserService(dbContext,mapper);
+            var userService = new UserService(dbContext, mapper);
             var testUser = GetTestUser();
             var testUserInfo = GetTestUserInfo();
             //Act
@@ -162,7 +155,7 @@ namespace Softuni.Community.Services.Tests
         {
             // Arrange
             var dbContext = this.GetDb();
-            var userService = new UserService(dbContext,mapper);
+            var userService = new UserService(dbContext, mapper);
             var testUser = GetTestUser();
             var testUserInfo = GetTestUserInfo();
             //Act

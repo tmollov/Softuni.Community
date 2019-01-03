@@ -632,6 +632,33 @@ namespace Softuni.Community.Services.Tests
             Assert.True(!result);
         }
 
+        /// <summary>
+        /// Testing Get* methods
+        /// </summary>
+        [Fact]
+        public void GetQuestionViewModel_Must_Return_ViewModel()
+        {
+            // Arrange
+            var db = GetDb();
+            db.Database.EnsureDeleted();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = GetTestUser();
+            var testQBM = GetTestQuestionBM();
+
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
+            var targetQuestion = discussionsService.GetQuestionViewModel(addedQuestion.Id);
+
+            //Assert
+            Assert.True(targetQuestion.QuestionId == addedQuestion.Id);
+            Assert.True(targetQuestion.Content == addedQuestion.Content);
+            Assert.True(targetQuestion.Category == addedQuestion.Category);
+            Assert.True(targetQuestion.Title == addedQuestion.Title);
+        }
+
+
         public SuCDbContext GetDb()
         {
             var dbOptions = new DbContextOptionsBuilder<SuCDbContext>()
