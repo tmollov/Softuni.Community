@@ -17,7 +17,7 @@ let jokeBase = "https://localhost:5001/api/jokes/";
 })();
 
 function LikeAnswer(e) {
-    if ($(e).css("color") == "green") {
+    if ($(e).hasClass("liked")) {
         return;
     } else {
         let currentRating = $(e).parent().find("p");
@@ -43,7 +43,7 @@ function LikeAnswer(e) {
 }
 
 function DislikeAnswer(e) {
-    if ($(e).css("color") == "red") {
+    if ($(e).hasClass("disliked")) {
         return;
     } else {
         let currentRating = $(e).parent().find("p");
@@ -68,7 +68,7 @@ function DislikeAnswer(e) {
 }
 
 function LikeQuestion(e) {
-    if ($(e).css("color") == "red") {
+    if ($(e).hasClass("liked")) {
         return;
     } else {
         let currentRating = $(e).parent().find("p");
@@ -93,7 +93,7 @@ function LikeQuestion(e) {
 }
 
 function DislikeQuestion(e) {
-    if ($(e).css("color") == "red") {
+    if ($(e).hasClass("disliked")) {
         return;
     } else {
         let currentRating = $(e).parent().find("p");
@@ -119,11 +119,11 @@ function DislikeQuestion(e) {
 
 
 function LikeJoke(e) {
-    if ($(e).css("color") == "green") {
+    if ($(e).hasClass("liked")) {
         return;
     } else {
-        let currentLikes = $(e).parent().find("p.likes");
         let currentDislikes = $(e).parent().find("p.dislikes");
+        let currentLikes = $(e).parent().find("p.likes");
         let jokeId = $(e).parent().find("span").text().replace("::","");
         let username = $("#Username").text();
         let iconUp = $(e).parent().find(".ratingUp i");
@@ -136,9 +136,11 @@ function LikeJoke(e) {
             data: JSON.stringify({ Rating: 1, JokeId: jokeId, Username: username })
         }).then(function (res) {
             currentLikes.text(Number(currentLikes.text()) + 1);
-            currentDislikes.text(Number(currentLikes.text()) - 1);
-
             iconUp.removeClass("neutral").addClass("liked");
+            if (iconDown.hasClass("disliked")) {
+                currentDislikes.text(Number(currentDislikes.text()) + 1);
+            }
+
             iconDown.removeClass("disliked").addClass("neutral");
         }).catch(function (res) {
             console.log(res);
@@ -147,11 +149,11 @@ function LikeJoke(e) {
 }
 
 function DislikeJoke(e) {
-    if ($(e).css("color") == "green") {
+    if ($(e).hasClass("disliked")) {
         return;
     } else {
-        let currentLikes = $(e).parent().find("p.likes");
         let currentDislikes = $(e).parent().find("p.dislikes");
+        let currentLikes = $(e).parent().find("p.likes");
         let jokeId = $(e).parent().find("span").text().replace("::","");
         let username = $("#Username").text();
         let iconUp = $(e).parent().find(".ratingUp i");
@@ -164,10 +166,11 @@ function DislikeJoke(e) {
             contentType: "application/json",
             data: JSON.stringify({ Rating: -1, JokeId: jokeId, Username: username })
         }).then(function (res) {
-            currentLikes.text(Number(currentLikes.text()) - 1);
-            currentDislikes.text(Number(currentLikes.text()) + 1);
-
+            currentDislikes.text(Number(currentDislikes.text()) - 1);
             iconDown.removeClass("neutral").addClass("disliked");
+            if (iconUp.hasClass("liked")) {
+                currentLikes.text(Number(currentLikes.text()) - 1);
+            }
             iconUp.removeClass("liked").addClass("neutral");
         }).catch(function (res) {
             console.log(res);

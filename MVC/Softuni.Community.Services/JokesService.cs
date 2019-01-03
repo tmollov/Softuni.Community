@@ -76,44 +76,53 @@ namespace Softuni.Community.Services
 
             if (ratingModel.Rating == 1)
             {
-                joke.Likes++;
-                var jokeToRate = new UserJokeLikes(ratingModel.JokeId, user);
-                this.context.UsersJokeLikes.Add(jokeToRate);
-
+                if (IsUserLikedJoke(ratingModel.JokeId, user.Id))
+                {
+                    return null;
+                }
                 if (IsUserDisLikedJoke(ratingModel.JokeId, user.Id))
                 {
+                    joke.Dislikes++;
                     var dislikedJoke = this.context.UsersJokeDislikes.FirstOrDefault(x =>
                         x.User.UserName == ratingModel.Username && x.JokeId == ratingModel.JokeId);
                     this.context.UsersJokeDislikes.Remove(dislikedJoke);
                     this.context.SaveChanges();
                 }
+
+                joke.Likes++;
+                var jokeToRate = new UserJokeLikes(ratingModel.JokeId, user);
+                this.context.UsersJokeLikes.Add(jokeToRate);
             }
             else
             {
-                joke.Dislikes--;
-                var jokeToRate = new UserJokeDislikes(ratingModel.JokeId, user);
-                this.context.UsersJokeDislikes.Add(jokeToRate);
-
+                if (IsUserDisLikedJoke(ratingModel.JokeId, user.Id))
+                {
+                    return null;
+                }
                 if (IsUserLikedJoke(ratingModel.JokeId, user.Id))
                 {
+                    joke.Likes--;
                     var likedJoke = this.context.UsersJokeLikes.FirstOrDefault(x =>
                         x.User.UserName == ratingModel.Username && x.JokeId == ratingModel.JokeId);
                     this.context.UsersJokeLikes.Remove(likedJoke);
                     this.context.SaveChanges();
                 }
+                joke.Dislikes--;
+                var jokeToRate = new UserJokeDislikes(ratingModel.JokeId, user);
+                this.context.UsersJokeDislikes.Add(jokeToRate);
             }
 
             this.context.SaveChanges();
             return joke;
         }
 
-        private bool IsUserDisLikedJoke(int jokeId, string userId)
+        public bool IsUserDisLikedJoke(int jokeId, string userId)
         {
             var result = this.context.UsersJokeDislikes.Any(x => x.JokeId == jokeId && x.UserId == userId);
             return result;
         }
 
-        private bool IsUserLikedJoke(int jokeId, string userId)
+        public bool IsUserLikedJoke(int jokeId, string userId)
         {
             var result = this.context.UsersJokeLikes.Any(x => x.JokeId == jokeId && x.UserId == userId);
             return result;
@@ -121,13 +130,13 @@ namespace Softuni.Community.Services
 
         public IList<int> GetUserLikedJokesIdList(string userId)
         {
-            var ids = this.context.UsersJokeLikes.Where(x => x.UserId == userId).Select(x=>x.JokeId).ToList();
+            var ids = this.context.UsersJokeLikes.Where(x => x.UserId == userId).Select(x => x.JokeId).ToList();
             return ids;
         }
 
         public IList<int> GetUserDisikedJokesIdList(string userId)
         {
-            var ids = this.context.UsersJokeDislikes.Where(x => x.UserId == userId).Select(x=>x.JokeId).ToList();
+            var ids = this.context.UsersJokeDislikes.Where(x => x.UserId == userId).Select(x => x.JokeId).ToList();
             return ids;
         }
     }

@@ -13,6 +13,9 @@ namespace Softuni.Community.Web.Models.ViewModels
         public int Likes { get; set; }
         public int Dislikes { get; set; }
 
+        public bool IsUserLikedJoke { get; set; }
+        public bool IsUserDislikedJoke { get; set; }
+
         public string Publisher { get; set; }
     }
 }

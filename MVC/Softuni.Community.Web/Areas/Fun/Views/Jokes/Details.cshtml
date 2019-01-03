@@ -9,11 +9,37 @@
         <section class="w-50 mx-auto">
             <div class="m-5 p-0">
                 <div class="text-left p-2">
-                    <h2 class="jokeLink">@Model.Content</h2>
+                    <h2 class="jokeLink text-center">@Model.Content</h2>
                     @if (User.Identity.Name != null)
                     {
-                        <div class="border-top mt-5 border-dark">
-                            <p class="m-0 text-center">@Model.Likes:<button class="ratingBtn ratingUp"><i class="fas fa-thumbs-up"></i></button> | <button class="ratingBtn ratingDown"><i class="fas fa-thumbs-down"></i></button>:@Model.Dislikes</p>
+                        <div class="row border-top mt-5 border-dark">
+                            <p class="m-0 text-center">
+                                <span hidden>@Model.Id</span>
+                            <p class="ml-auto likes m-0 p-0 pr-2">@Model.Likes</p>
+                            <span>:</span>
+                            <button class="ratingBtn ratingUp" onclick="LikeJoke(this)">
+                                @if (Model.IsUserLikedJoke)
+                                {
+                                    <i class="fas fa-thumbs-up liked"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-thumbs-up"></i>
+                                }
+                            </button> |
+                            <button class="ratingBtn ratingDown" onclick="DislikeJoke(this)">
+                                @if (Model.IsUserDislikedJoke)
+                                {
+                                    <i class="fas fa-thumbs-down disliked"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-thumbs-down"></i>
+                                }
+                            </button>
+                            <span>:</span>
+                            <p class="mr-auto dislikes m-0 p-0 pl-2">@Model.Dislikes</p>
+                            </p>
                         </div>
                     }
                 </div>
