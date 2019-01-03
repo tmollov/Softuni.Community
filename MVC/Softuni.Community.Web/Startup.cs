@@ -41,10 +41,7 @@ namespace Softuni.Community.Web
             services.AddAuthorization();
 
             // Database
-            services.AddDbContext<SuCDbContext>(opt =>
-            {
-                opt.UseSqlServer(Configuration["Data:ConnectionString"]);
-            });
+            services.AddDbContext<SuCDbContext>(opt => { opt.UseSqlServer(Configuration["Data:ConnectionString"]); });
             services.AddIdentity<CustomUser, IdentityRole>(
                     opts =>
                     {
@@ -60,24 +57,19 @@ namespace Softuni.Community.Web
                 .AddEntityFrameworkStores<SuCDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication();
-
+            services.AddAuthentication( );
 
             //Addding CORS
             services.AddCors();
 
-
             // Setting up AutoMapper
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingProfile());
-            });
+            var mappingConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
             IMapper mapper = mappingConfig.CreateMapper();
 
             // Adding Services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IDiscussionsService, DiscussionsService>();
-            services.AddScoped<IJokesService,JokesService>();
+            services.AddScoped<IJokesService, JokesService>();
             //services.AddScoped<IMemesService,MemesService>();
             services.AddSingleton(mapper);
 
@@ -122,28 +114,30 @@ namespace Softuni.Community.Web
 
             // Using CORS
             app.UseCors(builder =>
+            {
                 builder.AllowAnyHeader()
-                       .AllowAnyMethod()
-                       .AllowAnyOrigin()
-            );
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin();
+            });
 
 
             app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "api",
-                    template: "api/[controller]"
-                );
-                routes.MapRoute(
-                    name: "areas",
-                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-                );
+                    {
+                        routes.MapRoute(
+                            name: "api",
+                            template: "api/[controller]"
+                        );
+                        routes.MapRoute(
+                            name: "areas",
+                            template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                        );
 
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+                        routes.MapRoute(
+                            name: "default",
+                            template: "{controller=Home}/{action=Index}/{id?}");
+                    });
         }
+
 
         public static async Task CreateRole(IServiceProvider serviceProvider,
             IConfiguration configuration, string roleName)

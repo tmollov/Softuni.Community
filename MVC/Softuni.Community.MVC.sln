@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softuni.Community.Web.Model
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softuni.Community.Data.Common", "Softuni.Community.Data.Common\Softuni.Community.Data.Common.csproj", "{40D777A5-A261-4268-A47C-81177881E6D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Softuni.Community.Services.Tests", "Softuni.Community.Services.Tests\Softuni.Community.Services.Tests.csproj", "{C8E6053F-FB0A-4538-BB71-78999225BF59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Softuni.Community.Services.Tests", "Softuni.Community.Services.Tests\Softuni.Community.Services.Tests.csproj", "{C8E6053F-FB0A-4538-BB71-78999225BF59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

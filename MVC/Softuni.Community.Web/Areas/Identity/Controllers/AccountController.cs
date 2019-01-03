@@ -17,6 +17,7 @@ using Softuni.Community.Web.Models.ViewModels;
 namespace Softuni.Community.Web.Areas.Identity.Controllers
 {
     [Area("Identity")]
+    [Authorize]
     public class AccountController : BaseController
     {
         private readonly UserManager<CustomUser> userManager;
@@ -40,10 +41,11 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             this.mapper = mapper;
             this.cloudinary = cloudinary;
         }
-
+        
         [AllowAnonymous]
-        public IActionResult Login()
+        public IActionResult Login(string ReturnUrl)
         {
+            ViewData["Redirection"] = ReturnUrl;
             return View();
         }
 
@@ -67,7 +69,13 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
                                 user, bindingModel.Password, false, false).Result;
 
                         if (result.Succeeded)
+                        {
+                            if (ViewData["Redirection"] != null)
+                            {
+                                return Redirect(ViewData["Redirection"].ToString());
+                            }
                             return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
+                        } 
                     }
                     else
                     {
@@ -131,8 +139,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         {
             return View();
         }
-
-        [Authorize]
+        
         public IActionResult ProfileSetUp()
         {
             // Logic to add: If user profile is setted up redirect to profile settings
@@ -144,7 +151,6 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             return View();
         }
 
-        [Authorize]
         [HttpPost]
         public IActionResult ProfileSetUp(UserInfoBindingModel bindingModel)
         {
@@ -162,22 +168,19 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             }
             return View(bindingModel);
         }
-
-        [Authorize]
+        
         public IActionResult Logout()
         {
             signInManager.SignOutAsync().GetAwaiter().GetResult();
 
             return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
         }
-
-        [Authorize]
+        
         public IActionResult DeleteProfile()
         {
             return this.View();
         }
-
-        [Authorize]
+        
         public IActionResult Profile()
         {
             var user = userManager.FindByNameAsync(User.Identity.Name).Result;
@@ -192,8 +195,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             };
             return this.View(vm);
         }
-
-        [Authorize]
+        
         public IActionResult ProfileSettings()
         {
             var userInfoId = userManager.FindByNameAsync(User.Identity.Name).Result.UserInfoId;
@@ -201,8 +203,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
             return this.View(bindingModel);
         }
-
-        [Authorize]
+        
         [HttpPost]
         public IActionResult ProfileSettings(ProfilesSettingsBindingModel bindingModel)
         {
@@ -224,7 +225,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             return View(bindingModel);
         }
 
-        public ImageUploadResult UploadImage(string path)
+        private ImageUploadResult UploadImage(string path)
         {
             var uploadParams = new ImageUploadParams()
             {
@@ -233,7 +234,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
             return cloudinary.Upload(uploadParams);
         }
-        public async Task<string> CreateTempFile(IFormFile file)
+        private async Task<string> CreateTempFile(IFormFile file)
         {
             var filePath = Path.GetTempFileName();
             var stream = new FileStream(filePath, FileMode.Create);

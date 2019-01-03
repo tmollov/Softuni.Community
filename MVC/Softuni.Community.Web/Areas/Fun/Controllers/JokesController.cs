@@ -84,9 +84,12 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
         public IActionResult Details(int id)
         {
             var vm = jokesService.GetJoke<JokeViewModel>(id);
-            var userid = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
-            vm.IsUserLikedJoke = jokesService.IsUserLikedJoke(vm.Id, userid);
-            vm.IsUserDislikedJoke = jokesService.IsUserDisLikedJoke(vm.Id, userid);
+            if (User.Identity.Name != null)
+            {
+                var userid = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
+                vm.IsUserLikedJoke = jokesService.IsUserLikedJoke(vm.Id, userid);
+                vm.IsUserDislikedJoke = jokesService.IsUserDisLikedJoke(vm.Id, userid);
+            }
             return View(vm);
         }
     }
