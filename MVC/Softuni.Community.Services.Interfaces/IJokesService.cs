@@ -17,6 +17,8 @@ namespace Softuni.Community.Services.Interfaces
         IList<int> GetUserLikedJokesIdList(string userId);
         IList<int> GetUserDislikedJokesIdList(string userId);
 
+        IList<JokeViewModel> GetTopJokes(string userId);
+
         bool IsUserDisLikedJoke(int jokeId, string userId);
         bool IsUserLikedJoke(int jokeId, string userId);
     }

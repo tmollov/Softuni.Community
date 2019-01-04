@@ -77,7 +77,12 @@
                     <div class="navbar-collapse dropdown collapse d-sm-inline-flex flex-sm-row ">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item ml-auto">
-                                <a id="Username" class="nav-link text-dark " asp-area="Identity" asp-controller="Account" asp-action="Profile">@User.Identity.Name</a>
+                                <a  class="nav-link text-dark " asp-area="Identity" asp-controller="Account" asp-action="Profile">
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <i class="fas fa-medal"></i>
+                                    } <span id="Username">@User.Identity.Name</span>
+                                </a>
                             </li>
                         </ul>
                     </div>

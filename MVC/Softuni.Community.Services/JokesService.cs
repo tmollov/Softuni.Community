@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Softuni.Community.Data;
 using Softuni.Community.Data.Models;
+using Softuni.Community.Data.Models.Enums;
 using Softuni.Community.Services.Interfaces;
 using Softuni.Community.Web.Models.BindingModels;
 using Softuni.Community.Web.Models.ViewModels;
@@ -120,6 +122,26 @@ namespace Softuni.Community.Services
                 Jokes = jokes
             };
             return vm;
+        }
+        
+        public IList<JokeViewModel> GetTopJokes(string userId)
+        {
+            // best one joke from every category
+            var jokes = new List<JokeViewModel>();
+            foreach (string category in  Enum.GetNames(typeof(JokeCategory)))
+            {
+                var joke = this.context.Jokes
+                    .Where(x => x.Category == (JokeCategory)Enum.Parse(typeof(JokeCategory), category))
+                    .OrderByDescending(x=>x.Dislikes)
+                    .ThenByDescending(x=>x.Likes)
+                    .First();
+                var vm = mapper.Map<JokeViewModel>(joke);
+                vm.IsUserDislikedJoke = this.IsUserDisLikedJoke(joke.Id,userId);
+                vm.IsUserLikedJoke = this.IsUserLikedJoke(joke.Id,userId);
+                jokes.Add(vm);
+            }
+
+            return jokes;
         }
 
         //Tested

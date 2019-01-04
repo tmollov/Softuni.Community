@@ -10,7 +10,6 @@ using Softuni.Community.Web.Models.ViewModels;
 namespace Softuni.Community.Web.Areas.Fun.Controllers
 {
     [Area("Fun")]
-    [AllowAnonymous]
     public class JokesController : BaseController
     {
         private readonly IJokesService jokesService;
@@ -22,13 +21,13 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
             this.userMgr = userMgr;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Add()
         {
             return View();
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Add(JokeBindingModel bindingModel)
         {
@@ -41,14 +40,14 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
             return View(bindingModel);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id)
         {
             var vm = jokesService.GetJoke<JokeEditBindingModel>(id);
             return View(vm);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Edit(JokeEditBindingModel bindingModel)
         {
@@ -60,7 +59,7 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
             return View(bindingModel);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             var deletedJoke = jokesService.DeleteJoke(id);
@@ -68,7 +67,7 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
             return Redirect("/Fun/Jokes/All");
         }
 
-
+        [AllowAnonymous]
         public IActionResult All()
         {
             var viewModel = jokesService.GetAllJokes();
@@ -80,7 +79,8 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
             }
             return View(viewModel);
         }
-        
+
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             var vm = jokesService.GetJoke<JokeViewModel>(id);
