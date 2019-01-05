@@ -22,7 +22,10 @@
         <div class="col text-left pl-5 my-auto">
             <p class="p-0 m-0">@Model.MyProfile.FirstName @Model.MyProfile.LastName</p>
             <hr class="bg-dark p-0 m-0 mt-2 mb-2 w-25" />
-            <p class="p-0 m-0"><i class="fas fa-home"></i> From V.Tarnovo</p>
+            @if (Model.MyProfile.State != null)
+            {
+            <p class="p-0 m-0"><i class="fas fa-home"></i> From @Model.MyProfile.State</p>
+            }
             <p class="p-0 m-0"><i class="fas fa-birthday-cake"></i> @Model.MyProfile.BirthDate.ToString("d MMMM yyyy")</p>
             <p class="p-0 m-0"><i class="fas fa-bookmark"></i> @Model.MyProfile.AboutMe</p>
         </div>

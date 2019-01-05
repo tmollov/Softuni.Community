@@ -47,7 +47,8 @@ namespace Softuni.Community.Services
                 userInfo.AboutMe = newUserInfo.AboutMe;
             if (newUserInfo.ProfilePictureUrl != null)
                 userInfo.ProfilePictureUrl = newUserInfo.ProfilePictureUrl;
-
+            if (newUserInfo.State != null)
+                userInfo.State = newUserInfo.State;
             this.context.SaveChanges();
 
             // Return updated entity if process is succesfull

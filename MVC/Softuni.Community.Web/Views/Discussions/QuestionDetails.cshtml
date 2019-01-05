@@ -33,14 +33,28 @@
                 </button>
             </div>
         }
+            <div class="col-1 my-auto">
+                <form class="row pt-2 pb-2 my-auto" method="post" asp-controller="Discussions" asp-action="DeleteQuestion">
+                    <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
+                    <div class="my-auto w-100">
+                        <button class="addBtn delete border border-secondary p-3" type="submit">Delete</button>
+                    </div>
+                </form>
+                <form class="row pt-2 pb-2 my-auto" method="get" asp-controller="Discussions" asp-action="EditQuestion">
+                    <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
+                    <div class="my-auto w-100">
+                        <button class="addBtn border border-secondary p-3" type="submit">Edit</button>
+                    </div>
+                </form>
+            </div>
 
-        <div class="col-10 m-0 pb-4 p-0">
+        <div class="col m-0 pb-4 p-0">
             <div class="w-50 mx-auto">
                 <h1 class="text-center">@Model.Question.Title</h1>
                 <hr class="line bg-dark" />
             </div>
             <div class="w-75 mx-auto text-center">
-                <h4 class="w-100">@Model.Question.Content</h4>
+                <h4 class="w-100 jokeLink ">@Model.Question.Content</h4>
             </div>
         </div>
         <div class="col-1 my-auto mx-auto m-0 p-0">
@@ -78,7 +92,7 @@
     <div class="row pt-3 p-0 text-center">
         <div class="mx-auto">
             <div class="border border-dark borderDiscussion">
-                <button id="addAnswerBtn" class="nav-link text-center addAnswerBtn">
+                <button id="addAnswerBtn" class="nav-link text-center addBtn">
                     Add Answer
                 </button>
             </div>
@@ -90,7 +104,7 @@
             <textarea id="replyText" class="col-11 text-center" name="Content" row="100%" cols="100%" maxlength="250" placeholder="Your answer here..."></textarea>
 
             <div class="col-1 my-auto">
-                <button class="addAnswerBtn border border-secondary p-3" type="submit">Reply</button>
+                <button class="addBtn border border-secondary p-3" type="submit">Reply</button>
             </div>
         </form>
     </div>
@@ -135,7 +149,7 @@
                         <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
                         <input type="text" name="AnswerId" value="@answer.AnswerId" hidden />
                         <div class="my-auto">
-                            <button class="addAnswerBtn border border-secondary p-3" type="submit">Delete</button>
+                            <button class="addBtn delete border border-secondary p-3" type="submit">Delete</button>
                         </div>
                     </form>
                 </div>

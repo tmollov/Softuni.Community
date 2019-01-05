@@ -22,6 +22,22 @@ namespace Softuni.Community.Web
                 .ForMember(x => x.Publisher,
                     opts => opts.MapFrom(src => src.Publisher.UserName));
 
+            this.CreateMap<Question, QuestionEditBindingModel>()
+                .ForMember(x=>x.Tags,
+                    opts => opts.MapFrom(src => string.Join("; ",src.Tags.Select(a => a.Name))));
+
+            this.CreateMap<Question, QuestionViewModel>()
+                .ForMember(x=>x.QuestionId,
+                    opts => opts.MapFrom(src => src.Id))
+                .ForMember(x=>x.AnswerCount,
+                    opts => opts.MapFrom(src => src.Answers.Count))
+                .ForMember(x=>x.PublisherName,
+                    opts => opts.MapFrom(src => src.Publisher.UserName))
+                .ForMember(x=>x.PublisherPicture,
+                    opts => opts.MapFrom(src => src.Publisher.UserInfo.ProfilePictureUrl))
+                .ForMember(x=>x.Tags,
+                    opts => opts.MapFrom(src => src.Tags.Select(a => a.Name).ToList()));
+
             this.CreateMap<Question, QuestionViewModel>()
                 .ForMember(x=>x.QuestionId,
                     opts => opts.MapFrom(src => src.Id))

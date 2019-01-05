@@ -15,7 +15,7 @@
     </div>
     @foreach (var item in Model.ViewModels)
     {
-        <div class="container borderDiscussion discussionDiv myHover mt-3">
+        <div class="container borderDiscussion myHover mt-3">
             <div class="row mx-auto">
                 <div class="text-center w-100">
                     <div class="col">
@@ -57,6 +57,10 @@
                         <span>@string.Join("",item.Tags)</span>
                     }
                 </div>
+                <div class="col-sm">
+                    <p class="text-left m-0">Category: @item.Category</p>
+                </div>
+
                 <div class="row ml-auto">
                     <p class="mr-3 m-0">@item.PublisherName</p>
                     <span class="mr-3">

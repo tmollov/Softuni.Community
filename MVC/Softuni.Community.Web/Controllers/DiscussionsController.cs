@@ -90,10 +90,10 @@ namespace Softuni.Community.Web.Controllers
         {
             return View();
         }
-
+        
         [Authorize]
         [HttpPost]
-        public IActionResult AddQuestion(QuestionBingingModel bindingModel)
+        public IActionResult AddQuestion(QuestionBindingModel bindingModel)
         {
             if (ModelState.IsValid)
             {
@@ -105,10 +105,26 @@ namespace Softuni.Community.Web.Controllers
         }
 
         [Authorize]
-        [HttpPost]
-        public IActionResult Delete()
+        public IActionResult EditQuestion(int questionId)
         {
-            return View();
+            var bm = discussService.GetQuestionEditBindingModel(questionId);
+            return View(bm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult EditQuestion(QuestionEditBindingModel bindingModel)
+        {
+            var bm = discussService.EditQuestion(bindingModel);
+            return Redirect($"/Discussions/QuestionDetails/?Id={bindingModel.Id}");
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult DeleteQuestion(int questionId)
+        {
+            discussService.DeleteQuestion(questionId);
+            return RedirectToAction(ActionsConts.AllDiscussions,ControllersConts.Discussions);
         }
 
     }

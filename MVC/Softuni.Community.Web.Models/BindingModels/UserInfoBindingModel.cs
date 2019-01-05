@@ -28,7 +28,12 @@ namespace Softuni.Community.Web.Models.BindingModels
         [StringLength(300)]
         [Display(Name = "Share us more about you")]
         public string AboutMe { get; set; }
-        
+
+        [DataType(DataType.Text)]
+        [MinLength(4)]
+        [Display(Name = "From which state are you ?")]
+        public string State { get; set; }
+
         public string ProfilePictureUrl { get; set; }
     }
 }

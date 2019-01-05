@@ -27,7 +27,7 @@
             </div>
 
             <div class="upload-btn-wrapper mt-3">
-                <label class="btn addAnswerBtn border border-dark" asp-for="ProfilePicture">Upload Picture</label>
+                <label class="btn addBtn border border-dark" asp-for="ProfilePicture">Upload Picture</label>
                 <input asp-for="ProfilePicture" onchange="readURL(this);" hidden>
             </div>
         </div>
@@ -52,13 +52,17 @@
                 <textarea asp-for="AboutMe" class="form-control" cols="10" rows="5"></textarea>
                 <span asp-validation-for="AboutMe" class="text-danger"></span>
             </div>
-            
 
+            <div class="form-group">
+                <label asp-for="State"></label>
+                <input asp-for="State" class="form-control" cols="10" rows="5">
+                <span asp-validation-for="State" class="text-danger"></span>
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="form-group mx-auto col-12">
-            <button class="btn addAnswerBtn border border-dark" type="submit">Apply Settings</button>
+            <button class="btn addBtn border border-dark" type="submit">Apply Settings</button>
         </div>
        
     </div>

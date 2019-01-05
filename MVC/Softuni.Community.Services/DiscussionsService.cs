@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Softuni.Community.Data;
 using Softuni.Community.Data.Models;
+using Softuni.Community.Data.Models.Enums;
 using Softuni.Community.Services.Interfaces;
 using Softuni.Community.Web.Models.BindingModels;
 using Softuni.Community.Web.Models.ViewModels;
@@ -20,6 +21,69 @@ namespace Softuni.Community.Services
         {
             this.context = context;
             this.mapper = mapper;
+        }
+
+        public QuestionEditBindingModel GetQuestionEditBindingModel(int questionId)
+        {
+            var question = this.context.Questions
+                .Include(x => x.Tags)
+                .FirstOrDefault(x => x.Id == questionId);
+            var bm = mapper.Map<QuestionEditBindingModel>(question);
+            return bm;
+        }
+
+        public Question EditQuestion(QuestionEditBindingModel bindingModel)
+        {
+            var question = this.context.Questions.FirstOrDefault(x => x.Id == bindingModel.Id);
+            question.Title = bindingModel.Title;
+            question.Content = bindingModel.Content;
+            question.Tags = this.UpdateTags(bindingModel.Tags, question);
+            question.Category = bindingModel.Category;
+            this.context.SaveChanges();
+            return question;
+        }
+
+        public ICollection<Tag> UpdateTags(string tags, Question question)
+        {
+            if (tags == null)
+                return new List<Tag>();
+
+            if (!tags.Contains(";") && tags.Length > 0)
+            {
+                List<Tag> list = new List<Tag>();
+                list.Add(this.AddTag(tags, question));
+                return list;
+            }
+
+            var tagList = tags.Split(";", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+            var currentTags = this.context.Questions
+                .Include(x => x.Tags)
+                .FirstOrDefault(x => x.Id == question.Id).Tags;
+
+            List<Tag> newTagsList = new List<Tag>();
+            foreach (var item in tagList)
+            {
+                if (currentTags.Any(x => x.Name == item))
+                {
+                    newTagsList.Add(currentTags.FirstOrDefault(x => x.Name == item));
+                    continue;
+                }
+                newTagsList.Add(this.AddTag(item, question));
+            }
+            return newTagsList;
+        }
+
+        public Question DeleteQuestion(int questionId)
+        {
+            var question = this.context.Questions.FirstOrDefault(x => x.Id == questionId);
+            if (question is null)
+            {
+                return null;
+            }
+
+            this.context.Questions.Remove(question);
+            this.context.SaveChanges();
+            return question;
         }
 
         public ICollection<AnswerViewModel> GetAnswersViewModels(int questionId)
@@ -58,16 +122,16 @@ namespace Softuni.Community.Services
         {
             var questions = this.context.Questions.Include(x => x.Publisher)
                 .Where(x => x.Publisher.UserName == username)
-                .Select(x=> mapper.Map<MyQuestionViewModel>(x)).ToList();
+                .Select(x => mapper.Map<MyQuestionViewModel>(x)).ToList();
             return questions;
         }
         public ICollection<MyAnswerViewModel> GetUserAnswers(string username)
         {
             var answers = this.context.Answers
                 .Include(x => x.Publisher)
-                .Include(x=>x.Question)
+                .Include(x => x.Question)
                 .Where(x => x.Publisher.UserName == username)
-                .Select(x=> mapper.Map<MyAnswerViewModel>(x)).ToList();
+                .Select(x => mapper.Map<MyAnswerViewModel>(x)).ToList();
             return answers;
         }
 
@@ -201,7 +265,7 @@ namespace Softuni.Community.Services
         }
 
         //Tested
-        public Question AddQuestion(QuestionBingingModel model, CustomUser publisher)
+        public Question AddQuestion(QuestionBindingModel model, CustomUser publisher)
         {
             var question = new Question(model.Title, model.Content, model.Category, publisher);
             this.context.Questions.Add(question);
@@ -222,15 +286,46 @@ namespace Softuni.Community.Services
         }
 
         //Tested
-        public ICollection<Tag> GenerateTagEntities(string tags, Question quest)
+        public ICollection<Tag> GenerateTagEntities(string tags, Question question)
         {
+            if (tags == null)
+                return new List<Tag>();
+
+            if (!tags.Contains(";") && tags.Length > 0)
+            {
+                List<Tag> list = new List<Tag>();
+                list.Add(this.AddTag(tags, question));
+                return list;
+            }
             var tagList = tags.Split(";", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
             List<Tag> tagsList = new List<Tag>();
             foreach (var item in tagList)
             {
-                tagsList.Add(this.AddTag(item, quest));
+                tagsList.Add(this.AddTag(item, question));
             }
             return tagsList;
+        }
+
+
+        public IList<QuestionViewModel> GetTopQuestions()
+        {
+            // best one joke from every category
+            var questions = new List<QuestionViewModel>();
+            foreach (string category in Enum.GetNames(typeof(Category)))
+            {
+                var question = this.context.Questions
+                    .Where(x => x.Category == (Category)Enum.Parse(typeof(Category), category))
+                    .OrderByDescending(x => x.Rating)
+                    .FirstOrDefault();
+
+                if (question != null)
+                {
+                    var vm = this.GetQuestionViewModel(question.Id);
+                    questions.Add(vm);
+                }
+            }
+
+            return questions;
         }
 
         //Tested

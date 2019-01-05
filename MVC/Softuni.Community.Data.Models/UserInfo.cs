@@ -25,7 +25,11 @@ namespace Softuni.Community.Data.Models
         [DataType(DataType.Text)]
         [StringLength(300)]
         public string AboutMe { get; set; }
-        
+
+        [DataType(DataType.Text)]
+        [MinLength(4)]
+        public string State { get; set; }
+
         public string ProfilePictureUrl { get; set; }
     }
 }

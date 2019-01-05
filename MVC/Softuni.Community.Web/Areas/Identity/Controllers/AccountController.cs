@@ -17,7 +17,6 @@ using Softuni.Community.Web.Models.ViewModels;
 namespace Softuni.Community.Web.Areas.Identity.Controllers
 {
     [Area("Identity")]
-    [Authorize]
     public class AccountController : BaseController
     {
         private readonly UserManager<CustomUser> userManager;
@@ -28,10 +27,10 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         private readonly Cloudinary cloudinary;
 
         public AccountController(UserManager<CustomUser> userMgr,
-            SignInManager<CustomUser> signinMgr, 
-            IUserService userService, 
+            SignInManager<CustomUser> signinMgr,
+            IUserService userService,
             IDiscussionsService discussionsService,
-            IMapper mapper, 
+            IMapper mapper,
             Cloudinary cloudinary)
         {
             this.userManager = userMgr;
@@ -41,11 +40,11 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             this.mapper = mapper;
             this.cloudinary = cloudinary;
         }
-        
+
         [AllowAnonymous]
         public IActionResult Login(string ReturnUrl)
         {
-            var vm = new LoginBindingModel() {ReturnUrl = ReturnUrl };
+            var vm = new LoginBindingModel() { ReturnUrl = ReturnUrl };
 
             return View(vm);
         }
@@ -76,7 +75,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
                                 return Redirect(bindingModel.ReturnUrl);
                             }
                             return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
-                        } 
+                        }
                     }
                     else
                     {
@@ -122,7 +121,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToRoute("/Identity/Account/ProfileSetUp");
+                    return Redirect("/Identity/Account/ProfileSetUp");
                 }
                 else
                 {
@@ -140,7 +139,8 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         {
             return View();
         }
-        
+
+        [Authorize]
         public IActionResult ProfileSetUp()
         {
             // Logic to add: If user profile is setted up redirect to profile settings
@@ -153,6 +153,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult ProfileSetUp(UserInfoBindingModel bindingModel)
         {
             if (ModelState.IsValid)
@@ -169,19 +170,35 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             }
             return View(bindingModel);
         }
-        
+
+        [Authorize]
         public IActionResult Logout()
         {
             signInManager.SignOutAsync().GetAwaiter().GetResult();
 
             return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
         }
-        
+
+        [Authorize]
         public IActionResult DeleteProfile()
         {
             return this.View();
         }
-        
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult DeleteProfile(DeleteProfileBindingModel bindingModel)
+        {
+            if (bindingModel.IsConfirmed)
+            {
+                signInManager.SignOutAsync().GetAwaiter().GetResult();
+                var user = userManager.FindByNameAsync(User.Identity.Name).Result;
+                var res = userManager.DeleteAsync(user).Result;
+            }
+            return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
+        }
+
+        [Authorize]
         public IActionResult Profile()
         {
             var user = userManager.FindByNameAsync(User.Identity.Name).Result;
@@ -196,7 +213,8 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             };
             return this.View(vm);
         }
-        
+
+        [Authorize]
         public IActionResult ProfileSettings()
         {
             var userInfoId = userManager.FindByNameAsync(User.Identity.Name).Result.UserInfoId;
@@ -204,7 +222,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
             return this.View(bindingModel);
         }
-        
+
         [HttpPost]
         public IActionResult ProfileSettings(ProfilesSettingsBindingModel bindingModel)
         {
@@ -225,7 +243,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
             }
             return View(bindingModel);
         }
-
+        
         private ImageUploadResult UploadImage(string path)
         {
             var uploadParams = new ImageUploadParams()

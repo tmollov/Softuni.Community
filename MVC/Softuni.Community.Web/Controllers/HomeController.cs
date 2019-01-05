@@ -29,6 +29,7 @@ namespace Softuni.Community.Web.Controllers
                 var userId = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
                 var vm = new IndexViewModel();
                 vm.Jokes = jokeService.GetTopJokes(userId);
+                vm.Questions = discussionsService.GetTopQuestions();
                 return View(vm);
             }
             return View();

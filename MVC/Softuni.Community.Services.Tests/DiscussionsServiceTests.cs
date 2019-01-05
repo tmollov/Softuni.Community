@@ -701,9 +701,9 @@ namespace Softuni.Community.Services.Tests
             return model;
         }
 
-        public QuestionBingingModel GetTestQuestionBM()
+        public QuestionBindingModel GetTestQuestionBM()
         {
-            var model = new QuestionBingingModel()
+            var model = new QuestionBindingModel()
             {
                 Title = "TestQuestion",
                 Content = "Just a test content",

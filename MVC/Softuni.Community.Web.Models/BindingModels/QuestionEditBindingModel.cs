@@ -3,8 +3,11 @@ using Softuni.Community.Data.Models.Enums;
 
 namespace Softuni.Community.Web.Models.BindingModels
 {
-    public class QuestionBingingModel
+    public class QuestionEditBindingModel
     {
+        [Required] 
+        public int Id { get; set; }
+
         [Required]
         [DataType(DataType.Text)]
         [MinLength(10)]
@@ -17,10 +20,10 @@ namespace Softuni.Community.Web.Models.BindingModels
         [Display(Name = "What is your question ?")]
         public string Content { get; set; }
 
-        [Display(Name = "Please seperate you tags with (semicolon) ';' symbol.")]
+        [Display(Name = "Please separate you tags with (semicolon) ';' symbol.")]
         public string Tags { get; set; }
 
         [Display(Name = "Put it on one of these categories")]
-        public Category Category { get;set;}
+        public Category Category { get; set; }
     }
 }

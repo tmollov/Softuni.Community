@@ -7,6 +7,11 @@ namespace Softuni.Community.Services.Interfaces
 {
     public interface IDiscussionsService
     {
+        QuestionEditBindingModel GetQuestionEditBindingModel(int questionId);
+        Question EditQuestion(QuestionEditBindingModel bindingModel);
+        Question DeleteQuestion(int questionId);
+
+        IList<QuestionViewModel> GetTopQuestions();
         IList<int> GetUserLikedAnswersIdList(string username);
         IList<int> GetUserDisLikedAnswersIdList(string username);
         ICollection<MyQuestionViewModel> GetUserQuestions(string username);
@@ -23,7 +28,7 @@ namespace Softuni.Community.Services.Interfaces
         Answer DeleteAnswer(int AnswerId, int QuestionId);
         Answer RateAnswer(AnswerRatingBindingModel model, CustomUser user);
 
-        Question AddQuestion(QuestionBingingModel model, CustomUser user);
+        Question AddQuestion(QuestionBindingModel model, CustomUser user);
         Question RateQuestion(QuestionRatingBindingModel model, CustomUser user);
 
         Tag AddTag(string name, Question question);

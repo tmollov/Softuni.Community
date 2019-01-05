@@ -1,17 +1,17 @@
 ﻿@using Softuni.Community.Data.Models.Enums
 
-@model Softuni.Community.Web.Models.BindingModels.QuestionBindingModel
-
+@model Softuni.Community.Web.Models.BindingModels.QuestionEditBindingModel
 @{
-    ViewData["Title"] = "Create Question";
+    ViewData["Title"] = "Edit Question";
 }
 
 <h1 class="text-center mt-4 mb-4">@ViewData["Title"]</h1>
 <div>
     <div class="text-center">
         <section class="w-25 mx-auto">
-            <form asp-controller="Discussions" asp-action="AddQuestion" method="post">
+            <form asp-controller="Discussions" asp-action="EditQuestion" method="post">
                 <hr />
+                <input asp-for="Id" hidden/>
                 <div class="form-group">
                     <label asp-for="Title"></label>
                     <input asp-for="Title" class="form-control" placeholder="Title here..." />
@@ -33,7 +33,7 @@
                     <span asp-validation-for="Tags" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default">Add Question</button>
+                    <button type="submit" class="btn btn-default">Edit Question</button>
                 </div>
             </form>
         </section>

@@ -32,8 +32,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="AboutMe"></label>
-                <textarea asp-for="AboutMe" class="form-control" cols="10" rows="5" ></textarea>
+                <textarea asp-for="AboutMe" class="form-control" cols="10" rows="5"></textarea>
                 <span asp-validation-for="AboutMe" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="State"></label>
+                <input asp-for="State" class="form-control">
+                <span asp-validation-for="State" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-default">Update Account</button>
         </form>

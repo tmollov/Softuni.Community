@@ -1,7 +1,21 @@
-﻿
+﻿@model Softuni.Community.Web.Models.BindingModels.DeleteProfileBindingModel
 @{
     ViewData["Title"] = "DeleteProfile";
 }
-
-<h1>DeleteProfile</h1>
-
+<h1>Delete Profile</h1>
+<div class="mt-5">
+    <form asp-area="Identity" asp-controller="Account" asp-action="DeleteProfile" method="post">
+        <h1>Are you sure ?</h1>
+        <div class="mt-5 mx-auto text-center">
+            <div>
+                <input asp-for="IsConfirmed" checked hidden/>
+                <button class=" addBtn delete p-2 mx-auto" type="submit">
+                    <h3 class="my-auto ">Yes, Delete it.</h3></button>
+            </div>
+            <div class="mt-4">
+                <h3><a class="addBtn p-2 mx-auto" asp-area="Identity" asp-controller="Account" asp-action="Profile">No, I'll stay</a></h3>
+            </div>
+            
+        </div>
+    </form>
+</div>

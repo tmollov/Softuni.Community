@@ -24,7 +24,9 @@ else
                 @foreach (var joke in Model.Jokes)
                 {
                     <div class="m-0 mt-4 mb-4 w-100 border-bottom border-dark">
-                        <div class="mx-auto text-left jokeLink">@joke.Content</div>
+                        <div class="p-0 m-0 text-left">
+                            <a class="m-0 p-0 jokeLink" href="/Fun/Jokes/Details/?id=@joke.Id">@joke.Content</a>
+                        </div>
                         <div class="row m-0 p-0 mt-2 ">
 
                             <div class="ml-4">
@@ -58,6 +60,77 @@ else
                                 <p class="mr-auto dislikes m-0 p-0">@joke.Dislikes</p>
                             </div>
                         </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-6 p-5">
+            <h2>Top Questions</h2>
+            <div class="scrollable scrollableDiv p-3">
+                @foreach (var question in Model.Questions)
+                {
+                    <div class="m-0 mt-4 mb-4 w-100 myHover">
+                        <div class="row mx-auto">
+                            <div class="text-center w-100">
+                                <div class="col">
+                                    <div>
+                                        <h3>
+                                            <a href="/Discussions/QuestionDetails/?Id=@question.QuestionId">
+                                                @if (question.Title.Length > 30)
+                                                {
+                                                    @string.Join("", question.Title.Take(25));<span>...</span>
+                                                }
+                                                else
+                                                {
+                                                    @question.Title
+                                                }
+                                            </a>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="questionStat w-100 row">
+                            <div class="col-sm-1">
+                                <p class="text-center m-0"><i class="fas fa-star"></i>: @question.Rating</p>
+                            </div>
+                            <div class="col-sm-1">
+                                <p class="text-center m-0"><i class="fas fa-comments"></i>: @question.AnswerCount</p>
+                            </div>
+                            <div class="col-sm-3 row">
+                                <p class="ml-3 mr-3 m-0"><i class="fas fa-hashtag"></i>:</p>
+                                @if (question.Tags.Count > 1)
+                                {
+                                    foreach (var tag in question.Tags)
+                                    {
+                                        <span>/@tag</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span>@string.Join("", question.Tags)</span>
+                                }
+                            </div>
+                            <div class="col-sm">
+                                <p class="text-left m-0">Category: @question.Category</p>
+                            </div>
+                            <div class="row ml-auto">
+                                <p class="mr-3 m-0">@question.PublisherName</p>
+                                <span class="mr-3">
+                                    @if (question.PublisherPicture == null)
+                                    {
+                                        <i class="fas fa-user-circle"></i>
+                                    }
+                                    else
+                                    {
+                                        <img class="ProfilePictureSmall" src="@question.PublisherPicture"
+                                             alt="NoImg" width="15px" height="15px" />
+                                    }
+                                </span>
+                                <p class="m-0">@question.PublishTime.ToString("dd MMM yyyy")</p>
+                            </div>
+                        </div>
+                        <hr class="line bg-dark" />
                     </div>
                 }
             </div>
