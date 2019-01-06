@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Softuni.Community.Data;
 
 namespace Softuni.Community.Data.Migrations
 {
     [DbContext(typeof(SuCDbContext))]
-    partial class SuCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190106150541_updated_GameProblem_table")]
+    partial class updated_GameProblem_table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

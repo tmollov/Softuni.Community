@@ -70,6 +70,7 @@ namespace Softuni.Community.Web
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IDiscussionsService, DiscussionsService>();
             services.AddScoped<IJokesService, JokesService>();
+            services.AddScoped<IProblemsService, ProblemsService>();
             //services.AddScoped<IMemesService,MemesService>();
             services.AddSingleton(mapper);
 

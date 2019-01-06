@@ -148,6 +148,10 @@ a {
     height: 600px;
 }
 
+.gameQuestionsDiv {
+    display: inline-block;
+}
+
 .jokeLink {
     overflow: hidden;
     text-overflow: ellipsis;

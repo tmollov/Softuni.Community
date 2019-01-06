@@ -33,6 +33,9 @@ namespace Softuni.Community.Data
         public DbSet<UserJokeLikes> UsersJokeLikes { get; set; }
         public DbSet<UserJokeDislikes> UsersJokeDislikes { get; set; }
 
+        public DbSet<Choice> Choices { get; set; }
+        public DbSet<GameProblem> GameProblems { get; set; }
+
         //public DbSet<QuestionsTags> QuestionsTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

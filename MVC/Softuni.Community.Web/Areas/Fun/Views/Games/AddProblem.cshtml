@@ -1,0 +1,50 @@
+﻿@using Softuni.Community.Data.Models.Enums
+@model Softuni.Community.Web.Models.BindingModels.AddProblemBindingModel
+@{
+    ViewData["Title"] = "Add Problem";
+}
+
+
+<h1 class="text-center mt-4 mb-4">@ViewData["Title"]</h1>
+<div>
+    <div class="text-center">
+        <section class="w-25 mx-auto">
+            <form asp-area="Fun" asp-controller="Games" asp-action="AddProblem" method="post">
+                <hr />
+                <div class="form-group">
+                    <label asp-for="Content"></label>
+                    <textarea asp-for="Content" class="form-control" placeholder="Problem description here..."></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AnswerA"></label>
+                    <input asp-for="AnswerA" class="form-control" placeholder="A..." />
+                    <span asp-validation-for="AnswerA" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AnswerB"></label>
+                    <input asp-for="AnswerB" class="form-control" placeholder="B..." />
+                    <span asp-validation-for="AnswerB" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AnswerC"></label>
+                    <input asp-for="AnswerC" class="form-control" placeholder="C..." />
+                    <span asp-validation-for="AnswerC" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AnswerD"></label>
+                    <input asp-for="AnswerD" class="form-control" placeholder="D..." />
+                    <span asp-validation-for="AnswerD" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="RightAnswer"></label>
+                    <select asp-for="RightAnswer" asp-items="Html.GetEnumSelectList<ChoiceEnum>()"></select>
+                    <span asp-validation-for="RightAnswer" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default">Add Question</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>

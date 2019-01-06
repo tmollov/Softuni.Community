@@ -1,7 +1,54 @@
 ﻿
 @{
-    ViewData["Title"] = "Become Code Wizard";
+    ViewData["Title"] = "Code Wizard";
 }
 
-<h1>Code Wizard</h1>
+<link href="~/css/codeWizard.css" rel="stylesheet" />
+<section id="gameSection">
+    <section id="start">
+        <h2 class="text-center">
+            <button id="startGame" >Start Game</button>
+        </h2>
+        @if (User.IsInRole("Admin"))
+        {
+            <div>
+                <a asp-area="Fun" asp-controller="Games" asp-action="ManageCodeWizard">Manage Game</a>
+            </div>
+        }
+        <div id="loadingDiv" class="text-center" style="display:none">
+            <img src="https://goengo.com/wp-content/plugins/layerednavigation-master/assets/images/Layered-Navigation-Loading.gif"
+                 width="40px">
+        </div>
+    </section>
+    <section id="game" style="display:none">
+        <section class="mx-auto">
+            <h1 class="text-center mx-auto">Question: #<span id="questionNo">1</span></h1>
+        </section>
+        <section class="mx-auto mt-5 p-5" id="quiz">
+            <div id="quizContent">
+                <h1 class="text-center">What is GIT?</h1>
+            </div>
+        </section>
+        <section id="choices" class="mt-4 m-0 p-0">
+            <div id="choiceA" class="choice">
+                <h3>General Internet Transfer</h3>
+            </div>
+            <div id="choiceB" class="choice">
+                <h3>Programming language</h3>
+            </div>
+            <div id="choiceC" class="choice">
+                <h3>Version-control system</h3>
+            </div>
+            <div id="choiceD" class="choice">
+                <h3>PHP</h3>
+            </div>
+        </section>
+    </section>
+    <section id="score" style="display: none;">
+        <h1 class="text-center">Score : </h1>
+        <h2 class="text-center"></h2>
+        <button id="playAgain" class="text-white">Play Again</button>
+    </section>
+</section>
 
+<script src="~/js/codeWizard.js"></script>

@@ -65,6 +65,16 @@ namespace Softuni.Community.Web
             this.CreateMap<Answer, MyAnswerViewModel>()
                 .ForMember(x => x.QuestionTitle,
                     opts => opts.MapFrom(src => src.Question.Title));
+
+            this.CreateMap<AddProblemBindingModel, GameProblem>()
+                .ForMember(x => x.ProblemContent,
+                    opts => opts.MapFrom(src => src.Content));
+
+            this.CreateMap<GameProblem, GameProblemViewModel>();
+            this.CreateMap<GameProblem, ProblemDetailsViewModel>()
+                .ForMember(x => x.Answers,
+                    opts => opts.MapFrom(src => src.Choices.Select(x=>x.Content).ToArray()));
+
         }
     }
 }

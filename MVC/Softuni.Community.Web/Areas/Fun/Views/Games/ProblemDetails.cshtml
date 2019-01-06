@@ -1,0 +1,34 @@
+﻿@model Softuni.Community.Web.Models.ViewModels.ProblemDetailsViewModel
+
+@{
+
+    ViewData["Title"] = "Problem Details";
+}
+
+<h1 class="text-center mt-4 mb-4">@ViewData["Title"]</h1>
+<div>
+    <div class="text-center">
+        <section class="w-50 mx-auto">
+            <div class="m-5 p-0">
+                <div class="text-left p-2">
+                    <h2 class="jokeLink text-center">@Model.ProblemContent</h2>
+                </div>
+                <div>
+                    <h3 class="liked">@Model.RightAnswer</h3>
+                </div>
+                @foreach(var item in Model.Answers){
+                    <div>
+                        <h3 class="disliked">@item</h3>
+                    </div>
+                }
+            </div>
+        </section>
+    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="mx-auto">
+            <p>Need modifications? <a class="delete" href="/Fun/Jokes/EditProblem/?id=@Model.Id">EDIT</a> it.</p>
+            <p>You can also <a class="delete" href="/Fun/Games/DeleteProblem/?id=@Model.Id">DELETE</a> it.</p>
+        </div>
+    }
+</div>

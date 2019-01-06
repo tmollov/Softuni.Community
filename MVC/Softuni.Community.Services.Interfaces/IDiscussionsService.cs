@@ -11,6 +11,7 @@ namespace Softuni.Community.Services.Interfaces
         Question EditQuestion(QuestionEditBindingModel bindingModel);
         Question DeleteQuestion(int questionId);
 
+        bool IsCurrentUserIsPublisherOfQuestion(int questionId, string userId);
         IList<QuestionViewModel> GetTopQuestions();
         IList<int> GetUserLikedAnswersIdList(string username);
         IList<int> GetUserDisLikedAnswersIdList(string username);

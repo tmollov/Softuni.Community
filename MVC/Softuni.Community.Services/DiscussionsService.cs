@@ -23,6 +23,13 @@ namespace Softuni.Community.Services
             this.mapper = mapper;
         }
 
+        public bool IsCurrentUserIsPublisherOfQuestion(int questionId, string userId)
+        {
+            return this.context.Questions
+                       .FirstOrDefault(x => x.Id == questionId)
+                       .PublisherId == userId;
+        }
+
         public QuestionEditBindingModel GetQuestionEditBindingModel(int questionId)
         {
             var question = this.context.Questions

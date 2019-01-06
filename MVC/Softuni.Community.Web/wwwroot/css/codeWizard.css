@@ -1,0 +1,52 @@
+hr {
+    height: 10px;
+    background-color: black;
+    width: 20%;
+}
+
+#quiz {
+    border: 3px solid black;
+}
+
+.choice, h3 {
+    display: inline-block;
+}
+
+.choice {
+    border: 3px solid black;
+    border-radius: 5px;
+    width: 49%;
+    text-align: center;
+    align-items: center;
+    margin: 0;
+    margin-bottom: 2%;
+}
+
+.choice:hover {
+    cursor: pointer;
+}
+
+#gameSection p {
+    font-weight: 600;
+    font-size: 44px;
+}
+
+#startGame {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: 0;
+}
+
+#start {
+    height: 50vh;
+    padding: 20%;
+}
+
+#gameSection h3 {
+    padding: 2%;
+}
+
+#score button{
+    cursor: pointer;
+}

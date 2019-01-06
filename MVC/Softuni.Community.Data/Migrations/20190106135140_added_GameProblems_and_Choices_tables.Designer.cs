@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Softuni.Community.Data;
 
 namespace Softuni.Community.Data.Migrations
 {
     [DbContext(typeof(SuCDbContext))]
-    partial class SuCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190106135140_added_GameProblems_and_Choices_tables")]
+    partial class added_GameProblems_and_Choices_tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,7 +175,7 @@ namespace Softuni.Community.Data.Migrations
                     b.Property<string>("Content")
                         .IsRequired();
 
-                    b.Property<int>("GameProblemId");
+                    b.Property<int?>("GameProblemId");
 
                     b.HasKey("Id");
 
@@ -248,8 +250,7 @@ namespace Softuni.Community.Data.Migrations
                     b.Property<string>("ProblemContent")
                         .IsRequired();
 
-                    b.Property<string>("RightAnswer")
-                        .IsRequired();
+                    b.Property<int>("RightAnswer");
 
                     b.HasKey("Id");
 
@@ -543,10 +544,9 @@ namespace Softuni.Community.Data.Migrations
 
             modelBuilder.Entity("Softuni.Community.Data.Models.Choice", b =>
                 {
-                    b.HasOne("Softuni.Community.Data.Models.GameProblem", "GameProblem")
+                    b.HasOne("Softuni.Community.Data.Models.GameProblem")
                         .WithMany("Choices")
-                        .HasForeignKey("GameProblemId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("GameProblemId");
                 });
 
             modelBuilder.Entity("Softuni.Community.Data.Models.CustomUser", b =>

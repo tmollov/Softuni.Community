@@ -107,8 +107,14 @@ namespace Softuni.Community.Web.Controllers
         [Authorize]
         public IActionResult EditQuestion(int questionId)
         {
-            var bm = discussService.GetQuestionEditBindingModel(questionId);
-            return View(bm);
+            var userId = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
+            if (discussService.IsCurrentUserIsPublisherOfQuestion(questionId,userId))
+            {
+                var bm = discussService.GetQuestionEditBindingModel(questionId);
+                return View(bm);
+            }
+
+            return Redirect($"/Discussions/QuestionDetails/?Id={questionId}");
         }
 
         [Authorize]
