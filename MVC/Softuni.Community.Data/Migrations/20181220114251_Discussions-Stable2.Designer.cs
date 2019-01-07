@@ -184,7 +184,7 @@ namespace Softuni.Community.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<bool>("IsProfileSettedUp");
+                    b.Property<bool>("IsProfileSetUp");
 
                     b.Property<bool>("LockoutEnabled");
 

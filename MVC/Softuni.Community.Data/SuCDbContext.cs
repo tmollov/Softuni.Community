@@ -22,7 +22,6 @@ namespace Softuni.Community.Data
         public DbSet<Question> Questions { get; set; }
 
         public DbSet<Joke> Jokes { get; set; }
-        public DbSet<Meme> Memes { get; set; }
 
         public DbSet<UserAnswerLikes> UsersAnswerLikes { get; set; }
         public DbSet<UserAnswerDisLikes> UsersAnswerDislikes{ get; set; }
@@ -35,14 +34,11 @@ namespace Softuni.Community.Data
 
         public DbSet<Choice> Choices { get; set; }
         public DbSet<GameProblem> GameProblems { get; set; }
-
-        //public DbSet<QuestionsTags> QuestionsTags { get; set; }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.ApplyConfiguration(new QuestionsTagsConfig());
-
             modelBuilder.ApplyConfiguration(new QuestionConfig());
+
             /* Adding default Identity model configurations
              * see more @ https://docs.microsoft.com/en-us/aspnet/core/security/authentication/customize-identity-model?view=aspnetcore-2.2
              */

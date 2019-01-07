@@ -13,21 +13,26 @@
                 <div class="text-left p-2">
                     <h2 class="jokeLink text-center">@Model.ProblemContent</h2>
                 </div>
-                <div>
-                    <h3 class="liked">@Model.RightAnswer</h3>
+                <div class="row">
+                    <h3 class="ml-auto">Right Answer :</h3>
+                    <h3 class="pl-2 liked mr-auto">    @Model.RightAnswer</h3>
                 </div>
-                @foreach(var item in Model.Answers){
-                    <div>
-                        <h3 class="disliked">@item</h3>
-                    </div>
-                }
+                <div>
+                    <h2>Wrong Answers:</h2>
+                    @foreach (var item in Model.Answers)
+                    {
+                        <div>
+                            <h3 class="disliked">@item</h3>
+                        </div>
+                    }
+                </div>
             </div>
         </section>
     </div>
     @if (User.IsInRole("Admin"))
     {
         <div class="mx-auto">
-            <p>Need modifications? <a class="delete" href="/Fun/Jokes/EditProblem/?id=@Model.Id">EDIT</a> it.</p>
+            <p>Need modifications? <a class="delete" href="/Fun/Games/EditProblem/?id=@Model.Id">EDIT</a> it.</p>
             <p>You can also <a class="delete" href="/Fun/Games/DeleteProblem/?id=@Model.Id">DELETE</a> it.</p>
         </div>
     }

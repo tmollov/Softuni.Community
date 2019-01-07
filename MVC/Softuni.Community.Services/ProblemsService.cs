@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +8,7 @@ using Softuni.Community.Data.Models;
 using Softuni.Community.Data.Models.Enums;
 using Softuni.Community.Services.Interfaces;
 using Softuni.Community.Web.Models.BindingModels;
+using Softuni.Community.Web.Models.BindingModels.Interfaces;
 using Softuni.Community.Web.Models.ViewModels;
 
 namespace Softuni.Community.Services
@@ -17,6 +17,15 @@ namespace Softuni.Community.Services
     {
         private readonly SuCDbContext context;
         private readonly IMapper mapper;
+        private static readonly Random random = new Random();
+        private static readonly object syncLock = new object();
+        public static int RandomNumber(int min, int max)
+        {
+            lock (syncLock)
+            { // synchronize
+                return random.Next(min, max);
+            }
+        }
 
         public ProblemsService(SuCDbContext context, IMapper mapper)
         {
@@ -24,32 +33,45 @@ namespace Softuni.Community.Services
             this.mapper = mapper;
         }
 
+        //Tested
         public GameProblem AddProblem(AddProblemBindingModel bindingModel)
         {
             var problem = mapper.Map<GameProblem>(bindingModel);
             this.context.GameProblems.Add(problem);
             this.context.SaveChanges();
-            problem.RightAnswer = GetRightAnswerContent(bindingModel);
-            problem.Choices = this.GenerateChoices(bindingModel, problem);
+            problem.RightAnswer = GetRightAnswerString(bindingModel);
+            problem.Choices = this.AddChoices(bindingModel, problem);
             this.context.SaveChanges();
             return problem;
         }
-
-        public IList<GameProblemViewModel> GetAllProblems()
+        //Tested
+        public GameProblem EditProblem(EditProblemBindingModel bindingModel)
         {
-            var problems = new List<GameProblemViewModel>();
-            foreach (var item in  this.context.GameProblems)
-            {
-                problems.Add(mapper.Map<GameProblemViewModel>(item));
-            }
-            return problems;
+            var problem = this.context.GameProblems
+                .Include(x => x.Choices)
+                .FirstOrDefault(x => x.Id == bindingModel.Id);
+            problem.ProblemContent = bindingModel.Content;
+            problem.RightAnswer = GetRightAnswerString(bindingModel);
+            problem.Choices = this.UpdateChoices(problem.Choices, bindingModel);
+            this.context.SaveChanges();
+            return problem;
+        }
+        //Tested
+        public GameProblem DeleteProblem(int id)
+        {
+            var problem = this.context.GameProblems
+                .Include(x=>x.Choices)
+                .FirstOrDefault(x => x.Id == id);
+            this.context.GameProblems.Remove(problem);
+            this.context.SaveChanges();
+            return problem;
         }
 
         public ProblemDetailsViewModel GetProblemDetails(int id)
         {
             var problem = this.context.GameProblems
-                .Include(x=>x.Choices)
-                .FirstOrDefault(x=>x.Id == id);
+                .Include(x => x.Choices)
+                .FirstOrDefault(x => x.Id == id);
 
             var vm = mapper.Map<ProblemDetailsViewModel>(problem);
             var index = vm.Answers.IndexOf(vm.RightAnswer);
@@ -57,14 +79,68 @@ namespace Softuni.Community.Services
             return vm;
         }
 
+        public IList<Choice> UpdateChoices(IList<Choice> choices, IProblemAddEdit bindingModel)
+        {
+            choices[0].Content = bindingModel.AnswerA;
+            choices[1].Content = bindingModel.AnswerB;
+            choices[2].Content = bindingModel.AnswerC;
+            choices[3].Content = bindingModel.AnswerD;
+            return choices;
+        }
+
+        //Tested
+        public EditProblemBindingModel GetEditProblemBindingModel(int id)
+        {
+            var problem = this.context.GameProblems
+                .Include(x => x.Choices)
+                .FirstOrDefault(x => x.Id == id);
+
+            var bm = mapper.Map<EditProblemBindingModel>(problem);
+            var indexOfRightAnswer =
+                problem.Choices
+                    .IndexOf(
+                        problem.Choices
+                            .FirstOrDefault(x => x.Content == problem.RightAnswer)
+                        );
+            bm.RightAnswer = GetRightAnswerChoice(indexOfRightAnswer);
+            return bm;
+        }
+
+        public IList<GameProblemViewModel> GetAllProblems()
+        {
+            var problems = new List<GameProblemViewModel>();
+            foreach (var item in this.context.GameProblems)
+            {
+                problems.Add(mapper.Map<GameProblemViewModel>(item));
+            }
+            return problems;
+        }
+
         public AllProblemsViewModel GetAllProblemsViewModel()
         {
-            var vm = new AllProblemsViewModel();
-            vm.GameProblems = this.GetAllProblems();
+            var vm = new AllProblemsViewModel
+            {
+                GameProblems = this.GetAllProblems()
+            };
             return vm;
         }
 
-        private string GetRightAnswerContent(AddProblemBindingModel bindingModel)
+        //Tested
+        public ChoiceEnum GetRightAnswerChoice(int index)
+        {
+            switch (index)
+            {
+                case 0: return ChoiceEnum.A;
+                case 1: return ChoiceEnum.B;
+                case 2: return ChoiceEnum.C;
+                case 3: return ChoiceEnum.D;
+            }
+
+            return ChoiceEnum.A;
+        }
+
+        //Tested
+        public string GetRightAnswerString(IProblemAddEdit bindingModel)
         {
             switch (bindingModel.RightAnswer)
             {
@@ -77,11 +153,10 @@ namespace Softuni.Community.Services
                 case ChoiceEnum.D:
                     return bindingModel.AnswerD;
             }
-
             return null;
         }
 
-        public IList<Choice> GenerateChoices(AddProblemBindingModel bindingModel, GameProblem problem)
+        public IList<Choice> AddChoices(IProblemAddEdit bindingModel, GameProblem problem)
         {
             var list = new List<Choice>();
             var a = AddChoice(bindingModel.AnswerA, problem);
@@ -97,13 +172,28 @@ namespace Softuni.Community.Services
 
         public Choice AddChoice(string content, GameProblem problem)
         {
-            var el = new Choice();
-            el.Content = content;
-            el.GameProblem = problem;
+            var el = new Choice
+            {
+                Content = content,
+                GameProblem = problem
+            };
             this.context.Choices.Add(el);
             this.context.SaveChanges();
             return el;
         }
 
+        // FOR Api Controller
+        public ProblemDetailsViewModel GetRandomProblem()
+        {
+            int maxInt = this.context.GameProblems.Count();
+
+            var randomNumber = RandomNumber(1, maxInt);
+            var problem = this.context.GameProblems
+                .Include(x => x.Choices)
+                .FirstOrDefault(x => x.Id == randomNumber);
+
+            var vm = mapper.Map<ProblemDetailsViewModel>(problem);
+            return vm;
+        }
     }
 }

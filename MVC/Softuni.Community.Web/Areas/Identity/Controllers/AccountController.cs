@@ -145,7 +145,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         {
             // Logic to add: If user profile is setted up redirect to profile settings
             //var user = userManager.FindByNameAsync(User.Identity.Name).Result;
-            //if (!user.IsProfileSettedUp)
+            //if (!user.IsProfileSetUp)
             //{
             //
             //}

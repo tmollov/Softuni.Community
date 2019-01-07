@@ -18,53 +18,7 @@
 else
 {
     <div class="row w-100 mx-auto">
-        <div class="col-3 p-5">
-            <h2>Top Jokes</h2>
-            <div class="scrollable scrollableDiv p-3">
-                @foreach (var joke in Model.Jokes)
-                {
-                    <div class="m-0 mt-4 mb-4 w-100 border-bottom border-dark">
-                        <div class="p-0 m-0 text-left">
-                            <a class="m-0 p-0 jokeLink" href="/Fun/Jokes/Details/?id=@joke.Id">@joke.Content</a>
-                        </div>
-                        <div class="row m-0 p-0 mt-2 ">
-
-                            <div class="ml-4">
-                                Category: @joke.Category
-                            </div>
-                            <div class="row m-0 p-0 ml-auto">
-                                <span hidden>@joke.Id</span>
-                                <p class="ml-auto likes m-0 p-0">@joke.Likes</p>
-                                <span>:</span>
-                                <button class="ratingBtn ratingUp" onclick="LikeJoke(this)">
-                                    @if (joke.IsUserLikedJoke)
-                                    {
-                                        <i class="fas fa-thumbs-up liked"></i>
-                                    }
-                                    else
-                                    {
-                                        <i class="fas fa-thumbs-up"></i>
-                                    }
-                                </button> |
-                                <button class="ratingBtn ratingDown" onclick="DislikeJoke(this)">
-                                    @if (joke.IsUserDislikedJoke)
-                                    {
-                                        <i class="fas fa-thumbs-down disliked"></i>
-                                    }
-                                    else
-                                    {
-                                        <i class="fas fa-thumbs-down"></i>
-                                    }
-                                </button>
-                                <span>:</span>
-                                <p class="mr-auto dislikes m-0 p-0">@joke.Dislikes</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-        <div class="col-6 p-5">
+        <div class="col-9 p-5">
             <h2>Top Questions</h2>
             <div class="scrollable scrollableDiv p-3">
                 @foreach (var question in Model.Questions)
@@ -131,6 +85,52 @@ else
                             </div>
                         </div>
                         <hr class="line bg-dark" />
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-3 p-5">
+            <h2>Top Jokes</h2>
+            <div class="scrollable scrollableDiv p-3">
+                @foreach (var joke in Model.Jokes)
+                {
+                    <div class="m-0 mt-4 mb-4 w-100 border-bottom border-dark">
+                        <div class="p-0 m-0 text-left">
+                            <a class="m-0 p-0 jokeLink" href="/Fun/Jokes/Details/?id=@joke.Id">@joke.Content</a>
+                        </div>
+                        <div class="row m-0 p-0 mt-2 ">
+
+                            <div class="ml-4">
+                                Category: @joke.Category
+                            </div>
+                            <div class="row m-0 p-0 ml-auto">
+                                <span hidden>@joke.Id</span>
+                                <p class="ml-auto likes m-0 p-0">@joke.Likes</p>
+                                <span>:</span>
+                                <button class="ratingBtn ratingUp" onclick="LikeJoke(this)">
+                                    @if (joke.IsUserLikedJoke)
+                                    {
+                                        <i class="fas fa-thumbs-up liked"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-thumbs-up"></i>
+                                    }
+                                </button> |
+                                <button class="ratingBtn ratingDown" onclick="DislikeJoke(this)">
+                                    @if (joke.IsUserDislikedJoke)
+                                    {
+                                        <i class="fas fa-thumbs-down disliked"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-thumbs-down"></i>
+                                    }
+                                </button>
+                                <span>:</span>
+                                <p class="mr-auto dislikes m-0 p-0">@joke.Dislikes</p>
+                            </div>
+                        </div>
                     </div>
                 }
             </div>

@@ -45,6 +45,29 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
             return View(vm);
         }
 
+        [Authorize(Roles = "Admin")]
+        public IActionResult EditProblem(int id)
+        {
+            var bm = problemsService.GetEditProblemBindingModel(id);
+            return View(bm);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public IActionResult EditProblem(EditProblemBindingModel bindingModel)
+        {
+            var bm = problemsService.EditProblem(bindingModel);
+            return Redirect($"/{Area}/{Controller}/ProblemDetails?Id={bm.Id}");
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteProblem(int id)
+        {
+            var bm = problemsService.DeleteProblem(id);
+            return Redirect($"/{Area}/{Controller}/{nameof(ManageCodeWizard)}");
+        }
+
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public IActionResult AddProblem(AddProblemBindingModel bindingModel)

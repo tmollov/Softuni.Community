@@ -1,11 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 using Softuni.Community.Data.Models.Enums;
 using Softuni.Community.Web.Models.BindingModels.Interfaces;
 
 namespace Softuni.Community.Web.Models.BindingModels
 {
-    public class AddProblemBindingModel : IProblemAddEdit
+    public class EditProblemBindingModel : IProblemAddEdit
     {
+        
+        [Required]
+        public int Id { get; set; }
+
         [Required]
         [Display(Name = "Fill Problem description")]
         public string Content { get; set; }
@@ -29,6 +36,5 @@ namespace Softuni.Community.Web.Models.BindingModels
         [Required]
         [Display(Name = "What is the Right Answer for this problem?")]
         public ChoiceEnum RightAnswer { get; set; }
-
     }
 }

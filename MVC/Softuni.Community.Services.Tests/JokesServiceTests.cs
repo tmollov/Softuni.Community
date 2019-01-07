@@ -23,9 +23,9 @@ namespace Softuni.Community.Services.Tests
         public void AddJoke_Must_Return_Created_Joke()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
             //Act
             dbContext.Users.Add(testUser);
@@ -43,9 +43,9 @@ namespace Softuni.Community.Services.Tests
         public void DeleteJoke_Must_Return_Deleted_Joke()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
             //Act
             dbContext.Users.Add(testUser);
@@ -62,9 +62,9 @@ namespace Softuni.Community.Services.Tests
         public void EditJoke_Must_Return_Edited_Joke()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
             //Act
             dbContext.Users.Add(testUser);
@@ -85,9 +85,9 @@ namespace Softuni.Community.Services.Tests
         public void RateJoke_Must_Return_Rated_Joke_If_RatedUp()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
 
             //Act
@@ -107,9 +107,9 @@ namespace Softuni.Community.Services.Tests
         public void RateJoke_Must_Return_NULL_If_Joke_RatedUp_Twice()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
 
             //Act
@@ -126,9 +126,9 @@ namespace Softuni.Community.Services.Tests
         public void RateJoke_Must_Return_Rated_Joke_If_RatedDowns()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
 
             //Act
@@ -148,9 +148,9 @@ namespace Softuni.Community.Services.Tests
         public void RateJoke_Must_Return_NULL_If_Joke_RatedDown_Twice()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
 
             //Act
@@ -168,9 +168,9 @@ namespace Softuni.Community.Services.Tests
         public void GetJoke_Must_Return_Joke_When_T_Is_Joke_Type()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
             //Act
             dbContext.Users.Add(testUser);
@@ -188,9 +188,9 @@ namespace Softuni.Community.Services.Tests
         public void GetJoke_Must_Return_Joke_When_T_Is_JokeViewModel()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
             //Act
             dbContext.Users.Add(testUser);
@@ -208,9 +208,9 @@ namespace Softuni.Community.Services.Tests
         public void GetJoke_Must_Return_Joke_When_T_Is_JokeEditBindingModel()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
             //Act
             dbContext.Users.Add(testUser);
@@ -228,10 +228,10 @@ namespace Softuni.Community.Services.Tests
         public void GetAllJokes_Must_Return_AllJokesViewModel()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             dbContext.Database.EnsureDeleted();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
             //Act
             dbContext.Users.Add(testUser);
@@ -248,9 +248,9 @@ namespace Softuni.Community.Services.Tests
         public void IsUserLikedJoke_Must_Return_TRUE_If_User_Likes_Given_Joke()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
 
             //Act
@@ -267,9 +267,9 @@ namespace Softuni.Community.Services.Tests
         public void IsUserLikedJoke_Must_Return_FALSE_If_User_Likes_Given_Joke()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
 
             //Act
@@ -285,9 +285,9 @@ namespace Softuni.Community.Services.Tests
         public void IsUserDislikedJoke_Must_Return_TRUE_If_User_Likes_Given_Joke()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
 
             //Act
@@ -304,9 +304,9 @@ namespace Softuni.Community.Services.Tests
         public void IsUserDislikedJoke_Must_Return_FALSE_If_User_Likes_Given_Joke()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
 
             //Act
@@ -322,10 +322,10 @@ namespace Softuni.Community.Services.Tests
         public void GetUserLikedJokesIdList_Must_Return_Id_List_Of_User_Liked_Jokes()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             dbContext.Database.EnsureDeleted();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
 
             //Act
@@ -351,9 +351,9 @@ namespace Softuni.Community.Services.Tests
         public void GetUserLikedJokesIdList_Must_Return_Empty_Collection_If_User_Havent_Liked_Any_Joke()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
 
             //Act
@@ -369,10 +369,10 @@ namespace Softuni.Community.Services.Tests
         public void GetUserDislikedJokesIdList_Must_Return_Id_List_Of_User_Liked_Jokes()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             dbContext.Database.EnsureDeleted();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
 
             //Act
@@ -398,9 +398,9 @@ namespace Softuni.Community.Services.Tests
         public void GetUserDislikedJokesIdList_Must_Return_Empty_Collection_If_User_Havent_Disliked_Any_Joke()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM = GetTestJokeBM();
 
             //Act
@@ -416,9 +416,9 @@ namespace Softuni.Community.Services.Tests
         public void GetTopJokes_Must_Return_Top_Jokes_From_Every_Category()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var jokesService = new JokesService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testJokeBM1 = GetTestJokeBM(JokeCategory.ChuckNorris);
             var testJokeBM2 = GetTestJokeBM(JokeCategory.Animals);
             var testJokeBM3 = GetTestJokeBM(JokeCategory.Computers);
@@ -488,25 +488,6 @@ namespace Softuni.Community.Services.Tests
                 Category = category
             };
             return jokeBM;
-        }
-        public CustomUser GetTestUser()
-        {
-            var testUser = new CustomUser()
-            {
-                Id = Guid.NewGuid().ToString(),
-                Email = "mail@mail.com",
-                UserName = "TestUser",
-                PasswordHash = "MySecretPass1",
-            };
-            return testUser;
-        }
-        public SuCDbContext GetDb()
-        {
-            var dbOptions = new DbContextOptionsBuilder<SuCDbContext>()
-                .UseInMemoryDatabase(databaseName: "SuC-InMemory")
-                .Options;
-            var dbContext = new SuCDbContext(dbOptions);
-            return dbContext;
         }
     }
 }

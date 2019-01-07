@@ -25,9 +25,9 @@ namespace Softuni.Community.Services.Tests
         public void AddQuestion_Must_Return_Created_Question()
         {
             // Arrange
-            var db = GetDb();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             //Act
             db.Users.Add(testUser);
@@ -43,9 +43,9 @@ namespace Softuni.Community.Services.Tests
         public void AddTag_Must_Return_Created_Tag()
         {
             // Arrange
-            var db = GetDb();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser =StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             //Act
             db.Users.Add(testUser);
@@ -63,9 +63,9 @@ namespace Softuni.Community.Services.Tests
         public void GenerateTagEntities_Must_Return_List_Of_Created_Tags()
         {
             // Arrange
-            var db = GetDb();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             var testTags = "newTag;myTag";
             //Act
@@ -85,10 +85,9 @@ namespace Softuni.Community.Services.Tests
         public void RateQuestion_Must_Return_Updated_Question_RatedUp()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             //Act
             db.Users.Add(testUser);
@@ -105,10 +104,9 @@ namespace Softuni.Community.Services.Tests
         public void RateQuestion_Must_Return_NULL_If_RatedUp_Twice()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
 
             //Act
@@ -126,10 +124,9 @@ namespace Softuni.Community.Services.Tests
         public void RateQuestion_Must_Return_Updated_Question_RatedDown()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
 
             //Act
@@ -147,10 +144,9 @@ namespace Softuni.Community.Services.Tests
         public void RateQuestion_Must_Return_NULL_If_RatedDown_Twice()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
 
             //Act
@@ -172,10 +168,9 @@ namespace Softuni.Community.Services.Tests
         public void RateAnswer_Must_Return_Updated_Answer_RatedUp()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             
             //Act
@@ -198,10 +193,9 @@ namespace Softuni.Community.Services.Tests
         public void RateAnswer_Must_Return_NULL_If_RatedUp_Twice()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             
             //Act
@@ -220,10 +214,9 @@ namespace Softuni.Community.Services.Tests
         public void RateAnswer_Must_Return_Updated_Answer_RatedDown()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             
             //Act
@@ -246,10 +239,9 @@ namespace Softuni.Community.Services.Tests
         public void RateAnswer_Must_Return_NULL_If_RatedDown_Twice()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             
             //Act
@@ -268,10 +260,9 @@ namespace Softuni.Community.Services.Tests
         public void AddAnswer_Must_Return_Created_Answer()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
 
             //Act
@@ -291,10 +282,9 @@ namespace Softuni.Community.Services.Tests
         public void AddAnswer_Must_Return_NULL_If_There_Isnt_Question_With_Given_Id()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
 
             //Act
             db.Users.Add(testUser);
@@ -310,14 +300,13 @@ namespace Softuni.Community.Services.Tests
         public void AddAnswer_Must_Return_NULL_If_Publisher_Isnt_Registered()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
 
             //Act
             var content = "Test Answer";
-            var nonUser = GetTestUser();
+            var nonUser = StaticMethods.GetTestUser();
             var questionId = 10;
             var answer = discussionsService.AddAnswer(content,nonUser,questionId);
 
@@ -328,10 +317,9 @@ namespace Softuni.Community.Services.Tests
         public void DeleteAnswer_Must_Return_Deleted_Answer()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
 
             //Act
@@ -349,8 +337,7 @@ namespace Softuni.Community.Services.Tests
         public void DeleteAnswer_Must_Return_NULL_If_There_Is_No_Answer_Or_Question_With_Given_Ids()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
 
             //Act
@@ -369,10 +356,9 @@ namespace Softuni.Community.Services.Tests
         public void GetUserLikedAnswersIdList_Must_Return_User_Liked_Answers_Ids_In_List()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             var content1 = "Test Answer";
             var content2 = "Test Answer";
@@ -405,10 +391,9 @@ namespace Softuni.Community.Services.Tests
         public void GetUserLikedAnswersIdList_Must_Return_Empty_List_If_User_Havent_Liked_Any_Answer()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
 
             //Act
@@ -423,10 +408,9 @@ namespace Softuni.Community.Services.Tests
         public void GetUserDisLikedAnswersIdList_Must_Return_User_Liked_Answers_Ids_In_List()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             var content1 = "Test Answer";
             var content2 = "Test Answer";
@@ -459,10 +443,9 @@ namespace Softuni.Community.Services.Tests
         public void GetUserDisLikedAnswersIdList_Must_Return_Empty_List_If_User_Havent_Disliked_Any_Answer()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
 
             //Act
@@ -478,10 +461,9 @@ namespace Softuni.Community.Services.Tests
         public void IsUserLikedAnswer_Must_Return_True_If_User_Liked_Given_Answer()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             
             //Act
@@ -500,10 +482,9 @@ namespace Softuni.Community.Services.Tests
         public void IsUserLikedAnswer_Must_Return_False_If_User_Not_Liked_Given_Answer()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             
             //Act
@@ -520,10 +501,9 @@ namespace Softuni.Community.Services.Tests
         public void IsUserDisLikedAnswer_Must_Return_True_If_User_DisLiked_Given_Answer()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             var content = "Test Answer";
 
@@ -542,10 +522,9 @@ namespace Softuni.Community.Services.Tests
         public void IsUserDisLikedAnswer_Must_Return_False_If_User_Not_DisLiked_Given_Answer()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             var content = "Test Answer";
 
@@ -563,10 +542,9 @@ namespace Softuni.Community.Services.Tests
         public void IsUserLikedQuestion_Must_Return_True_If_User_Liked_Given_Question()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             //Act
             db.Users.Add(testUser);
@@ -582,10 +560,9 @@ namespace Softuni.Community.Services.Tests
         public void IsUserLikedQuestion_Must_Return_False_If_User_Not_Liked_Given_Question()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             //Act
             db.Users.Add(testUser);
@@ -599,10 +576,9 @@ namespace Softuni.Community.Services.Tests
         public void IsUserDisLikedQuestion_Must_Return_True_If_User_DisLiked_Given_Question()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             //Act
             db.Users.Add(testUser);
@@ -618,10 +594,9 @@ namespace Softuni.Community.Services.Tests
         public void IsUserDisLikedQuestion_Must_Return_False_If_User_Not_Liked_Given_Question()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             //Act
             db.Users.Add(testUser);
@@ -639,10 +614,9 @@ namespace Softuni.Community.Services.Tests
         public void GetQuestionViewModel_Must_Return_ViewModel()
         {
             // Arrange
-            var db = GetDb();
-            db.Database.EnsureDeleted();
+            var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
 
             //Act
@@ -657,29 +631,7 @@ namespace Softuni.Community.Services.Tests
             Assert.True(targetQuestion.Category == addedQuestion.Category);
             Assert.True(targetQuestion.Title == addedQuestion.Title);
         }
-
-
-        public SuCDbContext GetDb()
-        {
-            var dbOptions = new DbContextOptionsBuilder<SuCDbContext>()
-                .UseInMemoryDatabase(databaseName: "SuC-InMemory")
-                .Options;
-            var dbContext = new SuCDbContext(dbOptions);
-            return dbContext;
-        }
-
-        public CustomUser GetTestUser()
-        {
-            var testUser = new CustomUser()
-            {
-                Id = Guid.NewGuid().ToString(),
-                Email = "mail@mail.com",
-                UserName = "TestUser",
-                PasswordHash = "MySecretPass1"
-            };
-            return testUser;
-        }
-
+        
         public AnswerRatingBindingModel GetTestAnswerRatingBMRatingUp(Answer answer, CustomUser user)
         {
             var model = new AnswerRatingBindingModel()

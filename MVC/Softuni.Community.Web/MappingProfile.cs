@@ -23,31 +23,31 @@ namespace Softuni.Community.Web
                     opts => opts.MapFrom(src => src.Publisher.UserName));
 
             this.CreateMap<Question, QuestionEditBindingModel>()
-                .ForMember(x=>x.Tags,
-                    opts => opts.MapFrom(src => string.Join("; ",src.Tags.Select(a => a.Name))));
+                .ForMember(x => x.Tags,
+                    opts => opts.MapFrom(src => string.Join("; ", src.Tags.Select(a => a.Name))));
 
             this.CreateMap<Question, QuestionViewModel>()
-                .ForMember(x=>x.QuestionId,
+                .ForMember(x => x.QuestionId,
                     opts => opts.MapFrom(src => src.Id))
-                .ForMember(x=>x.AnswerCount,
+                .ForMember(x => x.AnswerCount,
                     opts => opts.MapFrom(src => src.Answers.Count))
-                .ForMember(x=>x.PublisherName,
+                .ForMember(x => x.PublisherName,
                     opts => opts.MapFrom(src => src.Publisher.UserName))
-                .ForMember(x=>x.PublisherPicture,
+                .ForMember(x => x.PublisherPicture,
                     opts => opts.MapFrom(src => src.Publisher.UserInfo.ProfilePictureUrl))
-                .ForMember(x=>x.Tags,
+                .ForMember(x => x.Tags,
                     opts => opts.MapFrom(src => src.Tags.Select(a => a.Name).ToList()));
 
             this.CreateMap<Question, QuestionViewModel>()
-                .ForMember(x=>x.QuestionId,
+                .ForMember(x => x.QuestionId,
                     opts => opts.MapFrom(src => src.Id))
-                .ForMember(x=>x.AnswerCount,
+                .ForMember(x => x.AnswerCount,
                     opts => opts.MapFrom(src => src.Answers.Count))
-                .ForMember(x=>x.PublisherName,
+                .ForMember(x => x.PublisherName,
                     opts => opts.MapFrom(src => src.Publisher.UserName))
-                .ForMember(x=>x.PublisherPicture,
+                .ForMember(x => x.PublisherPicture,
                          opts => opts.MapFrom(src => src.Publisher.UserInfo.ProfilePictureUrl))
-                .ForMember(x=>x.Tags,
+                .ForMember(x => x.Tags,
                     opts => opts.MapFrom(src => src.Tags.Select(a => a.Name).ToList()));
 
             this.CreateMap<Question, MyQuestionViewModel>()
@@ -73,7 +73,22 @@ namespace Softuni.Community.Web
             this.CreateMap<GameProblem, GameProblemViewModel>();
             this.CreateMap<GameProblem, ProblemDetailsViewModel>()
                 .ForMember(x => x.Answers,
-                    opts => opts.MapFrom(src => src.Choices.Select(x=>x.Content).ToArray()));
+                    opts => opts.MapFrom(src => src.Choices.Select(x => x.Content).ToArray()));
+
+            this.CreateMap<GameProblem, EditProblemBindingModel>()
+                .ForMember(x => x.RightAnswer, 
+                    opt => opt.Ignore())
+                .ForMember(x => x.Content,
+                    opts => opts.MapFrom(src => src.ProblemContent))
+                .ForMember(x => x.AnswerA,
+                    opts => opts.MapFrom(src => src.Choices[0].Content))
+                .ForMember(x => x.AnswerB,
+                    opts => opts.MapFrom(src => src.Choices[1].Content))
+                .ForMember(x => x.AnswerC,
+                    opts => opts.MapFrom(src => src.Choices[2].Content))
+                .ForMember(x => x.AnswerD,
+                    opts => opts.MapFrom(src => src.Choices[3].Content));
+
 
         }
     }

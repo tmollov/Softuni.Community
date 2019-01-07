@@ -1,7 +1,7 @@
 ﻿@using Softuni.Community.Data.Models.Enums
-@model Softuni.Community.Web.Models.BindingModels.AddProblemBindingModel
+@model Softuni.Community.Web.Models.BindingModels.EditProblemBindingModel
 @{
-    ViewData["Title"] = "Add Problem";
+    ViewData["Title"] = "Edit Problem";
 }
 
 
@@ -9,8 +9,9 @@
 <div>
     <div class="text-center">
         <section class="w-25 mx-auto">
-            <form asp-area="Fun" asp-controller="Games" asp-action="AddProblem" method="post">
+            <form asp-area="Fun" asp-controller="Games" asp-action="EditProblem" method="post">
                 <hr />
+                <input asp-for="Id" hidden/>
                 <div class="form-group">
                     <label asp-for="Content"></label>
                     <textarea asp-for="Content" class="form-control" placeholder="Problem description here..."></textarea>
@@ -42,7 +43,7 @@
                     <span asp-validation-for="RightAnswer" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default">Add Problem</button>
+                    <button type="submit" class="btn btn-default">Edit Problem</button>
                 </div>
             </form>
         </section>

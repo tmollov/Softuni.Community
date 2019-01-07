@@ -280,31 +280,6 @@ namespace Softuni.Community.Data.Migrations
                     b.ToTable("Jokes");
                 });
 
-            modelBuilder.Entity("Softuni.Community.Data.Models.Meme", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Dislikes");
-
-                    b.Property<int>("Likes");
-
-                    b.Property<string>("PictureUrl")
-                        .IsRequired();
-
-                    b.Property<string>("PublisherId");
-
-                    b.Property<string>("Title")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PublisherId");
-
-                    b.ToTable("Memes");
-                });
-
             modelBuilder.Entity("Softuni.Community.Data.Models.Question", b =>
                 {
                     b.Property<int>("Id")
@@ -561,13 +536,6 @@ namespace Softuni.Community.Data.Migrations
                 {
                     b.HasOne("Softuni.Community.Data.Models.CustomUser", "Publisher")
                         .WithMany("Jokes")
-                        .HasForeignKey("PublisherId");
-                });
-
-            modelBuilder.Entity("Softuni.Community.Data.Models.Meme", b =>
-                {
-                    b.HasOne("Softuni.Community.Data.Models.CustomUser", "Publisher")
-                        .WithMany("Memes")
                         .HasForeignKey("PublisherId");
                 });
 

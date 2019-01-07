@@ -10,8 +10,8 @@ using Softuni.Community.Data;
 namespace Softuni.Community.Data.Migrations
 {
     [DbContext(typeof(SuCDbContext))]
-    [Migration("20181226163411_added_categories_to_jokes")]
-    partial class added_categories_to_jokes
+    [Migration("20190107115630_deleted_Memes_table")]
+    partial class deleted_Memes_table
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -166,6 +166,24 @@ namespace Softuni.Community.Data.Migrations
                     b.ToTable("Answers");
                 });
 
+            modelBuilder.Entity("Softuni.Community.Data.Models.Choice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Content")
+                        .IsRequired();
+
+                    b.Property<int>("GameProblemId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameProblemId");
+
+                    b.ToTable("Choices");
+                });
+
             modelBuilder.Entity("Softuni.Community.Data.Models.CustomUser", b =>
                 {
                     b.Property<string>("Id")
@@ -181,7 +199,7 @@ namespace Softuni.Community.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<bool>("IsProfileSetUp");
+                    b.Property<bool>("IsProfileSettedUp");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -223,6 +241,23 @@ namespace Softuni.Community.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Softuni.Community.Data.Models.GameProblem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ProblemContent")
+                        .IsRequired();
+
+                    b.Property<string>("RightAnswer")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GameProblems");
+                });
+
             modelBuilder.Entity("Softuni.Community.Data.Models.Joke", b =>
                 {
                     b.Property<int>("Id")
@@ -245,31 +280,6 @@ namespace Softuni.Community.Data.Migrations
                     b.HasIndex("PublisherId");
 
                     b.ToTable("Jokes");
-                });
-
-            modelBuilder.Entity("Softuni.Community.Data.Models.Meme", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Dislikes");
-
-                    b.Property<int>("Likes");
-
-                    b.Property<string>("PictureUrl")
-                        .IsRequired();
-
-                    b.Property<string>("PublisherId");
-
-                    b.Property<string>("Title")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PublisherId");
-
-                    b.ToTable("Memes");
                 });
 
             modelBuilder.Entity("Softuni.Community.Data.Models.Question", b =>
@@ -369,9 +379,45 @@ namespace Softuni.Community.Data.Migrations
 
                     b.Property<string>("ProfilePictureUrl");
 
+                    b.Property<string>("State");
+
                     b.HasKey("Id");
 
                     b.ToTable("UserInfos");
+                });
+
+            modelBuilder.Entity("Softuni.Community.Data.Models.UserJokeDislikes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("JokeId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UsersJokeDislikes");
+                });
+
+            modelBuilder.Entity("Softuni.Community.Data.Models.UserJokeLikes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("JokeId");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UsersJokeLikes");
                 });
 
             modelBuilder.Entity("Softuni.Community.Data.Models.UserQuestionDisLikes", b =>
@@ -472,6 +518,14 @@ namespace Softuni.Community.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Softuni.Community.Data.Models.Choice", b =>
+                {
+                    b.HasOne("Softuni.Community.Data.Models.GameProblem", "GameProblem")
+                        .WithMany("Choices")
+                        .HasForeignKey("GameProblemId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Softuni.Community.Data.Models.CustomUser", b =>
                 {
                     b.HasOne("Softuni.Community.Data.Models.UserInfo", "UserInfo")
@@ -484,13 +538,6 @@ namespace Softuni.Community.Data.Migrations
                 {
                     b.HasOne("Softuni.Community.Data.Models.CustomUser", "Publisher")
                         .WithMany("Jokes")
-                        .HasForeignKey("PublisherId");
-                });
-
-            modelBuilder.Entity("Softuni.Community.Data.Models.Meme", b =>
-                {
-                    b.HasOne("Softuni.Community.Data.Models.CustomUser", "Publisher")
-                        .WithMany("Memes")
                         .HasForeignKey("PublisherId");
                 });
 
@@ -517,6 +564,20 @@ namespace Softuni.Community.Data.Migrations
                 });
 
             modelBuilder.Entity("Softuni.Community.Data.Models.UserAnswerLikes", b =>
+                {
+                    b.HasOne("Softuni.Community.Data.Models.CustomUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Softuni.Community.Data.Models.UserJokeDislikes", b =>
+                {
+                    b.HasOne("Softuni.Community.Data.Models.CustomUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Softuni.Community.Data.Models.UserJokeLikes", b =>
                 {
                     b.HasOne("Softuni.Community.Data.Models.CustomUser", "User")
                         .WithMany()

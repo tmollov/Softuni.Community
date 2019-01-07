@@ -11,7 +11,7 @@
         </h2>
         @if (User.IsInRole("Admin"))
         {
-            <div>
+            <div id="manageGameDiv">
                 <a asp-area="Fun" asp-controller="Games" asp-action="ManageCodeWizard">Manage Game</a>
             </div>
         }
@@ -20,27 +20,28 @@
                  width="40px">
         </div>
     </section>
-    <section id="game" style="display:none">
+    <section id="game" style="display: none">
+        <p id="currentRightAnswer" hidden></p>
         <section class="mx-auto">
             <h1 class="text-center mx-auto">Question: #<span id="questionNo">1</span></h1>
         </section>
         <section class="mx-auto mt-5 p-5" id="quiz">
             <div id="quizContent">
-                <h1 class="text-center">What is GIT?</h1>
+                <h1 class="text-center jokeLink" ></h1>
             </div>
         </section>
         <section id="choices" class="mt-4 m-0 p-0">
             <div id="choiceA" class="choice">
-                <h3>General Internet Transfer</h3>
+                <h3></h3>
             </div>
             <div id="choiceB" class="choice">
-                <h3>Programming language</h3>
+                <h3></h3>
             </div>
             <div id="choiceC" class="choice">
-                <h3>Version-control system</h3>
+                <h3></h3>
             </div>
             <div id="choiceD" class="choice">
-                <h3>PHP</h3>
+                <h3></h3>
             </div>
         </section>
     </section>

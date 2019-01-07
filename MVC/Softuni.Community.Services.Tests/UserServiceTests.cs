@@ -1,7 +1,5 @@
 ﻿using System;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Softuni.Community.Data;
 using Softuni.Community.Data.Models;
 using Softuni.Community.Web;
 using Softuni.Community.Web.Models.BindingModels;
@@ -22,11 +20,9 @@ namespace Softuni.Community.Services.Tests
         public void IsFirstUser_Must_Return_True_If_There_Is_Only_One_User()
         {
             // Arrange
-            var dbContext = this.GetDb();
-            //// Clear Users
-            dbContext.Database.EnsureDeleted();
+            var dbContext = StaticMethods.GetDb();
             var userService = new UserService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
 
             //Act
             dbContext.Users.Add(testUser);
@@ -39,12 +35,10 @@ namespace Softuni.Community.Services.Tests
         public void IsFirstUser_Must_Return_False_If_There_Is_Two_or_More_Users()
         {
             // Arrange
-            var dbContext = this.GetDb();
-            //// Clear Users
-            dbContext.Database.EnsureDeleted();
+            var dbContext = StaticMethods.GetDb();
             var userService = new UserService(dbContext, mapper);
-            var testUser1 = GetTestUser();
-            var testUser2 = GetTestUser();
+            var testUser1 = StaticMethods.GetTestUser();
+            var testUser2 = StaticMethods.GetTestUser();
             //Act
             dbContext.Users.Add(testUser1);
             dbContext.Users.Add(testUser2);
@@ -58,7 +52,7 @@ namespace Softuni.Community.Services.Tests
         public void AddUserInfo_Must_Return_Updated_UserInfo_with_Id()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var userService = new UserService(dbContext, mapper);
             var testUserInfo = GetTestUserInfo();
             var testUserInfo1 = GetTestUserInfo();
@@ -79,9 +73,9 @@ namespace Softuni.Community.Services.Tests
         public void UpdateUserInfo_Must_Return_Updated_UserInfo_If_Successeed()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var userService = new UserService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testUserInfo = GetTestUserInfo();
             var testUserInfoUpdate = GetTestUserInfoBMUpdate();
             //Act
@@ -104,9 +98,9 @@ namespace Softuni.Community.Services.Tests
         public void UpdateProfilePicture_Must_Return_Updated_UserInfo()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var userService = new UserService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testUserInfo = GetTestUserInfo();
             //Act
             dbContext.UserInfos.Add(testUserInfo);
@@ -129,9 +123,9 @@ namespace Softuni.Community.Services.Tests
         public void GetProfileSettingsBindingModel_Must_Return_BindingModel()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var userService = new UserService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testUserInfo = GetTestUserInfo();
             //Act
             dbContext.UserInfos.Add(testUserInfo);
@@ -154,9 +148,9 @@ namespace Softuni.Community.Services.Tests
         public void GetProfileViewModel_Must_Return_ViewModel()
         {
             // Arrange
-            var dbContext = this.GetDb();
+            var dbContext = StaticMethods.GetDb();
             var userService = new UserService(dbContext, mapper);
-            var testUser = GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testUserInfo = GetTestUserInfo();
             //Act
             dbContext.UserInfos.Add(testUserInfo);
@@ -175,18 +169,6 @@ namespace Softuni.Community.Services.Tests
             Assert.True(result.ProfilePictureUrl == testUserInfo.ProfilePictureUrl);
         }
 
-
-        public CustomUser GetTestUser()
-        {
-            var testUser = new CustomUser()
-            {
-                Id = Guid.NewGuid().ToString(),
-                Email = "mail@mail.com",
-                UserName = "TestUser",
-                PasswordHash = "MySecretPass1",
-            };
-            return testUser;
-        }
         public UserInfo GetTestUserInfo()
         {
             var UserInfo = new UserInfo()
@@ -215,15 +197,6 @@ namespace Softuni.Community.Services.Tests
                 });
 
             return UserInfoBM;
-        }
-
-        public SuCDbContext GetDb()
-        {
-            var dbOptions = new DbContextOptionsBuilder<SuCDbContext>()
-                .UseInMemoryDatabase(databaseName: "SuC-InMemory")
-                .Options;
-            var dbContext = new SuCDbContext(dbOptions);
-            return dbContext;
         }
     }
 }
