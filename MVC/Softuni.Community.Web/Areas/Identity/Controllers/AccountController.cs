@@ -202,8 +202,8 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         public IActionResult Profile()
         {
             var user = userManager.FindByNameAsync(User.Identity.Name).Result;
-            var questions = discussionsService.GetUserQuestions(User.Identity.Name);
-            var answers = discussionsService.GetUserAnswers(User.Identity.Name);
+            var questions = discussionsService.GetUserQuestionsVM(User.Identity.Name);
+            var answers = discussionsService.GetUserAnswersVM(User.Identity.Name);
             var myProfile = userService.GetProfileViewModel(user.UserInfoId);
             var vm = new ProfileViewModel()
             {

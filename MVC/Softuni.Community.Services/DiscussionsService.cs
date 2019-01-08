@@ -23,30 +23,32 @@ namespace Softuni.Community.Services
             this.mapper = mapper;
         }
 
-        public bool IsCurrentUserIsPublisherOfQuestion(int questionId, string userId)
-        {
-            return this.context.Questions
-                       .FirstOrDefault(x => x.Id == questionId)
-                       .PublisherId == userId;
-        }
-
-        public QuestionEditBindingModel GetQuestionEditBindingModel(int questionId)
+        public QuestionEditBindingModel GetQuestionEditBindingModel(int questionId, string publisherId)
         {
             var question = this.context.Questions
                 .Include(x => x.Tags)
-                .FirstOrDefault(x => x.Id == questionId);
+                .FirstOrDefault(x => x.Id == questionId && x.PublisherId == publisherId);
+            if (question == null)
+            {
+                return null;
+            }
             var bm = mapper.Map<QuestionEditBindingModel>(question);
             return bm;
         }
 
-        public Question EditQuestion(QuestionEditBindingModel bindingModel)
+        public Question EditQuestion(QuestionEditBindingModel bindingModel, string publisherId)
         {
-            var question = this.context.Questions.FirstOrDefault(x => x.Id == bindingModel.Id);
-            question.Title = bindingModel.Title;
-            question.Content = bindingModel.Content;
-            question.Tags = this.UpdateTags(bindingModel.Tags, question);
-            question.Category = bindingModel.Category;
-            this.context.SaveChanges();
+            var question = this.context.Questions
+                                       .Include(x=>x.Tags)
+                                       .FirstOrDefault(x => x.Id == bindingModel.Id && x.PublisherId==publisherId);
+            if (question != null)
+            {
+                question.Title = bindingModel.Title;
+                question.Content = bindingModel.Content;
+                question.Tags = this.UpdateTags(bindingModel.Tags, question);
+                question.Category = bindingModel.Category;
+                this.context.SaveChanges();
+            }
             return question;
         }
 
@@ -58,31 +60,34 @@ namespace Softuni.Community.Services
             if (!tags.Contains(";") && tags.Length > 0)
             {
                 List<Tag> list = new List<Tag>();
-                list.Add(this.AddTag(tags, question));
-                return list;
+                if (question.Tags.Any(x=>x.Name != tags))
+                {
+                    list.Add(this.AddTag(tags, question));
+                    return list;
+                }
+                return question.Tags;
             }
 
-            var tagList = tags.Split(";", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
-            var currentTags = this.context.Questions
-                .Include(x => x.Tags)
-                .FirstOrDefault(x => x.Id == question.Id).Tags;
-
+            var tagList = tags.Split(";", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToHashSet();
+            
             List<Tag> newTagsList = new List<Tag>();
             foreach (var item in tagList)
             {
-                if (currentTags.Any(x => x.Name == item))
+                if (question.Tags.Any(x=>x.Name == item))
                 {
-                    newTagsList.Add(currentTags.FirstOrDefault(x => x.Name == item));
+                    newTagsList.Add(question.Tags.FirstOrDefault(x => x.Name == item));
                     continue;
                 }
+
                 newTagsList.Add(this.AddTag(item, question));
             }
             return newTagsList;
         }
 
-        public Question DeleteQuestion(int questionId)
+        //Tested
+        public Question DeleteQuestion(int questionId,string publisherId)
         {
-            var question = this.context.Questions.FirstOrDefault(x => x.Id == questionId);
+            var question = this.context.Questions.FirstOrDefault(x => x.Id == questionId && x.PublisherId == publisherId);
             if (question is null)
             {
                 return null;
@@ -119,20 +124,24 @@ namespace Softuni.Community.Services
                    .Include(x => x.Publisher)
                    .ThenInclude(x => x.UserInfo)
                    .FirstOrDefault(x => x.Id == id);
+            if (question == null)
+            {
+                return null;
+            }
 
             QuestionViewModel vm = mapper.Map<QuestionViewModel>(question);
             vm.Tags = question.Tags.Select(x => x.Name).ToList();
             return vm;
         }
 
-        public ICollection<MyQuestionViewModel> GetUserQuestions(string username)
+        public ICollection<MyQuestionViewModel> GetUserQuestionsVM(string username)
         {
             var questions = this.context.Questions.Include(x => x.Publisher)
                 .Where(x => x.Publisher.UserName == username)
                 .Select(x => mapper.Map<MyQuestionViewModel>(x)).ToList();
             return questions;
         }
-        public ICollection<MyAnswerViewModel> GetUserAnswers(string username)
+        public ICollection<MyAnswerViewModel> GetUserAnswersVM(string username)
         {
             var answers = this.context.Answers
                 .Include(x => x.Publisher)
@@ -143,9 +152,9 @@ namespace Softuni.Community.Services
         }
 
         //Tested
-        public Answer DeleteAnswer(int AnswerId, int QuestionId)
+        public Answer DeleteAnswer(int AnswerId, int QuestionId,string PublisherId)
         {
-            if (this.context.Answers.Any(x => x.Id == AnswerId && x.QuestionId == QuestionId))
+            if (this.context.Answers.Any(x => x.Id == AnswerId && x.QuestionId == QuestionId && x.PublisherId == PublisherId))
             {
                 var answer = this.context.Answers.FirstOrDefault(x => x.Id == AnswerId && x.QuestionId == QuestionId);
                 this.context.Answers.Remove(answer);
@@ -304,7 +313,7 @@ namespace Softuni.Community.Services
                 list.Add(this.AddTag(tags, question));
                 return list;
             }
-            var tagList = tags.Split(";", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToArray();
+            var tagList = tags.Split(";", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToHashSet();
             List<Tag> tagsList = new List<Tag>();
             foreach (var item in tagList)
             {
@@ -313,7 +322,7 @@ namespace Softuni.Community.Services
             return tagsList;
         }
 
-
+        //Tested
         public IList<QuestionViewModel> GetTopQuestions()
         {
             // best one joke from every category

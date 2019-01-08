@@ -1,8 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using Softuni.Community.Data;
 using Softuni.Community.Data.Models;
 using Softuni.Community.Data.Models.Enums;
 using Softuni.Community.Web;
@@ -38,6 +35,7 @@ namespace Softuni.Community.Services.Tests
             Assert.True(result.Title == testQBM.Title);
             Assert.True(result.Content == testQBM.Content);
             Assert.True(result.Category == testQBM.Category);
+            Assert.True(result.Tags.Count == 2);
         }
         [Fact]
         public void AddTag_Must_Return_Created_Tag()
@@ -45,7 +43,7 @@ namespace Softuni.Community.Services.Tests
             // Arrange
             var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-            var testUser =StaticMethods.GetTestUser();
+            var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
             //Act
             db.Users.Add(testUser);
@@ -160,7 +158,7 @@ namespace Softuni.Community.Services.Tests
             //Assert
             Assert.True(thisMustBeNull == null);
         }
-        
+
         /// <summary>
         /// Answer Tests
         /// </summary>
@@ -172,15 +170,15 @@ namespace Softuni.Community.Services.Tests
             var discussionsService = new DiscussionsService(db, this.mapper);
             var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
-            
+
             //Act
             db.Users.Add(testUser);
             db.SaveChanges();
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
             var content = "Test Answer";
-            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
-            var testAnswerRatingBM = GetTestAnswerRatingBMRatingUp(answer,testUser);
-            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM,testUser);
+            var answer = discussionsService.AddAnswer(content, testUser, addedQuestion.Id);
+            var testAnswerRatingBM = GetTestAnswerRatingBMRatingUp(answer, testUser);
+            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM, testUser);
 
             //Assert
             Assert.True(ratedAnswer != null);
@@ -197,16 +195,16 @@ namespace Softuni.Community.Services.Tests
             var discussionsService = new DiscussionsService(db, this.mapper);
             var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
-            
+
             //Act
             db.Users.Add(testUser);
             db.SaveChanges();
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
             var content = "Test Answer";
-            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
-            var testAnswerRatingBM = GetTestAnswerRatingBMRatingUp(answer,testUser);
-            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM,testUser);
-            var thisMustBeNull = discussionsService.RateAnswer(testAnswerRatingBM,testUser);
+            var answer = discussionsService.AddAnswer(content, testUser, addedQuestion.Id);
+            var testAnswerRatingBM = GetTestAnswerRatingBMRatingUp(answer, testUser);
+            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM, testUser);
+            var thisMustBeNull = discussionsService.RateAnswer(testAnswerRatingBM, testUser);
             //Assert
             Assert.True(thisMustBeNull == null);
         }
@@ -218,15 +216,15 @@ namespace Softuni.Community.Services.Tests
             var discussionsService = new DiscussionsService(db, this.mapper);
             var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
-            
+
             //Act
             db.Users.Add(testUser);
             db.SaveChanges();
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
             var content = "Test Answer";
-            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
-            var testAnswerRatingBM = GetTestAnswerRatingBMRatingDown(answer,testUser);
-            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM,testUser);
+            var answer = discussionsService.AddAnswer(content, testUser, addedQuestion.Id);
+            var testAnswerRatingBM = GetTestAnswerRatingBMRatingDown(answer, testUser);
+            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM, testUser);
 
             //Assert
             Assert.True(ratedAnswer != null);
@@ -243,16 +241,16 @@ namespace Softuni.Community.Services.Tests
             var discussionsService = new DiscussionsService(db, this.mapper);
             var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
-            
+
             //Act
             db.Users.Add(testUser);
             db.SaveChanges();
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
             var content = "Test Answer";
-            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
-            var testAnswerRatingBM = GetTestAnswerRatingBMRatingDown(answer,testUser);
-            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM,testUser);
-            var thisMustBeNull = discussionsService.RateAnswer(testAnswerRatingBM,testUser);
+            var answer = discussionsService.AddAnswer(content, testUser, addedQuestion.Id);
+            var testAnswerRatingBM = GetTestAnswerRatingBMRatingDown(answer, testUser);
+            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM, testUser);
+            var thisMustBeNull = discussionsService.RateAnswer(testAnswerRatingBM, testUser);
             //Assert
             Assert.True(thisMustBeNull == null);
         }
@@ -270,7 +268,7 @@ namespace Softuni.Community.Services.Tests
             db.SaveChanges();
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
             var content = "Test Answer";
-            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
+            var answer = discussionsService.AddAnswer(content, testUser, addedQuestion.Id);
 
             //Assert
             Assert.True(answer != null);
@@ -291,7 +289,7 @@ namespace Softuni.Community.Services.Tests
             db.SaveChanges();
             var content = "Test Answer";
             var testQuestionID = 10;
-            var answer = discussionsService.AddAnswer(content,testUser,testQuestionID);
+            var answer = discussionsService.AddAnswer(content, testUser, testQuestionID);
 
             //Assert
             Assert.True(answer == null);
@@ -308,7 +306,7 @@ namespace Softuni.Community.Services.Tests
             var content = "Test Answer";
             var nonUser = StaticMethods.GetTestUser();
             var questionId = 10;
-            var answer = discussionsService.AddAnswer(content,nonUser,questionId);
+            var answer = discussionsService.AddAnswer(content, nonUser, questionId);
 
             //Assert
             Assert.True(answer == null);
@@ -327,8 +325,8 @@ namespace Softuni.Community.Services.Tests
             db.SaveChanges();
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
             var content = "Test Answer";
-            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
-            var deletedAnswer = discussionsService.DeleteAnswer(answer.Id, addedQuestion.Id);
+            var answer = discussionsService.AddAnswer(content, testUser, addedQuestion.Id);
+            var deletedAnswer = discussionsService.DeleteAnswer(answer.Id, addedQuestion.Id,testUser.Id);
 
             //Assert
             Assert.True(deletedAnswer.Id == answer.Id);
@@ -339,16 +337,18 @@ namespace Softuni.Community.Services.Tests
             // Arrange
             var db = StaticMethods.GetDb();
             var discussionsService = new DiscussionsService(db, this.mapper);
-
+            var testUser = StaticMethods.GetTestUser();
             //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
             var testAnswerId = 23;
             var testQuestionId = 23;
-            var deletedAnswer = discussionsService.DeleteAnswer(testAnswerId, testQuestionId);
+            var deletedAnswer = discussionsService.DeleteAnswer(testAnswerId, testQuestionId,testUser.Id);
 
             //Assert
             Assert.True(deletedAnswer == null);
         }
-        
+
         /// <summary>
         /// Like / Dislike addition function Tests
         /// </summary>
@@ -368,17 +368,17 @@ namespace Softuni.Community.Services.Tests
             db.SaveChanges();
 
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
-            
-            var answer1 = discussionsService.AddAnswer(content1,testUser,addedQuestion.Id);
-            var answer2 = discussionsService.AddAnswer(content2,testUser,addedQuestion.Id);
+
+            var answer1 = discussionsService.AddAnswer(content1, testUser, addedQuestion.Id);
+            var answer2 = discussionsService.AddAnswer(content2, testUser, addedQuestion.Id);
 
             //// Like First Answer
-            var testAnswerRatingBM1 = GetTestAnswerRatingBMRatingUp(answer1,testUser);
-            var ratedAnswer1 = discussionsService.RateAnswer(testAnswerRatingBM1,testUser);
+            var testAnswerRatingBM1 = GetTestAnswerRatingBMRatingUp(answer1, testUser);
+            var ratedAnswer1 = discussionsService.RateAnswer(testAnswerRatingBM1, testUser);
 
             //// Like Secont Answer
-            testAnswerRatingBM1 = GetTestAnswerRatingBMRatingUp(answer2,testUser);
-            var ratedAnswer2 = discussionsService.RateAnswer(testAnswerRatingBM1,testUser);
+            testAnswerRatingBM1 = GetTestAnswerRatingBMRatingUp(answer2, testUser);
+            var ratedAnswer2 = discussionsService.RateAnswer(testAnswerRatingBM1, testUser);
 
             var userLikedAnswers = discussionsService.GetUserLikedAnswersIdList(testUser.UserName);
             //Assert
@@ -420,17 +420,17 @@ namespace Softuni.Community.Services.Tests
             db.SaveChanges();
 
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
-            
-            var answer1 = discussionsService.AddAnswer(content1,testUser,addedQuestion.Id);
-            var answer2 = discussionsService.AddAnswer(content2,testUser,addedQuestion.Id);
+
+            var answer1 = discussionsService.AddAnswer(content1, testUser, addedQuestion.Id);
+            var answer2 = discussionsService.AddAnswer(content2, testUser, addedQuestion.Id);
 
             //// Like First Answer
-            var testAnswerRatingBM1 = GetTestAnswerRatingBMRatingDown(answer1,testUser);
-            var ratedAnswer1 = discussionsService.RateAnswer(testAnswerRatingBM1,testUser);
+            var testAnswerRatingBM1 = GetTestAnswerRatingBMRatingDown(answer1, testUser);
+            var ratedAnswer1 = discussionsService.RateAnswer(testAnswerRatingBM1, testUser);
 
             //// Like Secont Answer
-            testAnswerRatingBM1 = GetTestAnswerRatingBMRatingDown(answer2,testUser);
-            var ratedAnswer2 = discussionsService.RateAnswer(testAnswerRatingBM1,testUser);
+            testAnswerRatingBM1 = GetTestAnswerRatingBMRatingDown(answer2, testUser);
+            var ratedAnswer2 = discussionsService.RateAnswer(testAnswerRatingBM1, testUser);
 
             var userLikedAnswers = discussionsService.GetUserDisLikedAnswersIdList(testUser.UserName);
             //Assert
@@ -456,7 +456,7 @@ namespace Softuni.Community.Services.Tests
             //Assert
             Assert.True(userLikedAnswers.Count == 0);
         }
-        
+
         [Fact]
         public void IsUserLikedAnswer_Must_Return_True_If_User_Liked_Given_Answer()
         {
@@ -465,16 +465,16 @@ namespace Softuni.Community.Services.Tests
             var discussionsService = new DiscussionsService(db, this.mapper);
             var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
-            
+
             //Act
             db.Users.Add(testUser);
             db.SaveChanges();
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
             var content = "Test Answer";
-            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
-            var testAnswerRatingBM = GetTestAnswerRatingBMRatingUp(answer,testUser);
-            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM,testUser);
-            var result = discussionsService.IsUserLikedAnswer(ratedAnswer.Id,testUser.UserName);
+            var answer = discussionsService.AddAnswer(content, testUser, addedQuestion.Id);
+            var testAnswerRatingBM = GetTestAnswerRatingBMRatingUp(answer, testUser);
+            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM, testUser);
+            var result = discussionsService.IsUserLikedAnswer(ratedAnswer.Id, testUser.UserName);
             //Assert
             Assert.True(result);
         }
@@ -486,14 +486,14 @@ namespace Softuni.Community.Services.Tests
             var discussionsService = new DiscussionsService(db, this.mapper);
             var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
-            
+
             //Act
             db.Users.Add(testUser);
             db.SaveChanges();
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
             var content = "Test Answer";
-            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
-            var result = discussionsService.IsUserLikedAnswer(answer.Id,testUser.UserName);
+            var answer = discussionsService.AddAnswer(content, testUser, addedQuestion.Id);
+            var result = discussionsService.IsUserLikedAnswer(answer.Id, testUser.UserName);
             //Assert
             Assert.True(!result);
         }
@@ -511,10 +511,10 @@ namespace Softuni.Community.Services.Tests
             db.Users.Add(testUser);
             db.SaveChanges();
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
-            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
-            var testAnswerRatingBM = GetTestAnswerRatingBMRatingDown(answer,testUser);
-            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM,testUser);
-            var result = discussionsService.IsUserDisLikedAnswer(ratedAnswer.Id,testUser.UserName);
+            var answer = discussionsService.AddAnswer(content, testUser, addedQuestion.Id);
+            var testAnswerRatingBM = GetTestAnswerRatingBMRatingDown(answer, testUser);
+            var ratedAnswer = discussionsService.RateAnswer(testAnswerRatingBM, testUser);
+            var result = discussionsService.IsUserDisLikedAnswer(ratedAnswer.Id, testUser.UserName);
             //Assert
             Assert.True(result);
         }
@@ -532,8 +532,8 @@ namespace Softuni.Community.Services.Tests
             db.Users.Add(testUser);
             db.SaveChanges();
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
-            var answer = discussionsService.AddAnswer(content,testUser,addedQuestion.Id);
-            var result = discussionsService.IsUserDisLikedAnswer(answer.Id,testUser.UserName);
+            var answer = discussionsService.AddAnswer(content, testUser, addedQuestion.Id);
+            var result = discussionsService.IsUserDisLikedAnswer(answer.Id, testUser.UserName);
             //Assert
             Assert.True(!result);
         }
@@ -552,7 +552,7 @@ namespace Softuni.Community.Services.Tests
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
             var questionRatingBindingModel = GetTestQuestionRatingBMRatingUp(addedQuestion);
             var ratedQuestion = discussionsService.RateQuestion(questionRatingBindingModel, testUser);
-            var result = discussionsService.IsUserLikedQuestion(ratedQuestion.Id,testUser.UserName);
+            var result = discussionsService.IsUserLikedQuestion(ratedQuestion.Id, testUser.UserName);
             //Assert
             Assert.True(result);
         }
@@ -568,7 +568,7 @@ namespace Softuni.Community.Services.Tests
             db.Users.Add(testUser);
             db.SaveChanges();
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
-            var result = discussionsService.IsUserLikedQuestion(addedQuestion.Id,testUser.UserName);
+            var result = discussionsService.IsUserLikedQuestion(addedQuestion.Id, testUser.UserName);
             //Assert
             Assert.True(!result);
         }
@@ -586,7 +586,7 @@ namespace Softuni.Community.Services.Tests
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
             var questionRatingBindingModel = GetTestQuestionRatingBMRatingDown(addedQuestion);
             var ratedQuestion = discussionsService.RateQuestion(questionRatingBindingModel, testUser);
-            var result = discussionsService.IsUserDisLikedQuestion(ratedQuestion.Id,testUser.UserName);
+            var result = discussionsService.IsUserDisLikedQuestion(ratedQuestion.Id, testUser.UserName);
             //Assert
             Assert.True(result);
         }
@@ -602,7 +602,7 @@ namespace Softuni.Community.Services.Tests
             db.Users.Add(testUser);
             db.SaveChanges();
             var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
-            var result = discussionsService.IsUserDisLikedQuestion(addedQuestion.Id,testUser.UserName);
+            var result = discussionsService.IsUserDisLikedQuestion(addedQuestion.Id, testUser.UserName);
             //Assert
             Assert.True(!result);
         }
@@ -631,7 +631,115 @@ namespace Softuni.Community.Services.Tests
             Assert.True(targetQuestion.Category == addedQuestion.Category);
             Assert.True(targetQuestion.Title == addedQuestion.Title);
         }
-        
+
+        [Fact]
+        public void GetTopQuestion_Must_Return_Question_With_Highest_Rated_Question_By_Category()
+        {
+            // Testing with 2 categories
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser1 = StaticMethods.GetTestUser();
+            var testUser2 = StaticMethods.GetTestUser();
+            var testQBM1 = GetTestQuestionBM(Category.AndroidDevelopment);
+            var testQBM2 = GetTestQuestionBM(Category.AndroidDevelopment);
+            var testQBM3 = GetTestQuestionBM(Category.C);
+            var testQBM4 = GetTestQuestionBM(Category.C);
+            //Act
+            db.Users.Add(testUser1);
+            db.SaveChanges();
+            var addedQuestion1 = discussionsService.AddQuestion(testQBM1, testUser1);
+            var addedQuestion2 = discussionsService.AddQuestion(testQBM2, testUser1);
+            var addedQuestion3 = discussionsService.AddQuestion(testQBM3, testUser1);
+            var addedQuestion4 = discussionsService.AddQuestion(testQBM4, testUser1);
+            discussionsService.RateQuestion(GetTestQuestionRatingBMRatingUp(addedQuestion1), testUser2);
+            discussionsService.RateQuestion(GetTestQuestionRatingBMRatingDown(addedQuestion2), testUser2);
+
+            discussionsService.RateQuestion(GetTestQuestionRatingBMRatingUp(addedQuestion3), testUser2);
+            discussionsService.RateQuestion(GetTestQuestionRatingBMRatingDown(addedQuestion4), testUser2);
+
+            var result = discussionsService.GetTopQuestions();
+            //Assert
+            Assert.True(result.Count == 2);
+            Assert.True(result[0].QuestionId == addedQuestion1.Id);
+            Assert.True(result[1].QuestionId == addedQuestion3.Id);
+        }
+
+        [Fact]
+        public void DeleteQuestion_Must_Return_Deleted_Question()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = StaticMethods.GetTestUser();
+            var testQBM = GetTestQuestionBM(Category.AndroidDevelopment);
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM,testUser);
+            var result = discussionsService.DeleteQuestion(addedQuestion.Id, testUser.Id);
+            //Assert
+            Assert.True(result.Id == addedQuestion.Id);
+            Assert.True(result.Title == addedQuestion.Title);
+            Assert.True(result.Rating == addedQuestion.Rating);
+            Assert.True(result.PublishTime == addedQuestion.PublishTime);
+            Assert.True(result.PublisherId == testUser.Id);
+        }
+
+        [Fact]
+        public void EditQuestion_Must_Return_QuestionEditBM_Of_Given_Question()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = StaticMethods.GetTestUser();
+            var testQBM = GetTestQuestionBM(Category.AndroidDevelopment);
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM,testUser);
+            var editBM = discussionsService.GetQuestionEditBindingModel(addedQuestion.Id,testUser.Id);
+            editBM.Title = "Testing buddy";
+            editBM.Content = "This must be long string i think";
+            editBM.Category = Category.JavaScript;
+            editBM.Tags =  editBM.Tags+ ";nice;go;back";
+            var result = discussionsService.EditQuestion(editBM, testUser.Id);
+
+            //Assert
+            Assert.True(result.Id == addedQuestion.Id);
+            Assert.True(result.Title == editBM.Title);
+            Assert.True(result.Category == editBM.Category);
+
+            Assert.True(result.Tags.Count == 4);
+            Assert.True(result.Tags.Any(x => x.Name == "web"));
+            Assert.True(result.Tags.Any(x => x.Name == "nice"));
+            Assert.True(result.Tags.Any(x => x.Name == "go"));
+            Assert.True(result.Tags.Any(x => x.Name == "back"));
+        }
+
+        [Fact]
+        public void UpdateTags_Must_Return_List_Of_Updated_Tags()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = StaticMethods.GetTestUser();
+            var testQBM = GetTestQuestionBM(Category.AndroidDevelopment);
+            var testTags = "web;nice;os;www;nice;";
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM,testUser);
+            var result = discussionsService.UpdateTags(testTags, addedQuestion);
+            //Assert
+            Assert.True(result.Count == 4);
+            Assert.True(result.Any(x => x.Name == "web"));
+            Assert.True(result.Any(x=>x.Name == "www"));
+            Assert.True(result.Any(x=>x.Name == "os"));
+            Assert.True(result.Any(x=>x.Name == "nice"));
+        }
+
+
         public AnswerRatingBindingModel GetTestAnswerRatingBMRatingUp(Answer answer, CustomUser user)
         {
             var model = new AnswerRatingBindingModel()
@@ -661,6 +769,17 @@ namespace Softuni.Community.Services.Tests
                 Content = "Just a test content",
                 Tags = "web;nice;",
                 Category = Category.WebDevelopment
+            };
+            return model;
+        }
+        public QuestionBindingModel GetTestQuestionBM(Category category)
+        {
+            var model = new QuestionBindingModel()
+            {
+                Title = "TestQuestion",
+                Content = "Just a test content",
+                Tags = "web;nice;",
+                Category = category
             };
             return model;
         }

@@ -7,26 +7,25 @@ namespace Softuni.Community.Services.Interfaces
 {
     public interface IDiscussionsService
     {
-        QuestionEditBindingModel GetQuestionEditBindingModel(int questionId);
-        Question EditQuestion(QuestionEditBindingModel bindingModel);
-        Question DeleteQuestion(int questionId);
-
-        bool IsCurrentUserIsPublisherOfQuestion(int questionId, string userId);
+        QuestionEditBindingModel GetQuestionEditBindingModel(int questionId,string publisherId);
+        Question EditQuestion(QuestionEditBindingModel bindingModel, string publisherId);
+        Question DeleteQuestion(int questionId, string publisherId);
+        
         IList<QuestionViewModel> GetTopQuestions();
         IList<int> GetUserLikedAnswersIdList(string username);
         IList<int> GetUserDisLikedAnswersIdList(string username);
-        ICollection<MyQuestionViewModel> GetUserQuestions(string username);
-        ICollection<MyAnswerViewModel> GetUserAnswers(string username);
+        ICollection<MyQuestionViewModel> GetUserQuestionsVM(string username);
+        ICollection<MyAnswerViewModel> GetUserAnswersVM(string username);
 
         bool IsUserDisLikedQuestion(int questionId, string username);
         bool IsUserLikedQuestion(int questionId, string username);
-        
+
         ICollection<AnswerViewModel> GetAnswersViewModels(int questionId);
         QuestionViewModel GetQuestionViewModel(int id);
         ICollection<QuestionViewModel> GetQuestionViewModels();
 
         Answer AddAnswer(string content, CustomUser publisher, int questionId);
-        Answer DeleteAnswer(int AnswerId, int QuestionId);
+        Answer DeleteAnswer(int AnswerId, int QuestionId, string publisherId);
         Answer RateAnswer(AnswerRatingBindingModel model, CustomUser user);
 
         Question AddQuestion(QuestionBindingModel model, CustomUser user);

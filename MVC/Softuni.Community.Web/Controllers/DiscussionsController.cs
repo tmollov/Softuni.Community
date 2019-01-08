@@ -39,10 +39,11 @@ namespace Softuni.Community.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var answer = discussService.DeleteAnswer(bindingModel.AnswerId, bindingModel.QuestionId);
+                var userId = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
+                var answer = discussService.DeleteAnswer(bindingModel.AnswerId, bindingModel.QuestionId, userId);
                 if (answer == null)
                 {
-                    throw new Exception("Answer didnt found");
+                    throw new Exception("Answer didn't found");
                 }
             }
             return Redirect($"/Discussions/QuestionDetails/{bindingModel.QuestionId}");
@@ -108,10 +109,10 @@ namespace Softuni.Community.Web.Controllers
         public IActionResult EditQuestion(int questionId)
         {
             var userId = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
-            if (discussService.IsCurrentUserIsPublisherOfQuestion(questionId,userId))
+            var bm = discussService.GetQuestionEditBindingModel(questionId,userId);
+            if (bm == null)
             {
-                var bm = discussService.GetQuestionEditBindingModel(questionId);
-                return View(bm);
+                return RedirectToAction("AccessDenied","Account");
             }
 
             return Redirect($"/Discussions/QuestionDetails/?Id={questionId}");
@@ -121,16 +122,26 @@ namespace Softuni.Community.Web.Controllers
         [HttpPost]
         public IActionResult EditQuestion(QuestionEditBindingModel bindingModel)
         {
-            var bm = discussService.EditQuestion(bindingModel);
-            return Redirect($"/Discussions/QuestionDetails/?Id={bindingModel.Id}");
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
+                var bm = discussService.EditQuestion(bindingModel,userId);
+            }
+            return Redirect($"/{ControllersConts.Discussions}/QuestionDetails/?Id={bindingModel.Id}");
         }
 
         [Authorize]
         [HttpPost]
         public IActionResult DeleteQuestion(int questionId)
         {
-            discussService.DeleteQuestion(questionId);
-            return RedirectToAction(ActionsConts.AllDiscussions,ControllersConts.Discussions);
+            if (User.Identity.IsAuthenticated )
+            {
+                var userId = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
+                discussService.DeleteQuestion(questionId,userId);
+                return RedirectToAction(ActionsConts.AllDiscussions,ControllersConts.Discussions);
+            }
+
+            return RedirectToAction("SomethingWentWrong","Error");
         }
 
     }

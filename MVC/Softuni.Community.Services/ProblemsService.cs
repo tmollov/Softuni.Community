@@ -66,7 +66,7 @@ namespace Softuni.Community.Services
             this.context.SaveChanges();
             return problem;
         }
-
+        //Tested
         public ProblemDetailsViewModel GetProblemDetails(int id)
         {
             var problem = this.context.GameProblems
@@ -78,7 +78,7 @@ namespace Softuni.Community.Services
             vm.Answers.RemoveAt(index);
             return vm;
         }
-
+        //Tested
         public IList<Choice> UpdateChoices(IList<Choice> choices, IProblemAddEdit bindingModel)
         {
             choices[0].Content = bindingModel.AnswerA;
@@ -105,7 +105,7 @@ namespace Softuni.Community.Services
             bm.RightAnswer = GetRightAnswerChoice(indexOfRightAnswer);
             return bm;
         }
-
+        //Tested
         public IList<GameProblemViewModel> GetAllProblems()
         {
             var problems = new List<GameProblemViewModel>();
@@ -156,6 +156,7 @@ namespace Softuni.Community.Services
             return null;
         }
 
+        //Tested
         public IList<Choice> AddChoices(IProblemAddEdit bindingModel, GameProblem problem)
         {
             var list = new List<Choice>();
@@ -170,6 +171,7 @@ namespace Softuni.Community.Services
             return list;
         }
 
+        //Tested
         public Choice AddChoice(string content, GameProblem problem)
         {
             var el = new Choice
@@ -182,12 +184,14 @@ namespace Softuni.Community.Services
             return el;
         }
 
-        // FOR Api Controller
+        // For Api Controller
         public ProblemDetailsViewModel GetRandomProblem()
         {
-            int maxInt = this.context.GameProblems.Count();
+            var problemIds = this.context.GameProblems.Select(x => x.Id).ToList();
+            int min = problemIds.Min();
+            int max = problemIds.Max();
 
-            var randomNumber = RandomNumber(1, maxInt);
+            var randomNumber = RandomNumber(min, max);
             var problem = this.context.GameProblems
                 .Include(x => x.Choices)
                 .FirstOrDefault(x => x.Id == randomNumber);

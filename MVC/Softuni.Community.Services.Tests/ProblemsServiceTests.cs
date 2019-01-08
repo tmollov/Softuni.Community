@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using AutoMapper;
+using Softuni.Community.Data.Models;
 using Softuni.Community.Data.Models.Enums;
 using Softuni.Community.Web;
 using Softuni.Community.Web.Models.BindingModels;
+using Softuni.Community.Web.Models.BindingModels.Interfaces;
+using Softuni.Community.Web.Models.ViewModels;
 using Xunit;
 
 namespace Softuni.Community.Services.Tests
@@ -105,6 +110,7 @@ namespace Softuni.Community.Services.Tests
             var result = service.GetEditProblemBindingModel(addedProblem.Id);
 
             //Assert
+            Assert.True(result.GetType() == typeof(EditProblemBindingModel));
             Assert.True(result.Id == addedProblem.Id);
             Assert.True(result.Content == addedProblem.ProblemContent);
             Assert.True(result.RightAnswer == rightAnswer);
@@ -179,16 +185,144 @@ namespace Softuni.Community.Services.Tests
             Assert.True(result.GameProblemId == addedProblem.Id);
         }
 
+        [Fact]
+        public void AddChoices_Must_Return_List_Of_Answers_Of_Given_Problem()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var service = new ProblemsService(db, mapper);
+            var addProblemBM = GetTestAddProblemBM();
+            // Act
+            var addedProblem = service.AddProblem(addProblemBM);
+            var choices = service.AddChoices(addProblemBM,addedProblem);
+            // Assert
+            Assert.True(choices.Count == 4);
+
+            Assert.True(choices[0].GameProblemId == addedProblem.Id);
+            Assert.True(choices[0].Content == Answer.A);
+
+            Assert.True(choices[1].GameProblemId == addedProblem.Id);
+            Assert.True(choices[1].Content == Answer.B);
+
+            Assert.True(choices[2].GameProblemId == addedProblem.Id);
+            Assert.True(choices[2].Content == Answer.C);
+
+            Assert.True(choices[3].GameProblemId == addedProblem.Id);
+            Assert.True(choices[3].Content == Answer.D);
+        }
+
+        [Fact]
+        public void GetProblemDetails_Must_Return_ViewModel_With_Given_Id()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var service = new ProblemsService(db, mapper);
+            var rightAnswer = ChoiceEnum.A;
+            var addProblemBM = GetTestAddProblemBM(rightAnswer);
+
+            // Act
+            var addedProblem = service.AddProblem(addProblemBM);
+            var result = service.GetProblemDetails(addedProblem.Id);
+
+            //Assert
+            Assert.True(result.GetType() == typeof(ProblemDetailsViewModel));
+            Assert.True(result.Id == addedProblem.Id);
+            Assert.True(result.ProblemContent == addedProblem.ProblemContent);
+            Assert.True(result.RightAnswer == addedProblem.RightAnswer);
+            Assert.True(result.Answers.Count == 3);
+        }
+
+        [Fact]
+        public void UpdateChoices_Must_Return_ChoiceList_With_Updated_Content_Choices()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var service = new ProblemsService(db, mapper);
+            var testBM = GetTestAddEditBM();
+            var choicheList = GetTestChoiceList();
+            // Act
+            var result = service.UpdateChoices(choicheList,testBM);
+            //Assert
+            Assert.True(result.Count == 4);
+            Assert.True(result[0].Content == testBM.AnswerA);
+            Assert.True(result[1].Content == testBM.AnswerB);
+            Assert.True(result[2].Content == testBM.AnswerC);
+            Assert.True(result[3].Content == testBM.AnswerD);
+        }
+
+        [Fact]
+        public void GetAllProblems_Must_Return_List_Of_All_Problems_As_ViewModels()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var service = new ProblemsService(db, mapper);
+            var addProblemBM1 = GetTestAddProblemBM();
+            var addProblemBM2 = GetTestAddProblemBM();
+            var addProblemBM3 = GetTestAddProblemBM();
+            var addProblemBM4 = GetTestAddProblemBM();
+            // Act
+            var addedBM1 = service.AddProblem(addProblemBM1);
+            var addedBM2 = service.AddProblem(addProblemBM1);
+            var addedBM3 = service.AddProblem(addProblemBM1);
+            var addedBM4 = service.AddProblem(addProblemBM1);
+            var result = service.GetAllProblems();
+            //Assert
+            Assert.True(result.Count == 4);
+            Assert.True(result.All(x => x != null));
+        }
+
+        [Fact]
+        public void GetAllProblemsViewModel_Must_Return_ViewModel()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var service = new ProblemsService(db, mapper);
+            var addProblemBM1 = GetTestAddProblemBM();
+            var addProblemBM2 = GetTestAddProblemBM();
+            var addProblemBM3 = GetTestAddProblemBM();
+            var addProblemBM4 = GetTestAddProblemBM();
+            // Act
+            var addedBM1 = service.AddProblem(addProblemBM1);
+            var addedBM2 = service.AddProblem(addProblemBM1);
+            var addedBM3 = service.AddProblem(addProblemBM1);
+            var addedBM4 = service.AddProblem(addProblemBM1);
+            var result = service.GetAllProblemsViewModel();
+            //Assert
+            Assert.True(result.GameProblems.Count == 4);
+            Assert.True(result.GameProblems.All(x => x != null));
+        }
+
+        [Fact]
+        public void GetRandomProblem_Must_Return_Random_ProblemDetailViewModel()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var service = new ProblemsService(db, mapper);
+            var addProblemBM1 = GetTestAddProblemBM();
+            var addProblemBM2 = GetTestAddProblemBM();
+            var addProblemBM3 = GetTestAddProblemBM();
+            var addProblemBM4 = GetTestAddProblemBM();
+            // Act
+            var addedBM1 = service.AddProblem(addProblemBM1);
+            var addedBM2 = service.AddProblem(addProblemBM1);
+            var addedBM3 = service.AddProblem(addProblemBM1);
+            var addedBM4 = service.AddProblem(addProblemBM1);
+            var result = service.GetRandomProblem();
+            //Assert
+            Assert.True(result != null);
+            Assert.True(db.GameProblems.Any(x => x.Id == result.Id));
+        }
+
         public AddProblemBindingModel GetTestAddProblemBM()
         {
             var bm = new AddProblemBindingModel()
             {
                 Content = "Test question",
-                RightAnswer = ChoiceEnum.B,
-                AnswerA = "a",
-                AnswerB = "b",
-                AnswerC = "c",
-                AnswerD = "d",
+                RightAnswer = ChoiceEnum.A,
+                AnswerA = "TestA",
+                AnswerB = "TestB",
+                AnswerC = "TestC",
+                AnswerD = "TestD",
             };
             return bm;
         }
@@ -198,23 +332,41 @@ namespace Softuni.Community.Services.Tests
             {
                 Content = "Test question",
                 RightAnswer = choice,
-                AnswerA = "a",
-                AnswerB = "b",
-                AnswerC = "c",
-                AnswerD = "d",
+                AnswerA = "TestA",
+                AnswerB = "TestB",
+                AnswerC = "TestC",
+                AnswerD = "TestD",
             };
             return bm;
         }
 
+        public IProblemAddEdit GetTestAddEditBM()
+        {
+            var v = this.GetTestAddProblemBM();
+            v.AnswerA = "updated";
+            v.AnswerB = "this too";
+            v.AnswerC = "also this";
+            v.AnswerD = "yeah! this too";
+            return v;
+        }
+        public IList<Choice> GetTestChoiceList()
+        {
+            var list = new List<Choice>();
+            list.Add(new Choice() {Content = Answer.A});
+            list.Add(new Choice() {Content = Answer.B});
+            list.Add(new Choice() {Content = Answer.C});
+            list.Add(new Choice() {Content = Answer.D});
+            return list;
+        }
+
         public string GetTestContent = Guid.NewGuid().ToString();
-    
 
         internal static class Answer
         {
-            public static string A => "a";
-            public static string B => "b";
-            public static string C => "c";
-            public static string D => "d";
+            public static string A => "TestA";
+            public static string B => "TestB";
+            public static string C => "TestC";
+            public static string D => "TestD";
         }
     }
 }
