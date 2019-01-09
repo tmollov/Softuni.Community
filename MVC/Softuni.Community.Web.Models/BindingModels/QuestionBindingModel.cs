@@ -1,26 +1,28 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Softuni.Community.Data.Models.Enums;
+using Softuni.Community.Web.Common;
 
 namespace Softuni.Community.Web.Models.BindingModels
 {
     public class QuestionBindingModel
     {
-        [Required]
+        [Required(ErrorMessage = Error.TitleRequired)]
+        [StringLength(Required.TitleMaxLength, ErrorMessage = Error.TitleLength, MinimumLength = Required.TitleMinLength)]
         [DataType(DataType.Text)]
-        [MinLength(10)]
-        [Display(Name = "Give it a Title.")]
+        [Display(Name = DisplayName.Title)]
         public string Title { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = Error.QuestionCannotBeEmpty)]
+        [StringLength(Required.QuestionMaxLength, ErrorMessage = Error.QuestionLength, MinimumLength = Required.QuestionMinLength)]
         [DataType(DataType.MultilineText)]
-        [MinLength(10)]
-        [Display(Name = "What is your question ?")]
+        [Display(Name = DisplayName.Question)]
         public string Content { get; set; }
 
-        [Display(Name = "Please separate you tags with (semicolon) ';' symbol.")]
+        [Display(Name = DisplayName.Tags)]
         public string Tags { get; set; }
 
-        [Display(Name = "Put it on one of these categories")]
-        public Category Category { get;set;}
+        [Required(ErrorMessage = Error.CategoryRequired)]
+        [Display(Name = DisplayName.Categories)]
+        public Category Category { get; set; }
     }
 }

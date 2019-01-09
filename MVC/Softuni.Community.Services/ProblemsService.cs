@@ -116,6 +116,7 @@ namespace Softuni.Community.Services
             return problems;
         }
 
+        //Tested
         public AllProblemsViewModel GetAllProblemsViewModel()
         {
             var vm = new AllProblemsViewModel
@@ -136,7 +137,7 @@ namespace Softuni.Community.Services
                 case 3: return ChoiceEnum.D;
             }
 
-            return ChoiceEnum.A;
+            return ChoiceEnum.Error;
         }
 
         //Tested
@@ -184,6 +185,8 @@ namespace Softuni.Community.Services
             return el;
         }
 
+        
+        //Tested
         // For Api Controller
         public ProblemDetailsViewModel GetRandomProblem()
         {

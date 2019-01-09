@@ -1,54 +1,57 @@
 ﻿@model Softuni.Community.Web.Models.ViewModels.QuestionDetailsViewModel
 @{
-    ViewData["Title"] = "Question Details";
+    ViewData["Title"] = "Question JokeDetails";
 }
 
 <div class="w-75 mx-auto">
     <!--Question-->
     <div class="row border">
-        @if (User.Identity.Name != Model.Question.PublisherName)
+        @if (User.Identity.IsAuthenticated)
         {
-            <div class="col-1 my-auto">
-                <input type="text" value="@Model.Question.QuestionId" hidden />
-                <button class="ratingBtn ratingUp" onclick="LikeQuestion(this)">
-                    @if (Model.IsUserLikeQuestion)
-                    {
-                        <i class="fas fa-thumbs-up liked"></i>
-                    }
-                    else
-                    {
-                        <i class="fas fa-thumbs-up"></i>
-                    }
-                </button>
-                <p class="p-0 m-0">@Model.Question.Rating</p>
-                <button class="ratingBtn ratingDown" onclick="DislikeQuestion(this)">
-                    @if (Model.IsUserDisLikeQuestion)
-                    {
-                        <i class="fas fa-thumbs-down disliked"></i>
-                    }
-                    else
-                    {
-                        <i class="fas fa-thumbs-down"></i>
-                    }
-                </button>
-            </div>
-        }
-        else
-        {
-            <div class="col-1 my-auto">
-                <form class="row pt-2 pb-2 my-auto" method="post" asp-controller="Discussions" asp-action="DeleteQuestion">
-                    <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
-                    <div class="my-auto w-100">
-                        <button class="addBtn delete border border-secondary p-3" type="submit">Delete</button>
-                    </div>
-                </form>
-                <form class="row pt-2 pb-2 my-auto" method="get" asp-controller="Discussions" asp-action="EditQuestion">
-                    <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
-                    <div class="my-auto w-100">
-                        <button class="addBtn border border-secondary p-3" type="submit">Edit</button>
-                    </div>
-                </form>
-            </div>
+            @if (User.Identity.Name != Model.Question.PublisherName)
+            {
+                <div class="col-1 my-auto">
+                    <input type="text" value="@Model.Question.QuestionId" hidden />
+                    <button class="ratingBtn ratingUp" onclick="LikeQuestion(this)">
+                        @if (Model.IsUserLikeQuestion)
+                        {
+                            <i class="fas fa-thumbs-up liked"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-thumbs-up"></i>
+                        }
+                    </button>
+                    <p class="p-0 m-0">@Model.Question.Rating</p>
+                    <button class="ratingBtn ratingDown" onclick="DislikeQuestion(this)">
+                        @if (Model.IsUserDisLikeQuestion)
+                        {
+                            <i class="fas fa-thumbs-down disliked"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-thumbs-down"></i>
+                        }
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="col-1 my-auto">
+                    <form class="row pt-2 pb-2 my-auto" method="post" asp-controller="Discussions" asp-action="DeleteQuestion">
+                        <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
+                        <div class="my-auto w-100">
+                            <button class="addBtn delete border border-secondary p-3" type="submit">Delete</button>
+                        </div>
+                    </form>
+                    <form class="row pt-2 pb-2 my-auto" method="get" asp-controller="Discussions" asp-action="EditQuestion">
+                        <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
+                        <div class="my-auto w-100">
+                            <button class="addBtn border border-secondary p-3" type="submit">Edit</button>
+                        </div>
+                    </form>
+                </div>
+            }
         }
         <div class="col m-0 pb-4 p-0">
             <div class="w-50 mx-auto">
@@ -91,73 +94,90 @@
         </div>
     </div>
     <!--Add Answer/Reply -->
-    <div class="row pt-3 p-0 text-center">
-        <div class="mx-auto">
-            <div class="border border-dark borderDiscussion">
-                <button id="addAnswerBtn" class="nav-link text-center addBtn">
-                    Add Answer
-                </button>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="row pt-3 p-0 text-center">
+            <div class="mx-auto">
+                <div class="border border-dark borderDiscussion">
+                    <button id="addAnswerBtn" class="nav-link text-center addBtn">
+                        Add Answer
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-    <div id="replyDiv" class="row mt-3" style="display: none">
-        <form class="row w-100 m-0 p-0" method="post" asp-controller="Discussions" asp-action="AddAnswer">
-            <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
-            <textarea id="replyText" class="col-11 text-center" name="Content" row="100%" cols="100%" maxlength="250" placeholder="Your answer here..."></textarea>
+        <div id="replyDiv" class="row mt-3" style="display: none">
+            <form class="row w-100 m-0 p-0" method="post" asp-controller="Discussions" asp-action="AddAnswer">
+                <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
+                <textarea id="replyText" class="col-11 text-center" name="Content" row="100%" cols="100%" maxlength="250" placeholder="Your answer here..."></textarea>
 
-            <div class="col-1 my-auto">
-                <button class="addBtn border border-secondary p-3" type="submit">Reply</button>
+                <div class="col-1 my-auto">
+                    <button class="addBtn border border-secondary p-3" type="submit">Reply</button>
+                </div>
+            </form>
+        </div>
+    }
+    else
+    {
+        <div class="row pt-3 p-0 text-center">
+            <div class="mx-auto">
+                <div class="borderDiscussion">
+                    <p><a href="/Identity/Account/Login/?ReturnUrl=/Discussions/QuestionJokeDetails/?Id=@Model.Question.QuestionId">Sign In</a> to add answer.</p>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+    }
+
     <!--Answers-->
     @foreach (var answer in Model.Answers)
     {
-        <div class="row border mt-3">
-
-            @if (User.Identity.Name != answer.PublisherName)
+        <div id="@answer.AnswerId" class="row border mt-3">
+            @if (User.Identity.IsAuthenticated)
             {
-                <div class="col-1 my-auto">
-                    <button class="ratingBtn ratingUp" onclick="LikeAnswer(this)">
-                        @if (Model.ListOfLikedAnswers.Contains(answer.AnswerId))
-                        {
-                            <i class="fas fa-thumbs-up liked"></i>
-                        }
-                        else
-                        {
-                            <i class="fas fa-thumbs-up"></i>
-                        }
-                    </button>
-                    <p class="p-0 m-0">@answer.Rating</p>
-                    <input type="text" name="AnswerId" value="@answer.AnswerId" hidden />
-                    <!--Add Green Red colours-->
-                    <button class="ratingBtn ratingDown" onclick="DislikeAnswer(this)">
-                        @if (Model.ListOfDisLikedAnswers.Contains(answer.AnswerId))
-                        {
-                            <i class="fas fa-thumbs-down disliked"></i>
-                        }
-                        else
-                        {
-                            <i class="fas fa-thumbs-down"></i>
-                        }
-                    </button>
-                </div>
+                if (User.Identity.Name != answer.PublisherName)
+                 {
+                     <div class="col-1 my-auto">
+                         <button class="ratingBtn ratingUp" onclick="LikeAnswer(this)">
+                             @if (Model.ListOfLikedAnswers.Contains(answer.AnswerId))
+                             {
+                                 <i class="fas fa-thumbs-up liked"></i>
+                             }
+                             else
+                             {
+                                 <i class="fas fa-thumbs-up"></i>
+                             }
+                         </button>
+                         <p class="p-0 m-0">@answer.Rating</p>
+                         <input type="text" name="AnswerId" value="@answer.AnswerId" hidden />
+                         <!--AddJoke Green Red colours-->
+                         <button class="ratingBtn ratingDown" onclick="DislikeAnswer(this)">
+                             @if (Model.ListOfDisLikedAnswers.Contains(answer.AnswerId))
+                             {
+                                 <i class="fas fa-thumbs-down disliked"></i>
+                             }
+                             else
+                             {
+                                 <i class="fas fa-thumbs-down"></i>
+                             }
+                         </button>
+                     </div>
 
+                 }
+                 else
+                 {
+                     <div class="col-1 m-0 p-0 my-auto">
+                         <form class="col-1 my-auto" method="post" asp-controller="Discussions" asp-action="DeleteAnswer">
+                             <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
+                             <input type="text" name="AnswerId" value="@answer.AnswerId" hidden />
+                             <div class="my-auto">
+                                 <button class="addBtn delete border border-secondary p-3" type="submit">Delete</button>
+                             </div>
+                         </form>
+                     </div>
+                 }
             }
-            else
-            {
-                <div class="col-1 m-0 p-0 my-auto">
-                    <form class="col-1 my-auto" method="post" asp-controller="Discussions" asp-action="DeleteAnswer">
-                        <input type="text" name="QuestionId" value="@Model.Question.QuestionId" hidden />
-                        <input type="text" name="AnswerId" value="@answer.AnswerId" hidden />
-                        <div class="my-auto">
-                            <button class="addBtn delete border border-secondary p-3" type="submit">Delete</button>
-                        </div>
-                    </form>
-                </div>
-            }
+            
 
-            <div class="col-9 m-0 p-0 my-auto">
+            <div class="col m-0 p-0 my-auto">
                 <div class="mx-auto text-center">
                     <h4 class="w-100 pl-3 pr-3">@answer.Content</h4>
                 </div>

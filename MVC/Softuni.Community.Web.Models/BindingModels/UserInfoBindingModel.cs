@@ -1,37 +1,36 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Softuni.Community.Web.Common;
 
 namespace Softuni.Community.Web.Models.BindingModels
 {
     public class UserInfoBindingModel
     {
-        [Required]
+        [Required()]
         [DataType(DataType.Date)]
-        [Display(Name = "What is you Birth Date ?")]
+        [Display(Name = DisplayName.BirthDate)]
         public DateTime BirthDate { get; set; }
 
         [Required]
         [DataType(DataType.Text)]
-        [StringLength(20, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
-        [RegularExpression("^[A-Za-z]+$")]
-        [Display(Name = "What is you First Name ?")]
+        [StringLength(Required.NameMax, ErrorMessage = Error.FirstNameLength, MinimumLength = Required.NameMin)]
+        [RegularExpression(Required.FirstLastNameRegex)]
         public string FirstName { get; set; }
 
         [Required]
         [DataType(DataType.Text)]
-        [StringLength(20, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
-        [RegularExpression("^[A-Za-z]+$")]
-        [Display(Name = "What is you Last Name ?")]
+        [StringLength(Required.NameMax, ErrorMessage = Error.FirstNameLength, MinimumLength = Required.NameMin)]
+        [RegularExpression(Required.FirstLastNameRegex)]
         public string LastName { get; set; }
 
         [DataType(DataType.Text)]
-        [StringLength(300)]
-        [Display(Name = "Share us more about you")]
+        [StringLength(Required.AboutMeMax, ErrorMessage = Error.AboutMeLength, MinimumLength = Required.AboutMeMin)]
+        [Display(Name = DisplayName.AboutMe)]
         public string AboutMe { get; set; }
 
         [DataType(DataType.Text)]
         [MinLength(4)]
-        [Display(Name = "From which state are you ?")]
+        [Display(Name = DisplayName.State)]
         public string State { get; set; }
 
         public string ProfilePictureUrl { get; set; }

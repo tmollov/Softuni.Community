@@ -1,34 +1,34 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Softuni.Community.Data.Models.Enums;
+using Softuni.Community.Web.Common;
 using Softuni.Community.Web.Models.BindingModels.Interfaces;
 
 namespace Softuni.Community.Web.Models.BindingModels
 {
     public class AddProblemBindingModel : IProblemAddEdit
     {
-        [Required]
-        [Display(Name = "Fill Problem description")]
+        [Required(ErrorMessage = Error.ProblemContentRequired)]
+        [Display(Name = DisplayName.ProblemContent)]
         public string Content { get; set; }
 
-        [Required]
-        [Display(Name = "A")]
+        [Required(ErrorMessage = Error.AnswerRequired)]
+        [Display(Name = Answers.A)]
         public string AnswerA { get; set; }
 
-        [Required]
-        [Display(Name = "B")]
+        [Required(ErrorMessage = Error.AnswerRequired)]
+        [Display(Name = Answers.B)]
         public string AnswerB { get; set; }
 
-        [Required]
-        [Display(Name = "C")]
+        [Required(ErrorMessage = Error.AnswerRequired)]
+        [Display(Name = Answers.C)]
         public string AnswerC { get; set; }
 
-        [Required]
-        [Display(Name = "D")]
+        [Required(ErrorMessage = Error.AnswerRequired)]
+        [Display(Name = Answers.D)]
         public string AnswerD { get; set; }
 
-        [Required]
-        [Display(Name = "What is the Right Answer for this problem?")]
+        [Required(ErrorMessage = Error.RightAnswerRequired)]
+        [Display(Name = DisplayName.RightAnswer)]
         public ChoiceEnum RightAnswer { get; set; }
-
     }
 }

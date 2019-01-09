@@ -166,3 +166,7 @@ a {
 .clearLink {
     text-decoration: none;
 }
+
+textarea:focus {
+   height: 30vh;
+}

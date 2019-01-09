@@ -27,5 +27,27 @@ namespace Softuni.Community.Services.Tests
             };
             return testUser;
         }
+        public static CustomUser GetTestUser(string username)
+        {
+            var testUser = new CustomUser()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Email = "mail@mail.com",
+                UserName = username,
+                PasswordHash = "MySecretPass1",
+            };
+            return testUser;
+        }
+        public static CustomUser GetTestUser(string username, string email)
+        {
+            var testUser = new CustomUser()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Email = "mail@mail.com",
+                UserName = username,
+                PasswordHash = "MySecretPass1",
+            };
+            return testUser;
+        }
     }
 }

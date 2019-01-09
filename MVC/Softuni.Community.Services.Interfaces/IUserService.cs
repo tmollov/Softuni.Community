@@ -7,6 +7,7 @@ namespace Softuni.Community.Services.Interfaces
     public interface IUserService
     {
         bool IsFirstUser();
+        bool FinishSetUp(string userId);
         UserInfo AddUserInfo(UserInfo userInfo);
         UserInfo UpdateUserInfo(CustomUser user, UserInfoBindingModel userInfo);
         ProfilesSettingsBindingModel GetProfileSettingsBindingModel(int id);

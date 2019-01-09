@@ -4,10 +4,6 @@ namespace Softuni.Community.Web.Common
 {
     public class ErrorMessages
     {
-        public const string UserWithGivenEmailNotFound = "User with given email not found.";
-        public const string UserWithGivenPasswordNotFound = "Wrong password!";
-
-        //Template
-        //public const string  = "";
+       
     }
 }

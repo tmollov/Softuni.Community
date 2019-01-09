@@ -39,6 +39,19 @@ namespace Softuni.Community.Services.Tests
         }
 
         [Fact]
+        public void GetRightAnswerChoice_Must_Return_Error_Enum_If_Choice_Index_Is_Bigger_Than_Four()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var service = new ProblemsService(db, mapper);
+            // Act
+            var result = service.GetRightAnswerChoice(234);
+
+            //Assert
+            Assert.True(result == ChoiceEnum.Error);
+        }
+
+        [Fact]
         public void GetRightAnswerString_Must_Return_String_Of_Right_Choice()
         {
             // Arrange
@@ -59,6 +72,20 @@ namespace Softuni.Community.Services.Tests
             Assert.True(resultB == Answer.B);
             Assert.True(resultC == Answer.C);
             Assert.True(resultD == Answer.D);
+        }
+
+        [Fact]
+        public void GetRightAnswerString_Must_Return_NULL_If_Choice_Index_Is_Bigger_Than_Four()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var service = new ProblemsService(db, mapper);
+            var error = GetTestAddProblemBM(ChoiceEnum.Error);
+
+            // Act
+            var result = service.GetRightAnswerString(error);
+            //Assert
+            Assert.True(result == null);
         }
 
         [Fact]

@@ -65,7 +65,15 @@
         {
             <div class="border border-secondary row mx-auto my-auto pr-2 pl-2">
                 <p class=" p-0 m-0">@answer.PublishTime.ToString("dd MMM yyyy")<span class="mr-1 ml-1">:</span></p>
-                <a href="/Discussions/QuestionDetails/?Id=@answer.QuestionId">
+                @{
+                                                                                                                   
+                    var parameters = new Dictionary<string, string>
+                    {
+                        { "Id", $"{answer.QuestionId}#{answer.Id}" },
+                    };
+                    var fragment = answer.Id;
+                }
+                <a asp-controller="Discussions" asp-action="QuestionDetails" asp-all-route-data="parameters" >
                     @if (answer.Content.Length > 30)
                     {
                         @string.Join("", answer.Content.Take(30));<span>...</span>

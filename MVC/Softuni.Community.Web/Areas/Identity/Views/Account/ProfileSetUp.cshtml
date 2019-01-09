@@ -13,7 +13,7 @@
 
 <div class="mb-5">
     <div class="w-25 mx-auto">
-        <form method="post">
+        <form asp-area="Identity" asp-controller="Account" asp-action="ProfileSetUp" method="post">
             <hr />
             <div class="form-group">
                 <label asp-for="FirstName"></label>
@@ -40,7 +40,7 @@
                 <input asp-for="State" class="form-control">
                 <span asp-validation-for="State" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-default">Update Account</button>
+            <button type="submit" class="btn addBtn">Update Account</button>
         </form>
     </div>
 </div>

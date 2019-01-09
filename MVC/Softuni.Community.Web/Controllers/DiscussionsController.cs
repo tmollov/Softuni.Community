@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -43,12 +44,12 @@ namespace Softuni.Community.Web.Controllers
                 var answer = discussService.DeleteAnswer(bindingModel.AnswerId, bindingModel.QuestionId, userId);
                 if (answer == null)
                 {
-                    throw new Exception("Answer didn't found");
+                    return RedirectToAction(Actions.SomethingWentWrong, Paths.Error);
                 }
             }
-            return Redirect($"/Discussions/QuestionDetails/{bindingModel.QuestionId}");
+            return Redirect($"/{Paths.Discussions}/{Actions.QuestionDetails}/{bindingModel.QuestionId}");
         }
-        
+
         [Authorize]
         [HttpPost]
         public IActionResult AddAnswer(AnswerBindingModel bindingModel)
@@ -56,34 +57,40 @@ namespace Softuni.Community.Web.Controllers
             if (ModelState.IsValid)
             {
                 var user = userMgr.FindByNameAsync(User.Identity.Name).Result;
-                var answer = discussService.AddAnswer(bindingModel.Content,user,bindingModel.QuestionId);
+                var answer = discussService.AddAnswer(bindingModel.Content, user, bindingModel.QuestionId);
                 if (answer == null)
                 {
-                    throw new Exception("Cannot add answer");
+                    return RedirectToAction(Actions.SomethingWentWrong, Paths.Error);
                 }
             }
-            return Redirect($"/Discussions/QuestionDetails/{bindingModel.QuestionId}");
+            return Redirect($"/{Paths.Discussions}/{Actions.QuestionDetails}/?Id={bindingModel.QuestionId}");
         }
 
         [AllowAnonymous]
-        public IActionResult QuestionDetails(int id)
+        public IActionResult QuestionDetails(string id)
         {
-            var questionViewModel = discussService.GetQuestionViewModel(id);
-            var answersViewModels = discussService.GetAnswersViewModels(id);
-            var isUserLikeQuestion = discussService.IsUserLikedQuestion(questionViewModel.QuestionId,User.Identity.Name);
-            var isUserDisLikeQuestion = discussService.IsUserDisLikedQuestion(questionViewModel.QuestionId,User.Identity.Name);
-            var userLikedAnswers = discussService.GetUserLikedAnswersIdList(User.Identity.Name);
-            var userDisLikedAnswers = discussService.GetUserDisLikedAnswersIdList(User.Identity.Name);
-            var res = new QuestionDetailsViewModel()
+            var parms = id.Split("#").Select(int.Parse).ToArray();
+            var questionViewModel = discussService.GetQuestionViewModel(parms[0]);
+            if (questionViewModel != null)
             {
-                Question = questionViewModel,
-                Answers = answersViewModels,
-                IsUserLikeQuestion = isUserLikeQuestion,
-                IsUserDisLikeQuestion = isUserDisLikeQuestion,
-                ListOfLikedAnswers = userLikedAnswers,
-                ListOfDisLikedAnswers = userDisLikedAnswers
-            };
-            return this.View(res);
+                var answersViewModels = discussService.GetAnswersViewModels(parms[0]);
+                var isUserLikeQuestion = discussService.IsUserLikedQuestion(questionViewModel.QuestionId, User.Identity.Name);
+                var isUserDisLikeQuestion = discussService.IsUserDisLikedQuestion(questionViewModel.QuestionId, User.Identity.Name);
+                var userLikedAnswers = discussService.GetUserLikedAnswersIdList(User.Identity.Name);
+                var userDisLikedAnswers = discussService.GetUserDisLikedAnswersIdList(User.Identity.Name);
+                var vm = new QuestionDetailsViewModel()
+                {
+                    Question = questionViewModel,
+                    Answers = answersViewModels,
+                    IsUserLikeQuestion = isUserLikeQuestion,
+                    IsUserDisLikeQuestion = isUserDisLikeQuestion,
+                    ListOfLikedAnswers = userLikedAnswers,
+                    ListOfDisLikedAnswers = userDisLikedAnswers
+                };
+                return this.View(vm);
+            }
+
+            return RedirectToAction(Actions.SomethingWentWrong, Paths.Error);
         }
 
         [Authorize]
@@ -91,7 +98,7 @@ namespace Softuni.Community.Web.Controllers
         {
             return View();
         }
-        
+
         [Authorize]
         [HttpPost]
         public IActionResult AddQuestion(QuestionBindingModel bindingModel)
@@ -100,7 +107,7 @@ namespace Softuni.Community.Web.Controllers
             {
                 var user = userMgr.FindByNameAsync(User.Identity.Name).Result;
                 discussService.AddQuestion(bindingModel, user);
-                return RedirectToAction(ActionsConts.AllDiscussions, ControllersConts.Discussions);
+                return RedirectToAction(Actions.All, Paths.Discussions);
             }
             return View(bindingModel);
         }
@@ -108,14 +115,18 @@ namespace Softuni.Community.Web.Controllers
         [Authorize]
         public IActionResult EditQuestion(int questionId)
         {
-            var userId = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
-            var bm = discussService.GetQuestionEditBindingModel(questionId,userId);
-            if (bm == null)
+            if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("AccessDenied","Account");
-            }
+                var userId = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
+                var bm = discussService.GetQuestionEditBindingModel(questionId, userId);
+                if (bm == null)
+                {
+                    return RedirectToAction(Actions.SomethingWentWrong, Paths.Error);
+                }
 
-            return Redirect($"/Discussions/QuestionDetails/?Id={questionId}");
+                return this.View(bm);
+            }
+            return Redirect($"/{Paths.Discussions}/{Actions.QuestionDetails}/?Id={questionId}");
         }
 
         [Authorize]
@@ -125,23 +136,23 @@ namespace Softuni.Community.Web.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var userId = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
-                var bm = discussService.EditQuestion(bindingModel,userId);
+                var bm = discussService.EditQuestion(bindingModel, userId);
             }
-            return Redirect($"/{ControllersConts.Discussions}/QuestionDetails/?Id={bindingModel.Id}");
+            return Redirect($"/{Paths.Discussions}/{Actions.QuestionDetails}/?Id={bindingModel.Id}");
         }
 
         [Authorize]
         [HttpPost]
         public IActionResult DeleteQuestion(int questionId)
         {
-            if (User.Identity.IsAuthenticated )
+            if (User.Identity.IsAuthenticated)
             {
                 var userId = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
-                discussService.DeleteQuestion(questionId,userId);
-                return RedirectToAction(ActionsConts.AllDiscussions,ControllersConts.Discussions);
+                discussService.DeleteQuestion(questionId, userId);
+                return RedirectToAction(Actions.All, Paths.Discussions);
             }
 
-            return RedirectToAction("SomethingWentWrong","Error");
+            return RedirectToAction(Actions.SomethingWentWrong, Paths.Error);
         }
 
     }

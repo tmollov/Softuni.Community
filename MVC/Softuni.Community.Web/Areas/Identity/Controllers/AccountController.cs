@@ -13,6 +13,7 @@ using Softuni.Community.Web.Common;
 using Softuni.Community.Web.Controllers;
 using Softuni.Community.Web.Models.BindingModels;
 using Softuni.Community.Web.Models.ViewModels;
+using Error = Softuni.Community.Web.Common.Error;
 
 namespace Softuni.Community.Web.Areas.Identity.Controllers
 {
@@ -74,21 +75,21 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
                             {
                                 return Redirect(bindingModel.ReturnUrl);
                             }
-                            return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
+                            return RedirectToAction(Actions.Index, Paths.Home);
                         }
                     }
                     else
                     {
                         ModelState.AddModelError(nameof(LoginBindingModel.Password),
-                            ErrorMessages.UserWithGivenPasswordNotFound);
+                            Error.PasswordNotValid);
                         // Will returning empty password field
-                        //bindingModel.Password = string.Empty;
+                        bindingModel.Password = string.Empty;
                     }
                 }
                 else
                 {
                     ModelState.AddModelError(nameof(LoginBindingModel.Email),
-                        ErrorMessages.UserWithGivenEmailNotFound);
+                        Error.UserWithGivenEmailNotFound);
                 }
             }
             return View(bindingModel);
@@ -121,7 +122,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
                 if (result.Succeeded)
                 {
-                    return Redirect("/Identity/Account/ProfileSetUp");
+                    return Redirect($"/{Area.Identity}/{Paths.Account}/{Actions.ProfileSetUp}");
                 }
                 else
                 {
@@ -143,12 +144,11 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         [Authorize]
         public IActionResult ProfileSetUp()
         {
-            // Logic to add: If user profile is setted up redirect to profile settings
-            //var user = userManager.FindByNameAsync(User.Identity.Name).Result;
-            //if (!user.IsProfileSetUp)
-            //{
-            //
-            //}
+            var user = userManager.FindByNameAsync(User.Identity.Name).Result;
+            if (!user.IsProfileSetUp)
+            {
+                return Redirect($"/{Area.Identity}/{Paths.Account}/{Actions.Profile}");
+            }
             return View();
         }
 
@@ -158,15 +158,10 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = userService
-                    .UpdateUserInfo(
-                        userManager.FindByNameAsync(User.Identity.Name).Result,
-                        bindingModel
-                        );
-                if (result != null)
-                {
-                    return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
-                }
+                var user = userManager.FindByNameAsync(User.Identity.Name).Result;
+                var result = userService.UpdateUserInfo(user, bindingModel);
+                userService.FinishSetUp(user.Id);
+                return RedirectToAction(Actions.Index, Paths.Home);
             }
             return View(bindingModel);
         }
@@ -176,7 +171,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         {
             signInManager.SignOutAsync().GetAwaiter().GetResult();
 
-            return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
+            return RedirectToAction(Actions.Index, Paths.Home);
         }
 
         [Authorize]
@@ -189,13 +184,26 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         [Authorize]
         public IActionResult DeleteProfile(DeleteProfileBindingModel bindingModel)
         {
-            if (bindingModel.IsConfirmed)
+            if (ModelState.IsValid)
             {
-                signInManager.SignOutAsync().GetAwaiter().GetResult();
-                var user = userManager.FindByNameAsync(User.Identity.Name).Result;
-                var res = userManager.DeleteAsync(user).Result;
+                var username = User.Identity.Name;
+                CustomUser user = userManager.FindByNameAsync(username).Result;
+                if (user != null)
+                {
+                    var isPasswordRight = userManager.CheckPasswordAsync(user, bindingModel.Password).Result;
+
+                    if (isPasswordRight)
+                    {
+                        signInManager.SignOutAsync().GetAwaiter().GetResult();
+                        var res = userManager.DeleteAsync(user).Result;
+                    }
+                }
+                else
+                {
+                    return RedirectToAction(Actions.SomethingWentWrong, Paths.Error);
+                }
             }
-            return RedirectToAction(ActionsConts.Index, ControllersConts.Home);
+            return RedirectToAction(Actions.Index, Paths.Home);
         }
 
         [Authorize]
@@ -239,11 +247,11 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
                 var user = userManager.FindByNameAsync(User.Identity.Name).Result;
                 var userInfo = mapper.Map<UserInfoBindingModel>(bindingModel);
                 userService.UpdateUserInfo(user, userInfo);
-                return Redirect("/Identity/Account/ProfileSettings");
+                return Redirect($"/{Area.Identity}/{Paths.Account}/{Actions.ProfileSettings}");
             }
             return View(bindingModel);
         }
-        
+
         private ImageUploadResult UploadImage(string path)
         {
             var uploadParams = new ImageUploadParams()
@@ -253,6 +261,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
 
             return cloudinary.Upload(uploadParams);
         }
+
         private async Task<string> CreateTempFile(IFormFile file)
         {
             var filePath = Path.GetTempFileName();

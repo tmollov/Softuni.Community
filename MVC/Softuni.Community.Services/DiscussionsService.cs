@@ -23,6 +23,7 @@ namespace Softuni.Community.Services
             this.mapper = mapper;
         }
 
+        //Tested
         public QuestionEditBindingModel GetQuestionEditBindingModel(int questionId, string publisherId)
         {
             var question = this.context.Questions
@@ -36,11 +37,12 @@ namespace Softuni.Community.Services
             return bm;
         }
 
+        //Tested
         public Question EditQuestion(QuestionEditBindingModel bindingModel, string publisherId)
         {
             var question = this.context.Questions
-                                       .Include(x=>x.Tags)
-                                       .FirstOrDefault(x => x.Id == bindingModel.Id && x.PublisherId==publisherId);
+                                       .Include(x => x.Tags)
+                                       .FirstOrDefault(x => x.Id == bindingModel.Id && x.PublisherId == publisherId);
             if (question != null)
             {
                 question.Title = bindingModel.Title;
@@ -52,28 +54,18 @@ namespace Softuni.Community.Services
             return question;
         }
 
+        //Tested
         public ICollection<Tag> UpdateTags(string tags, Question question)
         {
             if (tags == null)
                 return new List<Tag>();
 
-            if (!tags.Contains(";") && tags.Length > 0)
-            {
-                List<Tag> list = new List<Tag>();
-                if (question.Tags.Any(x=>x.Name != tags))
-                {
-                    list.Add(this.AddTag(tags, question));
-                    return list;
-                }
-                return question.Tags;
-            }
+            var tagList = tags.Split(" ", StringSplitOptions.RemoveEmptyEntries).Where(x=> !string.IsNullOrWhiteSpace(x)).Select(x => x.Trim()).ToHashSet();
 
-            var tagList = tags.Split(";", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToHashSet();
-            
             List<Tag> newTagsList = new List<Tag>();
             foreach (var item in tagList)
             {
-                if (question.Tags.Any(x=>x.Name == item))
+                if (question.Tags.Any(x => x.Name == item))
                 {
                     newTagsList.Add(question.Tags.FirstOrDefault(x => x.Name == item));
                     continue;
@@ -85,7 +77,7 @@ namespace Softuni.Community.Services
         }
 
         //Tested
-        public Question DeleteQuestion(int questionId,string publisherId)
+        public Question DeleteQuestion(int questionId, string publisherId)
         {
             var question = this.context.Questions.FirstOrDefault(x => x.Id == questionId && x.PublisherId == publisherId);
             if (question is null)
@@ -98,6 +90,7 @@ namespace Softuni.Community.Services
             return question;
         }
 
+        //Tested
         public ICollection<AnswerViewModel> GetAnswersViewModels(int questionId)
         {
             List<AnswerViewModel> vms = this.context.Answers
@@ -107,6 +100,8 @@ namespace Softuni.Community.Services
                 .Select(x => mapper.Map<AnswerViewModel>(x)).ToList();
             return vms;
         }
+
+        //Tested
         public ICollection<QuestionViewModel> GetQuestionViewModels()
         {
             List<QuestionViewModel> vms = this.context.Questions
@@ -116,6 +111,8 @@ namespace Softuni.Community.Services
                 .Select(x => mapper.Map<QuestionViewModel>(x)).ToList();
             return vms;
         }
+
+        //Tested
         public QuestionViewModel GetQuestionViewModel(int id)
         {
             Question question = this.context.Questions
@@ -136,11 +133,14 @@ namespace Softuni.Community.Services
 
         public ICollection<MyQuestionViewModel> GetUserQuestionsVM(string username)
         {
-            var questions = this.context.Questions.Include(x => x.Publisher)
+            var questions = this.context.Questions
+                .Include(x => x.Publisher)
                 .Where(x => x.Publisher.UserName == username)
                 .Select(x => mapper.Map<MyQuestionViewModel>(x)).ToList();
             return questions;
         }
+
+        //Tested
         public ICollection<MyAnswerViewModel> GetUserAnswersVM(string username)
         {
             var answers = this.context.Answers
@@ -152,7 +152,7 @@ namespace Softuni.Community.Services
         }
 
         //Tested
-        public Answer DeleteAnswer(int AnswerId, int QuestionId,string PublisherId)
+        public Answer DeleteAnswer(int AnswerId, int QuestionId, string PublisherId)
         {
             if (this.context.Answers.Any(x => x.Id == AnswerId && x.QuestionId == QuestionId && x.PublisherId == PublisherId))
             {
@@ -306,14 +306,7 @@ namespace Softuni.Community.Services
         {
             if (tags == null)
                 return new List<Tag>();
-
-            if (!tags.Contains(";") && tags.Length > 0)
-            {
-                List<Tag> list = new List<Tag>();
-                list.Add(this.AddTag(tags, question));
-                return list;
-            }
-            var tagList = tags.Split(";", StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToHashSet();
+            var tagList = tags.Split(" ", StringSplitOptions.RemoveEmptyEntries).Where(x=>!string.IsNullOrWhiteSpace(x)).Select(x => x.Trim()).ToHashSet();
             List<Tag> tagsList = new List<Tag>();
             foreach (var item in tagList)
             {

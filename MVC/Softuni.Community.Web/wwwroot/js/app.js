@@ -16,6 +16,16 @@ let jokeBase = "https://localhost:5001/api/jokes/";
     })
 })();
 
+(() => {
+    let urlParams = document.URL.split('/');
+    var fragment = urlParams[urlParams.length-1].split("%23");
+    if (fragment.length > 1) {
+        console.log(fragment[1]);   
+        var elmnt = document.getElementById(fragment[1]);
+        elmnt.scrollIntoView();
+    }
+})();
+
 function LikeAnswer(e) {
     if ($(e).hasClass("liked")) {
         return;

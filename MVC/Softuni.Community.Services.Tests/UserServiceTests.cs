@@ -70,7 +70,7 @@ namespace Softuni.Community.Services.Tests
         }
 
         [Fact]
-        public void UpdateUserInfo_Must_Return_Updated_UserInfo_If_Successeed()
+        public void UpdateUserInfo_Must_Return_Updated_UserInfo()
         {
             // Arrange
             var dbContext = StaticMethods.GetDb();
@@ -92,6 +92,31 @@ namespace Softuni.Community.Services.Tests
             Assert.True(result.BirthDate == testUserInfoUpdate.BirthDate);
             Assert.True(result.AboutMe == testUserInfoUpdate.AboutMe);
             Assert.True(result.ProfilePictureUrl == testUserInfoUpdate.ProfilePictureUrl);
+        }
+
+        [Fact]
+        public void UpdateUserInfo_Must_Return_Same_UserInfo_With_Given_Same_UserInfo()
+        {
+            // Arrange
+            var dbContext = StaticMethods.GetDb();
+            var userService = new UserService(dbContext, mapper);
+            var testUser = StaticMethods.GetTestUser();
+            var testUserInfo = GetTestUserInfo();
+            var testSameUserInfoBM = GetTestSameUserInfoBM();
+            //Act
+            dbContext.UserInfos.Add(testUserInfo);
+            dbContext.SaveChanges();
+            testUser.UserInfo = testUserInfo;
+            dbContext.Users.Add(testUser);
+            dbContext.SaveChanges();
+            var result = userService.UpdateUserInfo(testUser, testSameUserInfoBM);
+
+            //Assert
+            Assert.True(result.FirstName == testSameUserInfoBM.FirstName);
+            Assert.True(result.LastName == testSameUserInfoBM.LastName);
+            Assert.True(result.BirthDate == testSameUserInfoBM.BirthDate);
+            Assert.True(result.AboutMe == testSameUserInfoBM.AboutMe);
+            Assert.True(result.ProfilePictureUrl == testSameUserInfoBM.ProfilePictureUrl);
         }
 
         [Fact]
@@ -182,6 +207,13 @@ namespace Softuni.Community.Services.Tests
             };
 
             return UserInfo;
+        }
+
+        public UserInfoBindingModel GetTestSameUserInfoBM()
+        {
+            var userInfo = this.GetTestUserInfo();
+            var bm = mapper.Map<UserInfoBindingModel>(userInfo);
+            return bm;
         }
         public UserInfoBindingModel GetTestUserInfoBMUpdate()
         {

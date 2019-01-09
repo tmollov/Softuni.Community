@@ -24,7 +24,7 @@ namespace Softuni.Community.Web
 
             this.CreateMap<Question, QuestionEditBindingModel>()
                 .ForMember(x => x.Tags,
-                    opts => opts.MapFrom(src => string.Join("; ", src.Tags.Select(a => a.Name))));
+                    opts => opts.MapFrom(src => string.Join(" ", src.Tags.Select(a => a.Name))));
 
             this.CreateMap<Question, QuestionViewModel>()
                 .ForMember(x => x.QuestionId,

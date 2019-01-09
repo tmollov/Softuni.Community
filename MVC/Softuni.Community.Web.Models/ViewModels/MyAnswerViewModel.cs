@@ -4,6 +4,8 @@ namespace Softuni.Community.Web.Models.ViewModels
 {
     public class MyAnswerViewModel
     {
+        public int Id { get; set; }
+
         public string Content { get; set; }
 
         public DateTime PublishTime { get; set; }

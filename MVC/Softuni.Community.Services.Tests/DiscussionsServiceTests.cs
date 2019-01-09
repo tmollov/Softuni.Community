@@ -65,7 +65,7 @@ namespace Softuni.Community.Services.Tests
             var discussionsService = new DiscussionsService(db, this.mapper);
             var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM();
-            var testTags = "newTag;myTag";
+            var testTags = " newTag myTag";
             //Act
             db.Users.Add(testUser);
             db.SaveChanges();
@@ -633,6 +633,25 @@ namespace Softuni.Community.Services.Tests
         }
 
         [Fact]
+        public void GetQuestionViewModel_Must_Return_NULL_If_There_Isnt_Question_With_Given_Id()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = StaticMethods.GetTestUser();
+            var testQBM = GetTestQuestionBM();
+
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM, testUser);
+            var result = discussionsService.GetQuestionViewModel(addedQuestion.Id + 1);
+
+            //Assert
+            Assert.True(result == null);
+        }
+
+        [Fact]
         public void GetTopQuestion_Must_Return_Question_With_Highest_Rated_Question_By_Category()
         {
             // Testing with 2 categories
@@ -702,7 +721,7 @@ namespace Softuni.Community.Services.Tests
             editBM.Title = "Testing buddy";
             editBM.Content = "This must be long string i think";
             editBM.Category = Category.JavaScript;
-            editBM.Tags =  editBM.Tags+ ";nice;go;back";
+            editBM.Tags =  editBM.Tags+ " nice go back";
             var result = discussionsService.EditQuestion(editBM, testUser.Id);
 
             //Assert
@@ -725,7 +744,7 @@ namespace Softuni.Community.Services.Tests
             var discussionsService = new DiscussionsService(db, this.mapper);
             var testUser = StaticMethods.GetTestUser();
             var testQBM = GetTestQuestionBM(Category.AndroidDevelopment);
-            var testTags = "web;nice;os;www;nice;";
+            var testTags = "web nice os www nice";
             //Act
             db.Users.Add(testUser);
             db.SaveChanges();
@@ -739,6 +758,179 @@ namespace Softuni.Community.Services.Tests
             Assert.True(result.Any(x=>x.Name == "nice"));
         }
 
+        [Fact]
+        public void UpdateTags_Must_Return_Empty_List_Of_Tags_If_There_Isnt_Any_Tag_To_Update()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = StaticMethods.GetTestUser();
+            var testQBM = GetTestQuestionBM(Category.AndroidDevelopment);
+            var testTags = "";
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM,testUser);
+            var result = discussionsService.UpdateTags(testTags, addedQuestion);
+            //Assert
+            Assert.True(result.Count == 0);
+        }
+
+        [Fact]
+        public void GetQuestionViewModels_Must_Return_Collection_Of_QuestionViewModels()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = StaticMethods.GetTestUser();
+            var testQBM1 = GetTestQuestionBM(Category.C);
+            var testQBM2 = GetTestQuestionBM(Category.DesktopDevelopment);
+
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion1 = discussionsService.AddQuestion(testQBM1, testUser);
+            var addedQuestion2 = discussionsService.AddQuestion(testQBM2, testUser);
+
+            var result = discussionsService.GetQuestionViewModels();
+
+            //Assert
+            Assert.True(result.Count == 2);
+            Assert.True(result.Any(x=>x.Category == addedQuestion1.Category));
+            Assert.True(result.Any(x=>x.Category == addedQuestion2.Category));
+        }
+
+        [Fact]
+        public void GetAnswersViewModels_Must_Return_Collection_Of_Answers_From_Given_Question_Id()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testPublisher = StaticMethods.GetTestUser();
+            var testUser = StaticMethods.GetTestUser("ChuckNorris","mail@chuck.com");
+            var testQBM = GetTestQuestionBM();
+
+            //Act
+            db.Users.Add(testUser);
+            db.Users.Add(testPublisher);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM, testPublisher);
+            var content1 = "First Test Answer";
+            var answer1 = discussionsService.AddAnswer(content1, testUser, addedQuestion.Id);
+            var content2 = "Second Test Answer";
+            var answer2 = discussionsService.AddAnswer(content2, testUser, addedQuestion.Id);
+            var result = discussionsService.GetAnswersViewModels(addedQuestion.Id);
+            //Assert
+            Assert.True(result.Count == 2);
+            Assert.True(result.Any(x => x.AnswerId == answer1.Id));
+            Assert.True(result.Any(x => x.AnswerId == answer2.Id));
+        }
+
+        [Fact]
+        public void GetAnswersViewModels_Must_Return_Empty_Collection_If_There_Isnt_Question_With_Given_Id()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testPublisher = StaticMethods.GetTestUser();
+
+            //Act
+            db.Users.Add(testPublisher);
+            db.SaveChanges();
+            var result = discussionsService.GetAnswersViewModels(2312);
+            //Assert
+            Assert.True(result.Count == 0);
+        }
+
+        [Fact]
+        public void GetUserAnswersVM_Must_Return_Collection_Of_Answers_From_Given_User_Name()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testPublisher = StaticMethods.GetTestUser();
+            var testUser = StaticMethods.GetTestUser("ChuckNorris","mail@chuck.com");
+            var testQBM = GetTestQuestionBM();
+
+            //Act
+            db.Users.Add(testUser);
+            db.Users.Add(testPublisher);
+            db.SaveChanges();
+            var addedQuestion = discussionsService.AddQuestion(testQBM, testPublisher);
+            var content1 = "First Test Answer";
+            var answer1 = discussionsService.AddAnswer(content1, testUser, addedQuestion.Id);
+            var content2 = "Second Test Answer";
+            var answer2 = discussionsService.AddAnswer(content2, testUser, addedQuestion.Id);
+            var result = discussionsService.GetUserAnswersVM(testUser.UserName);
+            //Assert
+            Assert.True(result.Count == 2);
+            Assert.True(result.Any(x => x.Content == answer1.Content));
+            Assert.True(result.Any(x => x.Content == answer2.Content));
+            
+            Assert.True(result.Any(x => x.PublishTime == answer1.PublishTime));
+            Assert.True(result.Any(x => x.PublishTime == answer2.PublishTime));
+
+            Assert.True(result.Any(x => x.QuestionId == addedQuestion.Id));
+            Assert.True(result.Any(x => x.QuestionTitle == addedQuestion.Title));
+        }
+
+        [Fact]
+        public void GetUserAnswersVM_Must_Return_Empty_Collection_If_There_Isnt_User_With_User_Name()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testQBM = GetTestQuestionBM();
+
+            //Act
+            var result = discussionsService.GetUserAnswersVM("ChuckNorris");
+            //Assert
+            Assert.True(result.Count == 0);
+        }
+
+        [Fact]
+        public void GetUserQuestionsVM_Must_Return_Collection_Of_Answers_From_Given_User_Name()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = StaticMethods.GetTestUser();
+            var testQBM1 = GetTestQuestionBM(Category.AndroidDevelopment);
+            var testQBM2 = GetTestQuestionBM(Category.C);
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion1 = discussionsService.AddQuestion(testQBM1, testUser);
+            var addedQuestion2 = discussionsService.AddQuestion(testQBM2, testUser);
+            var result = discussionsService.GetUserQuestionsVM(testUser.UserName);
+            //Assert
+            Assert.True(result.Count == 2);
+            Assert.True(result.Any(x=>x.Id == addedQuestion1.Id));
+            Assert.True(result.Any(x=>x.Id == addedQuestion2.Id));
+
+            Assert.True(result.Any(x=>x.Title == addedQuestion1.Title));
+            Assert.True(result.Any(x=>x.Title == addedQuestion2.Title));
+
+            Assert.True(result.Any(x=>x.Category == addedQuestion1.Category));
+            Assert.True(result.Any(x=>x.Category == addedQuestion2.Category));
+        }
+
+        [Fact]
+        public void GetUserQuestionsVM_Must_Return_Empty_Collection_If_There_Isnt_User_With_User_Name()
+        {
+            // Arrange
+            var db = StaticMethods.GetDb();
+            var discussionsService = new DiscussionsService(db, this.mapper);
+            var testUser = StaticMethods.GetTestUser();
+            var testQBM = GetTestQuestionBM(Category.AndroidDevelopment);
+            //Act
+            db.Users.Add(testUser);
+            db.SaveChanges();
+            var addedQuestion1 = discussionsService.AddQuestion(testQBM, testUser);
+            var result = discussionsService.GetUserQuestionsVM("ChuckNorris");
+            //Assert
+            Assert.True(result.Count == 0);
+        }
 
         public AnswerRatingBindingModel GetTestAnswerRatingBMRatingUp(Answer answer, CustomUser user)
         {
@@ -767,7 +959,7 @@ namespace Softuni.Community.Services.Tests
             {
                 Title = "TestQuestion",
                 Content = "Just a test content",
-                Tags = "web;nice;",
+                Tags = "web nice",
                 Category = Category.WebDevelopment
             };
             return model;
@@ -778,7 +970,7 @@ namespace Softuni.Community.Services.Tests
             {
                 Title = "TestQuestion",
                 Content = "Just a test content",
-                Tags = "web;nice;",
+                Tags = "web nice",
                 Category = category
             };
             return model;

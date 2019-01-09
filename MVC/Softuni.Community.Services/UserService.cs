@@ -50,8 +50,7 @@ namespace Softuni.Community.Services
             if (newUserInfo.State != null)
                 userInfo.State = newUserInfo.State;
             this.context.SaveChanges();
-
-            // Return updated entity if process is succesfull
+            
             return userInfo;
         }
 
@@ -61,8 +60,7 @@ namespace Softuni.Community.Services
             var userInfo = this.context.UserInfos.FirstOrDefault(x => x.Id == user.UserInfoId);
             userInfo.ProfilePictureUrl = picUri;
             this.context.SaveChanges();
-
-            // Return updated UserInfo entity if process is succesfull
+            
             return userInfo;
         }
 
@@ -74,11 +72,26 @@ namespace Softuni.Community.Services
             return result;
         }
 
+        //Tested
         public MyProfileViewModel GetProfileViewModel(int id)
         {
             var model = this.context.UserInfos.FirstOrDefault(x => x.Id == id);
             var result = mapper.Map<MyProfileViewModel>(model);
             return result;
+        }
+
+        public bool FinishSetUp(string userId)
+        {
+            // Returns false if ser profile is already set up.
+
+            var user = this.context.Users.FirstOrDefault(x => x.Id == userId);
+            if (user.IsProfileSetUp != true)
+            {
+                user.IsProfileSetUp = true;
+                this.context.SaveChanges();
+                return true;
+            }
+            return false;
         }
     }
 }

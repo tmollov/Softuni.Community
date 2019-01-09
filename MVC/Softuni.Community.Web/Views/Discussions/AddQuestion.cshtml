@@ -3,7 +3,7 @@
 @model Softuni.Community.Web.Models.BindingModels.QuestionBindingModel
 
 @{
-    ViewData["Title"] = "Create Question";
+    ViewData["Title"] = "Add Question";
 }
 
 <h1 class="text-center mt-4 mb-4">@ViewData["Title"]</h1>
@@ -33,7 +33,7 @@
                     <span asp-validation-for="Tags" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default">Add Question</button>
+                    <button type="submit" class="btn addBtn border border-dark">Add Question</button>
                 </div>
             </form>
         </section>

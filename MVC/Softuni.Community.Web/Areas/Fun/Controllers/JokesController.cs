@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Softuni.Community.Data.Models;
 using Softuni.Community.Services.Interfaces;
+using Softuni.Community.Web.Common;
 using Softuni.Community.Web.Controllers;
 using Softuni.Community.Web.Models.BindingModels;
 using Softuni.Community.Web.Models.ViewModels;
 
 namespace Softuni.Community.Web.Areas.Fun.Controllers
 {
-    [Area("Fun")]
+    [Area(Area.Fun)]
     public class JokesController : BaseController
     {
         private readonly IJokesService jokesService;
@@ -21,50 +22,51 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
             this.userMgr = userMgr;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         public IActionResult Add()
         {
             return View();
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
         public IActionResult Add(JokeBindingModel bindingModel)
         {
             if (ModelState.IsValid)
             {
                 var user = userMgr.FindByNameAsync(User.Identity.Name).Result;
                 this.jokesService.AddJoke(bindingModel,user);
-                return Redirect("/Fun/Jokes/All");
+                return Redirect($"/{Area.Fun}/{Paths.Jokes}/{Actions.All}");
             }
             return View(bindingModel);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         public IActionResult Edit(int id)
         {
             var vm = jokesService.GetJoke<JokeEditBindingModel>(id);
             return View(vm);
         }
-
-        [Authorize(Roles = "Admin")]
+        
         [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
         public IActionResult Edit(JokeEditBindingModel bindingModel)
         {
             if (ModelState.IsValid)
             {
                 jokesService.EditJoke(bindingModel);
-                return Redirect($"/Fun/Jokes/Details/?id={bindingModel.Id}");
+                var redirectUrl = $"/{Area.Fun}/{Paths.Jokes}/{Actions.JokeDetails}/?id={bindingModel.Id}";
+                return Redirect(redirectUrl);
             }
             return View(bindingModel);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         public IActionResult Delete(int id)
         {
             var deletedJoke = jokesService.DeleteJoke(id);
-
-            return Redirect("/Fun/Jokes/All");
+            var redirectUrl = $"/{Area.Fun}/{Paths.Jokes}/{Actions.All}";
+            return Redirect(redirectUrl);
         }
 
         [AllowAnonymous]

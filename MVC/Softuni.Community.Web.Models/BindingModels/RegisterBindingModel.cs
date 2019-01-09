@@ -1,29 +1,31 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Softuni.Community.Web.Common;
 
 namespace Softuni.Community.Web.Models.BindingModels
 {
     public class RegisterBindingModel
     {
-        [Required]
+        [Required(ErrorMessage = Error.EmailRequired)]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = DisplayName.Email)]
         public string Email { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage = Error.UsernameRequired)]
+        [StringLength(Required.UsernameMaxLength, ErrorMessage = Error.UsernameLength , MinimumLength = Required.UsernameMinLength)]
         [DataType(DataType.Text)]
-        [Display(Name = "Username")]
+        [Display(Name = DisplayName.Username)]
         public string UserName { get; set; }
 
-        [Required]
-        [StringLength(30, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage = Error.PasswordRequired)]
+        [StringLength(Required.PasswordMaxLength, ErrorMessage = Error.PasswordLength, MinimumLength = Required.PasswordMinLength)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = DisplayName.Password)]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = Error.ConfirmPasswordRequired)]
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = DisplayName.ConfirmPassword)]
+        [Compare(DisplayName.Password, ErrorMessage = Error.PasswordsDoesntMatch)]
         public string ConfirmPassword { get; set; }
     }
 }

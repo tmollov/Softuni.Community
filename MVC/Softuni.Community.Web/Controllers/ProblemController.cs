@@ -18,14 +18,13 @@ namespace Softuni.Community.Web.Controllers
             this.userMgr = userMgr;
         }
 
-        // Get Problem Details 
+        // Get Problem JokeDetails 
         // GET api/problem
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesDefaultResponseType]
         public ActionResult<ProblemDetailsViewModel> Get()
         {
-            // TODO: GET Random Problem
             var problem = problemsService.GetRandomProblem();
             return problem;
         }
