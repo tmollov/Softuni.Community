@@ -11,7 +11,7 @@ namespace Softuni.Community.Web.Models.BindingModels
         [Display(Name = DisplayName.BirthDate)]
         public DateTime BirthDate { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = Error.FirstNameRequired)]
         [DataType(DataType.Text)]
         [StringLength(Required.NameMax, ErrorMessage = Error.FirstNameLength, MinimumLength = Required.NameMin)]
         [RegularExpression(Required.FirstLastNameRegex)]
@@ -29,7 +29,7 @@ namespace Softuni.Community.Web.Models.BindingModels
         public string AboutMe { get; set; }
 
         [DataType(DataType.Text)]
-        [MinLength(4)]
+        [StringLength(Required.StateMax, ErrorMessage = Error.StateLength, MinimumLength = Required.StateMin)]
         [Display(Name = DisplayName.State)]
         public string State { get; set; }
 

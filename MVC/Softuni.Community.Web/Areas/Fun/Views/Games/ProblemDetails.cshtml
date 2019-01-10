@@ -1,4 +1,6 @@
-﻿@model Softuni.Community.Web.Models.ViewModels.ProblemDetailsViewModel
+﻿@using Softuni.Community.Web.Common
+
+@model Softuni.Community.Web.Models.ViewModels.ProblemDetailsViewModel
 
 @{
 
@@ -29,11 +31,17 @@
             </div>
         </section>
     </div>
-    @if (User.IsInRole("Admin"))
+    @if (User.IsInRole(Role.Admin))
     {
-        <div class="mx-auto">
-            <p>Need modifications? <a class="delete" href="/Fun/Games/EditProblem/?id=@Model.Id">EDIT</a> it.</p>
-            <p>You can also <a class="delete" href="/Fun/Games/DeleteProblem/?id=@Model.Id">DELETE</a> it.</p>
-        </div>
+    <div class="mx-auto">
+        @{
+            var parameters = new Dictionary<string, string>
+            {
+                { Query.Id, $"{Model.Id}" },
+            };
+        }
+        <p>Need modifications? <a class="delete" asp-area="Fun" asp-controller="Games" asp-action="EditProblem" asp-all-route-data="parameters">EDIT</a> it.</p>
+        <p>You can also <a class="delete" asp-area="Fun" asp-controller="Games" asp-action="DeleteProblem" asp-all-route-data="parameters">DELETE</a> it.</p>
+    </div>
     }
 </div>

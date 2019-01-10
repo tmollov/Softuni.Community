@@ -12,25 +12,41 @@
             <hr />
             <div class="form-group">
                 <label asp-for="UserName"></label>
-                <input asp-for="UserName" class="form-control" />
+                <input asp-for="UserName" class="form-control" placeholder="Username..."/>
                 <span asp-validation-for="UserName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" class="form-control" placeholder="Email..."/>
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+            <div class="form-group mx-auto">
+                <label class=" mx-auto text-center" asp-for="Password"></label>
+                <div class="input-group">
+                    <input id="PasswordInput" class="form-control" asp-for="Password" placeholder="Password..." aria-describedby="inputGroupPrepend" required>
+                    <div class="invalid-feedback">
+                        Please choose a username.
+                    </div>
+                    <div class="input-group-append">
+                        <span id="inputGroupPrepend" class="input-group-text"><i id="ShowPasswordIcon" class="ratingBtn fas fa-eye my-auto mr-auto" onclick="ShowPassword()"></i></span>
+                    </div>
+                </div>
+                <span asp-validation-for="Password" class="text-danger text-center"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPassword"></label>
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            <div class="form-group mx-auto">
+                <label class=" mx-auto text-center" asp-for="ConfirmPassword"></label>
+                <div class="input-group">
+                    <input id="ConfirmPasswordInput" class="form-control" asp-for="ConfirmPassword" placeholder="Confirm Password..." aria-describedby="inputGroupPrepend" required>
+                    <div class="invalid-feedback">
+                        Please choose a username.
+                    </div>
+                    <div class="input-group-append">
+                        <span id="inputGroupPrepend" class="input-group-text"><i id="ConfirmPasswordIcon" class="ratingBtn fas fa-eye my-auto mr-auto" onclick="ShowConfirmPassword()"></i></span>
+                    </div>
+                </div>
+                <span asp-validation-for="ConfirmPassword" class="text-danger text-center"></span>
             </div>
-            <button type="submit" class="btn btn-default">Register</button>
+            <button type="submit" class="btn addBtn border border-dark">Register</button>
         </form>
     </div>
 </div>

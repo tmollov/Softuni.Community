@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Softuni.Community.Data.Models;
@@ -23,6 +24,7 @@ namespace Softuni.Community.Web.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesDefaultResponseType]
+        [Authorize]
         public ActionResult<AnswerRatingBindingModel> Post(AnswerRatingBindingModel bindingModel)
         {
             var user = userMgr.FindByNameAsync(bindingModel.Username).Result;

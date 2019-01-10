@@ -31,5 +31,7 @@
         public const string AboutMe = "Share us more about you";
 
         public const string State = "From which state are you ?";
+
+        public const string EnterPassword = "Please enter your password:";
     }
 }

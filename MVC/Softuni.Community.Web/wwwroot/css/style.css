@@ -170,3 +170,14 @@ a {
 textarea:focus {
    height: 30vh;
 }
+
+.viewDiv {
+    height: 30vh;
+}
+
+.addBtn:hover a {
+    color: white;
+    text-decoration: none;
+
+}
+

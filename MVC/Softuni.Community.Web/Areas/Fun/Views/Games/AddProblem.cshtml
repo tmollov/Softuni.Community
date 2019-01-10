@@ -1,9 +1,9 @@
 ﻿@using Softuni.Community.Data.Models.Enums
 @model Softuni.Community.Web.Models.BindingModels.AddProblemBindingModel
+
 @{
     ViewData["Title"] = "Add Game Problem";
 }
-
 
 <h1 class="text-center mt-4 mb-4">@ViewData["Title"]</h1>
 <div>
@@ -42,7 +42,7 @@
                     <span asp-validation-for="RightAnswer" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default">AddJoke Problem</button>
+                    <button type="submit" class="btn addBtn border border-dark ">Add Problem</button>
                 </div>
             </form>
         </section>

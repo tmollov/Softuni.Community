@@ -1,4 +1,6 @@
-﻿@model Softuni.Community.Web.Models.ViewModels.JokeViewModel
+﻿@using Softuni.Community.Web.Common
+
+@model Softuni.Community.Web.Models.ViewModels.JokeViewModel
 @{
     ViewData["Title"] = "Joke Details";
 }
@@ -38,7 +40,7 @@
                                 }
                             </button>
                             <span>:</span>
-                            <p class="mr-auto dislikes m-0 p-0 pl-2">@Model.Dislikes</p>
+                            <p class="mr-auto dislikes m-0 p-0 pl-2">@Math.Abs(Model.Dislikes)</p>
                             </p>
                         </div>
                     }
@@ -46,11 +48,17 @@
             </div>
         </section>
     </div>
-    @if (User.IsInRole("Admin"))
+    @if (User.IsInRole(Role.Admin))
     {
         <div class="mx-auto">
-            <p>Need modifications? <a class="delete" href="/Fun/Jokes/Edit/?id=@Model.Id">EDIT</a> it.</p>
-            <p>You can also <a class="delete" href="/Fun/Jokes/Delete/?id=@Model.Id">DELETE</a> it.</p>
+            @{
+                var parameters = new Dictionary<string, string>
+                {
+                    { Query.Id, $"{Model.Id}" },
+                };
+            }
+            <p>Need modifications? <a class="delete" asp-area="Fun" asp-controller="Jokes" asp-action="Edit" asp-all-route-data="parameters">EDIT</a> it.</p>
+            <p>You can also <a class="delete" asp-area="Fun" asp-controller="Jokes" asp-action="Delete" asp-all-route-data="parameters">DELETE</a> it.</p>
         </div>
     }
 </div>

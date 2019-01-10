@@ -36,9 +36,10 @@
         public const string JokeLength = "Joke must be at least {2} and at max {1} characters long.";
         public const string JokeIDRequired = "Joke ID is required!";
 
+        public const string FirstNameRequired = "First name required!";
         public const string FirstNameLength = "First name must be at least {2} and at max {1} characters long.";
         public const string AboutMeLength = "About me must be at least {2} and at max {1} characters long.";
         public const string StateLength = "State must be at least {2} and at max {1} characters long.";
-
+        public const string EnterPasswordToDelete = "Please enter your password to continue deletion.";
     }
 }

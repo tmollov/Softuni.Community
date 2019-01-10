@@ -33,9 +33,9 @@ namespace Softuni.Community.Web.Controllers
 
             return View(viewModel);
         }
-
-        [Authorize]
+        
         [HttpPost]
+        [Authorize]
         public IActionResult DeleteAnswer(DeleteAnswerBindingModel bindingModel)
         {
             if (ModelState.IsValid)
@@ -49,9 +49,9 @@ namespace Softuni.Community.Web.Controllers
             }
             return Redirect($"/{Paths.Discussions}/{Actions.QuestionDetails}/{bindingModel.QuestionId}");
         }
-
-        [Authorize]
+        
         [HttpPost]
+        [Authorize]
         public IActionResult AddAnswer(AnswerBindingModel bindingModel)
         {
             if (ModelState.IsValid)
@@ -63,30 +63,18 @@ namespace Softuni.Community.Web.Controllers
                     return RedirectToAction(Actions.SomethingWentWrong, Paths.Error);
                 }
             }
-            return Redirect($"/{Paths.Discussions}/{Actions.QuestionDetails}/?Id={bindingModel.QuestionId}");
+            var returnUrl = $"/{Paths.Discussions}/{Actions.QuestionDetails}/?{Query.Id}={bindingModel.QuestionId}";
+            return Redirect(returnUrl);
         }
 
         [AllowAnonymous]
         public IActionResult QuestionDetails(string id)
         {
             var parms = id.Split("#").Select(int.Parse).ToArray();
-            var questionViewModel = discussService.GetQuestionViewModel(parms[0]);
-            if (questionViewModel != null)
+            var userId = userMgr.FindByNameAsync(User.Identity.Name).Result.Id;
+            var vm = discussService.GetQuestionDetailsVM(parms[0],userId);
+            if (vm != null)
             {
-                var answersViewModels = discussService.GetAnswersViewModels(parms[0]);
-                var isUserLikeQuestion = discussService.IsUserLikedQuestion(questionViewModel.QuestionId, User.Identity.Name);
-                var isUserDisLikeQuestion = discussService.IsUserDisLikedQuestion(questionViewModel.QuestionId, User.Identity.Name);
-                var userLikedAnswers = discussService.GetUserLikedAnswersIdList(User.Identity.Name);
-                var userDisLikedAnswers = discussService.GetUserDisLikedAnswersIdList(User.Identity.Name);
-                var vm = new QuestionDetailsViewModel()
-                {
-                    Question = questionViewModel,
-                    Answers = answersViewModels,
-                    IsUserLikeQuestion = isUserLikeQuestion,
-                    IsUserDisLikeQuestion = isUserDisLikeQuestion,
-                    ListOfLikedAnswers = userLikedAnswers,
-                    ListOfDisLikedAnswers = userDisLikedAnswers
-                };
                 return this.View(vm);
             }
 

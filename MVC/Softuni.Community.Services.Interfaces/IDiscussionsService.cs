@@ -12,13 +12,14 @@ namespace Softuni.Community.Services.Interfaces
         Question DeleteQuestion(int questionId, string publisherId);
         
         IList<QuestionViewModel> GetTopQuestions();
-        IList<int> GetUserLikedAnswersIdList(string username);
-        IList<int> GetUserDisLikedAnswersIdList(string username);
-        ICollection<MyQuestionViewModel> GetUserQuestionsVM(string username);
-        ICollection<MyAnswerViewModel> GetUserAnswersVM(string username);
+        IList<int> GetUserLikedAnswersIdList(string publisherId);
+        IList<int> GetUserDisLikedAnswersIdList(string userId);
+        ICollection<MyQuestionViewModel> GetUserQuestionsVM(string userId);
+        ICollection<MyAnswerViewModel> GetUserAnswersVM(string userId);
+        QuestionDetailsViewModel GetQuestionDetailsVM(int questionId, string userId);
 
-        bool IsUserDisLikedQuestion(int questionId, string username);
-        bool IsUserLikedQuestion(int questionId, string username);
+        bool IsUserDisLikedQuestion(int questionId, string userId);
+        bool IsUserLikedQuestion(int questionId, string userId);
 
         ICollection<AnswerViewModel> GetAnswersViewModels(int questionId);
         QuestionViewModel GetQuestionViewModel(int id);

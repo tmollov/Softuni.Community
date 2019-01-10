@@ -22,14 +22,14 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
             this.userMgr = userMgr;
         }
 
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult Add()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult Add(JokeBindingModel bindingModel)
         {
             if (ModelState.IsValid)
@@ -41,7 +41,7 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
             return View(bindingModel);
         }
 
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult Edit(int id)
         {
             var vm = jokesService.GetJoke<JokeEditBindingModel>(id);
@@ -49,7 +49,7 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
         }
         
         [HttpPost]
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult Edit(JokeEditBindingModel bindingModel)
         {
             if (ModelState.IsValid)
@@ -61,7 +61,7 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
             return View(bindingModel);
         }
 
-        [Authorize(Roles = Roles.Admin)]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult Delete(int id)
         {
             var deletedJoke = jokesService.DeleteJoke(id);

@@ -1,30 +1,15 @@
 ﻿let answersBase = "https://localhost:5001/api/answers/";
 let questionsBase = "https://localhost:5001/api/questions/";
 let jokeBase = "https://localhost:5001/api/jokes/";
-(() => {
-    let clicked = false;
-    $("#addAnswerBtn").click(function () {
-        if (!clicked) {
-            $("#replyDiv").show();
-            $(this).text("Hide Reply");
-            clicked = true;
-        } else {
-            $("#replyDiv").hide();
-            $(this).text("Add Answer");
-            clicked = false;
-        }
-    })
-})();
 
-(() => {
+function ScrollIntoView() {
     let urlParams = document.URL.split('/');
     var fragment = urlParams[urlParams.length-1].split("%23");
-    if (fragment.length > 1) {
-        console.log(fragment[1]);   
+    if (fragment.length > 1) { 
         var elmnt = document.getElementById(fragment[1]);
         elmnt.scrollIntoView();
     }
-})();
+}
 
 function LikeAnswer(e) {
     if ($(e).hasClass("liked")) {
@@ -127,7 +112,6 @@ function DislikeQuestion(e) {
     }
 }
 
-
 function LikeJoke(e) {
     if ($(e).hasClass("liked")) {
         return;
@@ -188,10 +172,6 @@ function DislikeJoke(e) {
     }
 }
 
-
-
-
-
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -207,7 +187,51 @@ function readURL(input) {
     }
 }
 
+function HideShowReply() {
+    let clicked = false;
+    $("#addAnswerBtn").click(function () {
+        if (!clicked) {
+            $("#replyDiv").show();
+            $(this).text("Hide Reply");
+            clicked = true;
+        } else {
+            $("#replyDiv").hide();
+            $(this).text("Add Answer");
+            clicked = false;
+        }
+    })
+}
+
+function ShowPassword() {
+    var x = document.getElementById("PasswordInput");
+    if (x.type === "password") {
+        x.type = "text";
+        $("#ShowPasswordIcon").removeClass("fa-eye").addClass("fa-eye-slash");
+    } else {
+        x.type = "password";
+        $("#ShowPasswordIcon").removeClass("fa-eye-slash").addClass("fa-eye");
+    }
+}
+
+function ShowConfirmPassword() {
+    var x = document.getElementById("ConfirmPasswordInput");
+    if (x.type === "password") {
+        x.type = "text";
+        $("#ConfirmPasswordIcon").removeClass("fa-eye").addClass("fa-eye-slash");
+    } else {
+        x.type = "password";
+        $("#ConfirmPasswordIcon").removeClass("fa-eye-slash").addClass("fa-eye");
+    }
+}
+
+
+
 // jquery Tabs
 $(function () {
     $("#tabs").tabs();
 });
+
+
+(HideShowReply)();
+
+(ScrollIntoView)();

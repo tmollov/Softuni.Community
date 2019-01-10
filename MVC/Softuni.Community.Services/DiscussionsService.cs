@@ -60,7 +60,7 @@ namespace Softuni.Community.Services
             if (tags == null)
                 return new List<Tag>();
 
-            var tagList = tags.Split(" ", StringSplitOptions.RemoveEmptyEntries).Where(x=> !string.IsNullOrWhiteSpace(x)).Select(x => x.Trim()).ToHashSet();
+            var tagList = tags.Split(" ", StringSplitOptions.RemoveEmptyEntries).Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => x.Trim()).ToHashSet();
 
             List<Tag> newTagsList = new List<Tag>();
             foreach (var item in tagList)
@@ -131,22 +131,22 @@ namespace Softuni.Community.Services
             return vm;
         }
 
-        public ICollection<MyQuestionViewModel> GetUserQuestionsVM(string username)
+        public ICollection<MyQuestionViewModel> GetUserQuestionsVM(string publisherId)
         {
             var questions = this.context.Questions
                 .Include(x => x.Publisher)
-                .Where(x => x.Publisher.UserName == username)
+                .Where(x => x.PublisherId == publisherId)
                 .Select(x => mapper.Map<MyQuestionViewModel>(x)).ToList();
             return questions;
         }
 
         //Tested
-        public ICollection<MyAnswerViewModel> GetUserAnswersVM(string username)
+        public ICollection<MyAnswerViewModel> GetUserAnswersVM(string publisherId)
         {
             var answers = this.context.Answers
                 .Include(x => x.Publisher)
                 .Include(x => x.Question)
-                .Where(x => x.Publisher.UserName == username)
+                .Where(x => x.PublisherId == publisherId)
                 .Select(x => mapper.Map<MyAnswerViewModel>(x)).ToList();
             return answers;
         }
@@ -190,13 +190,14 @@ namespace Softuni.Community.Services
 
             if (model.Rating == 1)
             {
-                if (!IsUserLikedAnswer(model.AnswerId, model.Username))
+                if (!IsUserLikedAnswer(model.AnswerId, user.Id))
                 {
                     var Answer = new UserAnswerLikes(answer.Id, user);
                     this.context.UsersAnswerLikes.Add(Answer);
-                    if (IsUserDisLikedAnswer(model.AnswerId, model.Username))
+                    if (IsUserDisLikedAnswer(model.AnswerId, user.Id))
                     {
-                        var dislikedAnswer = this.context.UsersAnswerDislikes.FirstOrDefault(x => x.User.UserName == model.Username && x.AnswerId == model.AnswerId);
+                        var dislikedAnswer = this.context.UsersAnswerDislikes
+                            .FirstOrDefault(x => x.User.Id == user.Id && x.AnswerId == model.AnswerId);
                         this.context.UsersAnswerDislikes.Remove(dislikedAnswer);
                         this.context.SaveChanges();
                     }
@@ -208,14 +209,15 @@ namespace Softuni.Community.Services
             }
             else
             {
-                if (!IsUserDisLikedAnswer(model.AnswerId, model.Username))
+                if (!IsUserDisLikedAnswer(model.AnswerId, user.Id))
                 {
                     var Answer = new UserAnswerDisLikes(answer.Id, user);
                     this.context.UsersAnswerDislikes.Add(Answer);
 
-                    if (IsUserLikedAnswer(model.AnswerId, model.Username))
+                    if (IsUserLikedAnswer(model.AnswerId, user.Id))
                     {
-                        var likedAnswer = this.context.UsersAnswerLikes.FirstOrDefault(x => x.User.UserName == model.Username && x.AnswerId == model.AnswerId);
+                        var likedAnswer = this.context.UsersAnswerLikes
+                            .FirstOrDefault(x => x.User.Id == user.Id && x.AnswerId == model.AnswerId);
                         this.context.UsersAnswerLikes.Remove(likedAnswer);
                         this.context.SaveChanges();
                     }
@@ -236,14 +238,14 @@ namespace Softuni.Community.Services
         {
             if (model.Rating == 1)
             {
-                if (!IsUserLikedQuestion(model.QuestionId, model.Username))
+                if (!IsUserLikedQuestion(model.QuestionId, user.Id))
                 {
                     var Question = new UserQuestionLikes(model.QuestionId, user);
                     this.context.UsersQuestionLikes.Add(Question);
-                    if (IsUserDisLikedQuestion(model.QuestionId, model.Username))
+                    if (IsUserDisLikedQuestion(model.QuestionId, user.Id))
                     {
                         var dislikedQuestion = this.context.UsersQuestionDislikes
-                            .FirstOrDefault(x => x.User.UserName == model.Username && x.QuestionId == model.QuestionId);
+                            .FirstOrDefault(x => x.User.Id == user.Id && x.QuestionId == model.QuestionId);
                         this.context.UsersQuestionDislikes.Remove(dislikedQuestion);
                         this.context.SaveChanges();
                     }
@@ -255,15 +257,15 @@ namespace Softuni.Community.Services
             }
             else
             {
-                if (!IsUserDisLikedQuestion(model.QuestionId, model.Username))
+                if (!IsUserDisLikedQuestion(model.QuestionId, user.Id))
                 {
                     var Question = new UserQuestionDisLikes(model.QuestionId, user);
                     this.context.UsersQuestionDislikes.Add(Question);
 
-                    if (IsUserLikedQuestion(model.QuestionId, model.Username))
+                    if (IsUserLikedQuestion(model.QuestionId, user.Id))
                     {
                         var likedQuestion = this.context.UsersQuestionLikes
-                            .FirstOrDefault(x => x.User.UserName == model.Username && x.QuestionId == model.QuestionId);
+                            .FirstOrDefault(x => x.User.Id == user.Id && x.QuestionId == model.QuestionId);
                         this.context.UsersQuestionLikes.Remove(likedQuestion);
                         this.context.SaveChanges();
                     }
@@ -306,7 +308,7 @@ namespace Softuni.Community.Services
         {
             if (tags == null)
                 return new List<Tag>();
-            var tagList = tags.Split(" ", StringSplitOptions.RemoveEmptyEntries).Where(x=>!string.IsNullOrWhiteSpace(x)).Select(x => x.Trim()).ToHashSet();
+            var tagList = tags.Split(" ", StringSplitOptions.RemoveEmptyEntries).Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => x.Trim()).ToHashSet();
             List<Tag> tagsList = new List<Tag>();
             foreach (var item in tagList)
             {
@@ -338,42 +340,67 @@ namespace Softuni.Community.Services
         }
 
         //Tested
-        public IList<int> GetUserLikedAnswersIdList(string username)
+        public IList<int> GetUserLikedAnswersIdList(string userId)
         {
             return this.context.UsersAnswerLikes.Include(x => x.User)
-                .Where(x => x.User.UserName == username).Select(x => x.AnswerId).ToList();
+                .Where(x => x.User.Id == userId).Select(x => x.AnswerId).ToList();
         }
         //Tested
-        public IList<int> GetUserDisLikedAnswersIdList(string username)
+        public IList<int> GetUserDisLikedAnswersIdList(string userId)
         {
             return this.context.UsersAnswerDislikes.Include(x => x.User)
-                .Where(x => x.User.UserName == username).Select(x => x.AnswerId).ToList();
+                .Where(x => x.User.Id == userId).Select(x => x.AnswerId).ToList();
         }
 
         //Tested
-        public bool IsUserLikedAnswer(int answerId, string username)
+        public bool IsUserLikedAnswer(int answerId, string userId)
         {
-            return this.context.UsersAnswerLikes.Any(x => x.User.UserName == username && x.AnswerId == answerId);
+            return this.context.UsersAnswerLikes.Any(x => x.User.Id == userId && x.AnswerId == answerId);
         }
         //Tested
-        public bool IsUserDisLikedAnswer(int answerId, string username)
+        public bool IsUserDisLikedAnswer(int answerId, string userId)
         {
-            return this.context.UsersAnswerDislikes.Any(x => x.User.UserName == username && x.AnswerId == answerId);
+            return this.context.UsersAnswerDislikes.Any(x => x.User.Id == userId && x.AnswerId == answerId);
         }
 
         //Tested
-        public bool IsUserDisLikedQuestion(int questionId, string username)
+        public bool IsUserDisLikedQuestion(int questionId, string userId)
         {
             return this.context.UsersQuestionDislikes
                 .Include(x => x.User)
-                .Any(x => x.User.UserName == username && x.QuestionId == questionId);
+                .Any(x => x.User.Id == userId && x.QuestionId == questionId);
         }
         //Tested
-        public bool IsUserLikedQuestion(int questionId, string username)
+        public bool IsUserLikedQuestion(int questionId, string userId)
         {
             return this.context.UsersQuestionLikes
                 .Include(x => x.User)
-                .Any(x => x.User.UserName == username && x.QuestionId == questionId);
+                .Any(x => x.User.Id == userId && x.QuestionId == questionId);
+        }
+
+        //
+        public QuestionDetailsViewModel GetQuestionDetailsVM(int questionId, string userId)
+        {
+            var question = this.GetQuestionViewModel(questionId);
+            if (question != null)
+            {
+                var answersViewModels = this.GetAnswersViewModels(questionId);
+                var isUserLikeQuestion = this.IsUserLikedQuestion(question.QuestionId, userId);
+                var isUserDisLikeQuestion = this.IsUserDisLikedQuestion(question.QuestionId, userId);
+                var userLikedAnswers = this.GetUserLikedAnswersIdList(userId);
+                var userDisLikedAnswers = this.GetUserDisLikedAnswersIdList(userId);
+                var vm = new QuestionDetailsViewModel()
+                {
+                    Question = question,
+                    Answers = answersViewModels,
+                    IsUserLikeQuestion = isUserLikeQuestion,
+                    IsUserDisLikeQuestion = isUserDisLikeQuestion,
+                    ListOfLikedAnswers = userLikedAnswers,
+                    ListOfDisLikedAnswers = userDisLikedAnswers
+                };
+                return vm;
+            }
+            return null;
         }
     }
 }

@@ -1,26 +1,33 @@
 ﻿@model Softuni.Community.Web.Models.BindingModels.LoginBindingModel
-
 @{
     ViewData["Title"] = "Log in";
 }
-
 <h2>@ViewData["Title"]</h2>
 <div >
     <div class="text-center">
         <section class="w-25 mx-auto">
-            <form method="post" >
+            <form asp-area="Identity" asp-controller="Account" asp-action="Login" method="post" >
                 <h4>Use your email and password to log in.</h4>
                 <hr />
                 <div class="form-group">
                     <label asp-for="Email"></label>
-                    <input asp-for="Email" class="form-control" />
+                    <input asp-for="Email" class="form-control" placeholder="Email..."/>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Password"></label>
-                    <input asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
+                <div class="form-group mx-auto">
+                    <label class=" mx-auto text-center" asp-for="Password"></label>
+                    <div class="input-group">
+                        <input id="PasswordInput" class="form-control" asp-for="Password" placeholder="Password..." aria-describedby="inputGroupPrepend" required>
+                        <div class="invalid-feedback">
+                            Please choose a username.
+                        </div>
+                        <div class="input-group-append">
+                            <span id="inputGroupPrepend" class="input-group-text"><i id="ShowPasswordIcon" class="ratingBtn fas fa-eye my-auto mr-auto" onclick="ShowPassword()"></i></span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger text-center"></span>
                 </div>
+
                 <div class="form-group">
                     <div class="checkbox">
                         <label asp-for="RememberMe">
@@ -31,7 +38,7 @@
                 </div>
                 <input asp-for="ReturnUrl" hidden />
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default">Log in</button>
+                    <button type="submit" class="btn addBtn border border-dark ">Log in</button>
                 </div>
                 <div class="form-group">
                     <p>

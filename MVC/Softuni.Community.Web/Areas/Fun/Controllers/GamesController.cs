@@ -1,17 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Softuni.Community.Services.Interfaces;
+using Softuni.Community.Web.Common;
 using Softuni.Community.Web.Controllers;
 using Softuni.Community.Web.Models.BindingModels;
 
 namespace Softuni.Community.Web.Areas.Fun.Controllers
 {
-    [Area("Fun")]
+    [Area(Area.Fun)]
     public class GamesController : BaseController
     {
-        private const string Area = "Fun";
-        private const string Controller = "Games";
-
         private readonly IProblemsService problemsService;
 
         public GamesController(IProblemsService problemsService)
@@ -25,27 +23,39 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult ManageCodeWizard()
         {
             var vm = problemsService.GetAllProblemsViewModel();
             return View(vm);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult AddProblem()
         {
             return View();
         }
+        
+        [HttpPost]
+        [Authorize(Roles = Role.Admin)]
+        public IActionResult AddProblem(AddProblemBindingModel bindingModel)
+        {
+            if (ModelState.IsValid)
+            {
+                this.problemsService.AddProblem(bindingModel);
+                return Redirect($"/{Area.Fun}/{Paths.Games}/{Actions.ManageCodeWizard}");
+                ;            }
+            return View(bindingModel);
+        }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult ProblemDetails(int id)
         {
             var vm = problemsService.GetProblemDetails(id);
             return View(vm);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult EditProblem(int id)
         {
             var bm = problemsService.GetEditProblemBindingModel(id);
@@ -53,32 +63,19 @@ namespace Softuni.Community.Web.Areas.Fun.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult EditProblem(EditProblemBindingModel bindingModel)
         {
             var bm = problemsService.EditProblem(bindingModel);
-            return Redirect($"/{Area}/{Controller}/ProblemDetails?Id={bm.Id}");
+            var redirectUrl = $"/{Area.Fun}/{Paths.Games}/{Actions.ProblemDetails}?{Query.Id}={bm.Id}";
+            return Redirect(redirectUrl);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult DeleteProblem(int id)
         {
             var bm = problemsService.DeleteProblem(id);
-            return Redirect($"/{Area}/{Controller}/{nameof(ManageCodeWizard)}");
+            return Redirect($"/{Area.Fun}/{Paths.Games}/{Actions.ManageCodeWizard}");
         }
-
-
-        [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public IActionResult AddProblem(AddProblemBindingModel bindingModel)
-        {
-            if (ModelState.IsValid)
-            {
-                this.problemsService.AddProblem(bindingModel);
-                return Redirect($"/{Area}/{Controller}/{nameof(ManageCodeWizard)}");
-;            }
-            return View(bindingModel);
-        }
-
     }
 }

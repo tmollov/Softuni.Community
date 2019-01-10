@@ -196,6 +196,14 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
                     {
                         signInManager.SignOutAsync().GetAwaiter().GetResult();
                         var res = userManager.DeleteAsync(user).Result;
+                        return RedirectToAction(Actions.Index, Paths.Home);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(nameof(DeleteProfileBindingModel.Password),
+                            Error.PasswordNotValid);
+                        // Will returning empty password field
+                        bindingModel.Password = string.Empty;
                     }
                 }
                 else
@@ -203,7 +211,7 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
                     return RedirectToAction(Actions.SomethingWentWrong, Paths.Error);
                 }
             }
-            return RedirectToAction(Actions.Index, Paths.Home);
+            return View(bindingModel);
         }
 
         [Authorize]

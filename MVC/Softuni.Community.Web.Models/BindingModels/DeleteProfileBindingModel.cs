@@ -5,10 +5,10 @@ namespace Softuni.Community.Web.Models.BindingModels
 {
     public class DeleteProfileBindingModel
     {
-        [Required(ErrorMessage = Error.PasswordRequired)]
+        [Required(ErrorMessage = Error.EnterPasswordToDelete)]
         [StringLength(Required.PasswordMaxLength, ErrorMessage = Error.PasswordLength, MinimumLength = Required.PasswordMinLength)]
         [DataType(DataType.Password)]
-        [Display(Name = DisplayName.Password)]
+        [Display(Name = DisplayName.EnterPassword)]
         public string Password { get; set; }
     }
 }

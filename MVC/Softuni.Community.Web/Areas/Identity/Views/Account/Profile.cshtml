@@ -1,7 +1,4 @@
 ﻿@model Softuni.Community.Web.Models.ViewModels.ProfileViewModel
-@{
-    ViewData["Title"] = "Profile";
-}
 
 <h1 class="p-2">@User.Identity.Name's Profile</h1>
 <div>
@@ -14,7 +11,6 @@
                 }
                 else
                 {
-                    <img id="profilePic" class="w-25" src="@Model.MyProfile.ProfilePictureUrl" style="border-radius:30%;" hidden>
                     <i id="profilePicIcon" class="fas fa-user-circle display-1"></i>
                 }
             </div>
@@ -24,70 +20,84 @@
             <hr class="bg-dark p-0 m-0 mt-2 mb-2 w-25" />
             @if (Model.MyProfile.State != null)
             {
-            <p class="p-0 m-0"><i class="fas fa-home"></i> From @Model.MyProfile.State</p>
+                <p class="p-0 m-0"><i class="fas fa-home"></i> From @Model.MyProfile.State</p>
             }
-            <p class="p-0 m-0"><i class="fas fa-birthday-cake"></i> @Model.MyProfile.BirthDate.ToString("d MMMM yyyy")</p>
-            <p class="p-0 m-0"><i class="fas fa-bookmark"></i> @Model.MyProfile.AboutMe</p>
+            @if (@Model.MyProfile.BirthDate != new DateTime(1, 1, 1))
+            {
+                <p class="p-0 m-0"><i class="fas fa-birthday-cake"></i> @Model.MyProfile.BirthDate.ToString("d MMMM yyyy")</p>
+            }
+            @if (!string.IsNullOrWhiteSpace(Model.MyProfile.AboutMe))
+            {
+                <p class="p-0 m-0"><i class="fas fa-bookmark"></i> @Model.MyProfile.AboutMe</p>
+            }
         </div>
     </div>
 </div>
 
 
 <div class="row mt-5 w-75 mx-auto">
-    <div class="col border border-dark m-2 p-2 scrollable">
+    <div class="col m-2 p-2">
         <h4 class="mb-0 pb-0">My Questions</h4>
         <hr class="bg-dark mt-0 pt-0 w-75" />
-        @foreach (var question in Model.MyQuestions)
-        {
-            <div class="border border-secondary row mx-auto my-auto pr-2 pl-2">
+        <div class="scrollable viewDiv p-1 m-0">
+            @foreach (var question in Model.MyQuestions)
+            {
+                <div class="border border-secondary row mx-auto my-auto pr-2 pl-2">
 
-                <p class=" p-0 m-0">@question.PublishTime.ToString("dd MMM yyyy")<span class="mr-1 ml-1">:</span></p>
-                <a class="" href="/Discussions/QuestionDetails/?Id=@question.Id">
-                    @if (question.Title.Length > 30)
-                    {
-                        @string.Join("", question.Title.Take(25));<span>...</span>
+                    <p class=" p-0 m-0">@question.PublishTime.ToString("dd MMM yyyy")<span class="mr-1 ml-1">:</span></p>
+                    @{
+
+                        var parameters = new Dictionary<string, string>
+                                            {
+                                                { "Id", $"{question.Id}" },
+                                            };
                     }
-                    else
-                    {
-                        @question.Title
-                    }
-                </a>
-                <p class="ml-auto text-center m-0 mr-1"><i class="fas fa-comments"></i>: @question.AnswerCount</p>
-                <p class="text-center m-0"><i class="fas fa-star"></i>: @question.Rating</p>
-            </div>
-        }
+                    <a asp-controller="Discussions" asp-action="QuestionDetails" asp-all-route-data="parameters">
+                        @if (question.Title.Length > 30)
+                        {
+                            @string.Join("", question.Title.Take(35));<span>...</span>
+                        }
+                        else
+                        {
+                            @question.Title
+                        }
+                    </a>
+                    <p class="ml-auto text-center m-0 mr-1"><i class="fas fa-comments"></i>: @question.AnswerCount</p>
+                    <p class="text-center m-0"><i class="fas fa-star"></i>: @question.Rating</p>
+                </div>
+            }
+        </div>
     </div>
 
-    <div class="col border border-dark m-2 p-2 scrollable">
+    <div class="col m-2 p-2">
         <h4 class="mb-0 pb-0">My Answers</h4>
         <hr class="bg-dark mt-0 pt-0 w-75" />
-        @foreach (var answer in Model.MyAnswers)
-        {
-            <div class="border border-secondary row mx-auto my-auto pr-2 pl-2">
-                <p class=" p-0 m-0">@answer.PublishTime.ToString("dd MMM yyyy")<span class="mr-1 ml-1">:</span></p>
-                @{
-                                                                                                                   
-                    var parameters = new Dictionary<string, string>
-                    {
-                        { "Id", $"{answer.QuestionId}#{answer.Id}" },
-                    };
-                    var fragment = answer.Id;
-                }
-                <a asp-controller="Discussions" asp-action="QuestionDetails" asp-all-route-data="parameters" >
-                    @if (answer.Content.Length > 30)
-                    {
-                        @string.Join("", answer.Content.Take(30));<span>...</span>
+        <div class="scrollable viewDiv p-1 m-0">
+            @foreach (var answer in Model.MyAnswers)
+            {
+                <div class="border border-secondary row mx-auto my-auto pr-2 pl-2">
+                    <p class=" p-0 m-0">@answer.PublishTime.ToString("dd MMM yyyy")<span class="mr-1 ml-1">:</span></p>
+                    @{
+
+                        var parameters = new Dictionary<string, string>
+                                        {
+                                            { "Id", $"{answer.QuestionId}#{answer.Id}" },
+                                        };
+                        var fragment = answer.Id;
                     }
-                    else
-                    {
-                        @answer.Content
-                    }
-                </a>
-                <p class="text-center m-0 ml-auto"><i class="fas fa-star"></i>: @answer.Rating</p>
-            </div>
-        }
-    </div>
-    <div class="col border border-dark m-2">
-        <h4>My Scores</h4>
+                    <a asp-controller="Discussions" asp-action="QuestionDetails" asp-all-route-data="parameters">
+                        @if (answer.Content.Length > 30)
+                        {
+                            @string.Join("", answer.Content.Take(30));<span>...</span>
+                        }
+                        else
+                        {
+                            @answer.Content
+                        }
+                    </a>
+                    <p class="text-center m-0 ml-auto"><i class="fas fa-star"></i>: @answer.Rating</p>
+                </div>
+            }
+        </div>
     </div>
 </div>

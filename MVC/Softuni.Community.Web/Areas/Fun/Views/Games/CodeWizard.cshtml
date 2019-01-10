@@ -1,4 +1,4 @@
-﻿
+﻿@using Softuni.Community.Web.Common
 @{
     ViewData["Title"] = "Code Wizard";
 }
@@ -7,9 +7,9 @@
 <section id="gameSection">
     <section id="start">
         <h2 class="text-center">
-            <button id="startGame" >Start Game</button>
+            <button id="startGame">Start Game</button>
         </h2>
-        @if (User.IsInRole("Admin"))
+        @if (User.IsInRole(Role.Admin))
         {
             <div id="manageGameDiv">
                 <a asp-area="Fun" asp-controller="Games" asp-action="ManageCodeWizard">Manage Game</a>
