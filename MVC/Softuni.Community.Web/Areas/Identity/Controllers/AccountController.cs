@@ -45,6 +45,10 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         [AllowAnonymous]
         public IActionResult Login(string ReturnUrl)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction(Actions.Index,Paths.Home);
+            }
             var vm = new LoginBindingModel() { ReturnUrl = ReturnUrl };
 
             return View(vm);
@@ -55,6 +59,10 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Login(LoginBindingModel bindingModel)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction(Actions.Index,Paths.Home);
+            }
             if (ModelState.IsValid)
             {
                 CustomUser user = userManager.FindByEmailAsync(bindingModel.Email).Result;
@@ -98,6 +106,10 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction(Actions.Index,Paths.Home);
+            }
             return View();
         }
 
@@ -106,6 +118,10 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Register(RegisterBindingModel bindingModel)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction(Actions.Index,Paths.Home);
+            }
             if (ModelState.IsValid && (bindingModel.Password == bindingModel.ConfirmPassword))
             {
                 var userInfo = new UserInfo();
@@ -218,8 +234,8 @@ namespace Softuni.Community.Web.Areas.Identity.Controllers
         public IActionResult Profile()
         {
             var user = userManager.FindByNameAsync(User.Identity.Name).Result;
-            var questions = discussionsService.GetUserQuestionsVM(User.Identity.Name);
-            var answers = discussionsService.GetUserAnswersVM(User.Identity.Name);
+            var questions = discussionsService.GetUserQuestionsVM(user.Id);
+            var answers = discussionsService.GetUserAnswersVM(user.Id);
             var myProfile = userService.GetProfileViewModel(user.UserInfoId);
             var vm = new ProfileViewModel()
             {
